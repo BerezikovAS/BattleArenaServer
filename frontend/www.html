@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="wwww.css">
+    <link href='https://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
+  </head>
+  <body>
+    <div style="display: inline-block;">
+      <div class="main">
+          <div id="field" class="container">
+
+          </div>
+      </div>
+    </div>
+    <div class="heroinfo" style="display: inline-block; vertical-align: middle;">
+
+      <table>
+        <tr style="height: 65px;">
+          <td rowspan="2"><div id="heroinfo_icon"></div></td>
+          <td style="text-align: center;"><p id="heroinfo_name" style="display: inline-block; font-size: 20px; font-weight: bolder;">HERONAME</p></td>
+          <td class="heroinfo"><img src="icons/meleeattack.png" style="height: 30px;"><div style="width: 100px; padding-left: 8px;" id="heroinfo_damage">100</div></td>
+          <td class="heroinfo"><img src="icons/armor.png" style="height: 30px;"><div style="width: 100px; padding-left: 8px;" id="heroinfo_armor">3 (27%)</div></td>
+        </tr>
+        <tr style="height: 30px;">
+          <td>
+            <div class="hpbar">
+              <div id="heroinfo_hpbar" class="hpbarCurrent" style="width: 300px;"></div>
+              <h id="heroinfo_hp" style="z-index: 2; position: relative;">1000</h>
+            </div>          
+          </td>
+          <td class="heroinfo"><img src="icons/rangeattack.png" style="height: 30px;"><div style="width: 100px; padding-left: 8px;" id="heroinfo_range">1</div></td>
+          <td class="heroinfo"><img src="icons/resist.png" style="height: 30px;"><div style="width: 100px; padding-left: 8px;" id="heroinfo_resist">2  (19%)</div></td>
+        </tr>
+      </table>
+
+      
+      
+    </div>
+    <div id="AProw" style="padding-top: 60px; height: 50px; padding-bottom: 20px;"></div>
+    <div class="bot" style="display: flex;">
+        <div onclick="castSpell(1)"><div class="cooldawn"><p class="cooldawn" id="cd1"></p></div><button id="spell1" class="spell">Spell1</button></div>
+        <div onclick="castSpell(2)"><div class="cooldawn"><p class="cooldawn" id="cd2"></p></div><button id="spell2" class="spell">Spell2</button></div>
+        <div onclick="castSpell(3)"><div class="cooldawn"><p class="cooldawn" id="cd3"></p></div><button id="spell3" class="spell">Spell3</button></div>
+        <div onclick="castSpell(4)"><div class="cooldawn"><p class="cooldawn" id="cd4"></p></div><button id="spell4" class="spell">Spell4</button></div>
+        <button id="AP" style="border: 1px solid; width: 100px; font-size: medium; margin-left: 30px;" onclick="endTurn()"></button>
+        <button style="border: 1px solid; width: 100px; font-size: medium; margin-left: 30px;" onclick="cancel()"></button>
+    </div>
+    <div>
+      
+    </div>
+    <script src="js/script.js"></script>
+    <script src="js/hovers.js"></script>
+    <script src="js/actions.js"></script>
+    <script src="js/util.js"></script>
+  </body>
+</html>
