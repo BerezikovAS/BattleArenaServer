@@ -1,0 +1,113 @@
+.main {
+    width: 825px;
+    display:flex;
+    --s: 100px;  /* size  */
+    --m: 1px;    /* margin */
+    --f: calc(1.732 * var(--s) + 4 * var(--m)  - 1px);
+  }
+  
+  
+
+  .container {
+    font-size: 0; /*disable white space between inline block element */
+  }
+  
+  .container div {
+    width: var(--s);
+    margin: var(--m);
+    height: calc(var(--s)*1.1547); 
+    display: inline-block;
+    font-size:initial;
+    clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+    background: rgba(69, 180, 69, 0.863);
+    margin-bottom: calc(var(--m) - var(--s)*0.2885);
+  }
+
+  div.hero.red {
+    background: red;
+  }
+
+  div.hero.blue {
+    background: rgb(0, 81, 255);
+  }
+
+  button.spell {
+    width: 100px;
+    height: 100px;
+    background-color: lightblue;
+    border-radius: 4px;
+    border-color: blue;
+    border-width: 1px;
+    box-shadow: 3px;
+  }
+
+  button.spell.cooldawn {
+    width: 100px;
+    height: 100px;
+    background-color: lightgray;
+    border-radius: 4px;
+    border-color: gray;
+    border-width: 1px;
+    box-shadow: 3px;
+  }
+
+  div.cooldawn {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    vertical-align: middle;
+    
+  }
+
+  p.cooldawn {
+    line-height: 0px;
+    font-size: 48px;
+    font-weight: bolder;
+    text-shadow: 0px 0px 10px black;
+    color: black;
+  }
+
+  
+ 
+  .container::before {
+    content: "";
+    width: calc(var(--s)/2 + var(--m));
+    float: left;
+    height: 120%;
+    shape-outside: repeating-linear-gradient(     
+        #000  0 calc(3px),      
+        #0000 0 calc(var(--f) + 3px));
+  }
+
+  div.hpbar {
+    width: 300px;
+    height: 30px;
+    background-color: rgb(238, 150, 150);
+    font-size: 26px;
+    text-align: center;
+  }
+
+  div.hpbarCurrent {
+    height: 30px;
+    background-color: red;
+    position: absolute; z-index: 1;
+  }
+
+  td.heroinfo {
+    width: 150px;
+    padding-left: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    display: inline-flex;
+  }
+
+  #heroinfo_icon {
+    width: 100px;
+    height: 100px;
+    background-color: red;
+    background-image: url(Angel.png);
+    background-size: cover;
+  }
+
+  
