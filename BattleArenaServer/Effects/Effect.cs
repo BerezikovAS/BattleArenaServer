@@ -11,8 +11,8 @@ namespace BattleArenaServer.Effects
         public int value {  get; set; }
         public int duration { get; set; }
 
-        public abstract void ApplyEffect(Hero _hero);
+        public abstract void ApplyEffect(Hero hero);
 
-        public abstract void RemoveEffect(Hero _hero);
+        public abstract void RemoveEffect(Hero hero);
     }
 }

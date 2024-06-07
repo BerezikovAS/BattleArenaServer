@@ -13,18 +13,24 @@ namespace BattleArenaServer.Skills
             coolDownNow = 0;
             requireAP = 0;
             nonTarget = true;
+            stats = new SkillStats(coolDown, requireAP, 0, 0);
         }
 
-        public ISkillCastRequest request => new NontargetCastRequest();
+        public new ISkillCastRequest request => new NontargetCastRequest();
 
         public override void Cancel()
         {
             throw new NotImplementedException();
         }
 
-        public override bool Cast(List<Hex> _hexes, int _target, int _caster)
+        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
         {
             return false;
+        }
+
+        public override bool UpgradeSkill()
+        {
+            throw new NotImplementedException();
         }
     }
 }

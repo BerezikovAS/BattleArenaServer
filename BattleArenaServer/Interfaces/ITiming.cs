@@ -6,6 +6,6 @@ namespace BattleArenaServer.Interfaces
     {
         public int EndTurn();
 
-        public void SetHeroList(List<Hero> _heroes);
+        public int GetActiveHero();
     }
 }

@@ -16,7 +16,7 @@ namespace BattleArenaServer.Models.Heroes
 
             AP = 4;
 
-            AttackRadius = 1;
+            AttackRadius = 2;
             Dmg = 94;
 
             SkillList[0] = new BlindingLight();

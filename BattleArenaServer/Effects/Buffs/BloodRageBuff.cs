@@ -1,0 +1,37 @@
+﻿using BattleArenaServer.Models;
+using BattleArenaServer.Services;
+
+namespace BattleArenaServer.Effects.Buffs
+{
+    public class BloodRageBuff : Effect
+    {
+        // Тот кого забафали и ему срезаем входящий дамаг
+        public BloodRageBuff(int _idCaster, int _value, int _duration)
+        {
+            Name = "BloodRage";
+            type = "buff";
+            idCaster = _idCaster;
+            value = _value;
+            duration = _duration;
+        }
+
+        public override void ApplyEffect(Hero _hero)
+        {
+            _hero.Dmg += value;
+            _hero.APtoAttack = 1;
+            _hero.afterAttack += AfterAttackDelegate;
+        }
+
+        public override void RemoveEffect(Hero _hero)
+        {
+            _hero.Dmg -= value;
+            _hero.APtoAttack = 2;
+            _hero.afterAttack -= AfterAttackDelegate;
+        }
+
+        private bool AfterAttackDelegate(Hero attacker, Hero defender, int dmg)
+        {
+            return AttackService.ApplyDamage(attacker, attacker, 40);
+        }
+    }
+}

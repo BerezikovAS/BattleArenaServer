@@ -4,7 +4,7 @@ namespace BattleArenaServer.Interfaces
 {
     public interface ISkillCastRequest
     {
-        public bool startRequest(List<Hex> _hexes, int _target, int _caster, Skill _skill);
+        public bool startRequest(Hero caster, Hero? target, Hex? targetHex, Skill skill);
 
         public void cancelRequest();
     }

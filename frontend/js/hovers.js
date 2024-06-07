@@ -58,36 +58,44 @@ function fillSpellAreaHovers(_spell) {
     hexes.forEach(el => {
         const _hexHover = document.getElementById(el.id);
             _hexHover.setAttribute("onmouseenter", "mouseSpellHoverIn(this, " + _spell +")");
-            //_hexHover.setAttribute("onmouseleave", "mouseSpellHoverOut()");
+            _hexHover.setAttribute("onmouseleave", "mouseSpellHoverOut(this, " + _spell +")");
+    });
+}
+
+// Функции выделения области действия способности
+function clearSpellAreaHovers() {
+    hexes.forEach(el => {
+        const _hexHover = document.getElementById(el.id);
+            _hexHover.removeAttribute("onmouseenter");
+            _hexHover.removeAttribute("onmouseleave");
     });
 }
 
 function mouseSpellHoverIn(_hex, _spell) {
-
     var spell = heroes[idActiveHero].skillList[_spell - 1];
     var spellArea = getHexesSpellArea(_hex.getAttribute("id"), heroes[idActiveHero].coordid, spell)
-
-    clearHovers();
 
     spellArea.forEach(el => {
         const _hexHover = document.getElementById(el);
         const attackImg = document.createElement("img");
         attackImg.setAttribute("src", "Attack.png");
-        attackImg.setAttribute("id", "attack" + el);
+        attackImg.setAttribute("class", "SpellHover");
         attackImg.setAttribute("style", "position: absolute; width: 100px;");
         _hexHover.appendChild(attackImg);
     });  
 }
 
+function mouseSpellHoverOut(_hex, _spell) {
+    for (let index = 0; index < 5; index++) {
+        clearHovers();        
+    }    
+}
+
 function clearHovers() {
-    hexes.forEach(el => {
-        const attackImg = document.getElementById("attack" + el.id);
-        if (attackImg != null || attackImg != undefined)
-        {
-            const _hexHover = document.getElementById(el.id);
-            _hexHover.removeChild(attackImg);
-        }
-    });
+    const attackImg = document.getElementsByClassName("SpellHover");
+    for (let el of attackImg) {
+        el.remove();
+    }
 }
 
 function clearHoversActions() {

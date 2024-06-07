@@ -12,27 +12,29 @@ namespace BattleArenaServer.Skills.Priest
         public Restoration()
         {
             name = "Restoration";
+            title = "Восстанавливает себе или союзнику 200 ХП и снимает негативные эффекты";
+            titleUpg = "-1 к стоимости в ОД, +1 к дальности";
             coolDown = 5;
             coolDownNow = 0;
             requireAP = 2;
             nonTarget = false;
             range = 2;
+            area = Consts.SpellArea.AllyTarget;
+            stats = new SkillStats(coolDown, requireAP, range, radius);
         }
 
-        public ISkillCastRequest request => new AllyTargetCastRequest();
+        public new ISkillCastRequest request => new AllyTargetCastRequest();
 
         public override void Cancel()
         {
             throw new NotImplementedException();
         }
 
-        public override bool Cast(List<Hex> _hexes, int _target, int _caster)
+        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
         {
-            if (request.startRequest(_hexes, _target, _caster, this))
+            if (request.startRequest(caster, target, targetHex, this))
             {
-                Hero caster = _hexes[_caster].HERO;
-                Hero target = _hexes[_target].HERO;
-                if (caster != null & target != null)
+                if (caster != null && target != null)
                 {
                     List<Effect> effects = new List<Effect>();
                     caster.AP -= requireAP;
@@ -53,6 +55,20 @@ namespace BattleArenaServer.Skills.Priest
                     coolDownNow = coolDown;
                     return true;
                 }
+            }
+            return false;
+        }
+
+        public override bool UpgradeSkill()
+        {
+            if (!upgraded)
+            {
+                upgraded = true;
+                requireAP -= 1;
+                stats.requireAP -= 1;
+                range += 1;
+                stats.range += 1;
+                return true;
             }
             return false;
         }

@@ -26,7 +26,7 @@
         </tr>
         <tr style="height: 30px;">
           <td>
-            <div class="hpbar">
+            <div id="hpbar" class="hpbar">
               <div id="heroinfo_hpbar" class="hpbarCurrent" style="width: 300px;"></div>
               <h id="heroinfo_hp" style="z-index: 2; position: relative;">1000</h>
             </div>          
@@ -41,10 +41,22 @@
     </div>
     <div id="AProw" style="padding-top: 60px; height: 50px; padding-bottom: 20px;"></div>
     <div class="bot" style="display: flex;">
-        <div onclick="castSpell(1)"><div class="cooldawn"><p class="cooldawn" id="cd1"></p></div><button id="spell1" class="spell">Spell1</button></div>
-        <div onclick="castSpell(2)"><div class="cooldawn"><p class="cooldawn" id="cd2"></p></div><button id="spell2" class="spell">Spell2</button></div>
-        <div onclick="castSpell(3)"><div class="cooldawn"><p class="cooldawn" id="cd3"></p></div><button id="spell3" class="spell">Spell3</button></div>
-        <div onclick="castSpell(4)"><div class="cooldawn"><p class="cooldawn" id="cd4"></p></div><button id="spell4" class="spell">Spell4</button></div>
+        <div>
+          <button id="upgrade1" class="upgrade" onclick="upgradeSkill(1)">+</button>
+          <div onclick="castSpell(1)" id="sp1"><div class="cooldawn"><p class="cooldawn" id="cd1"></p></div><button id="spell1" class="spell">Spell1</button></div>
+        </div>
+        <div>
+          <button id="upgrade2" class="upgrade" onclick="upgradeSkill(2)">+</button>
+          <div onclick="castSpell(2)" id="sp2"><div class="cooldawn"><p class="cooldawn" id="cd2"></p></div><button id="spell2" class="spell">Spell2</button></div>
+        </div>
+        <div>
+          <button id="upgrade3" class="upgrade" onclick="upgradeSkill(3)">+</button>
+          <div onclick="castSpell(3)" id="sp3"><div class="cooldawn"><p class="cooldawn" id="cd3"></p></div><button id="spell3" class="spell">Spell3</button></div>
+        </div>
+        <div>
+          <button id="upgrade4" class="upgrade" onclick="upgradeSkill(4)">+</button>
+          <div onclick="castSpell(4)" id="sp4"><div class="cooldawn"><p class="cooldawn" id="cd4"></p></div><button id="spell4" class="spell">Spell4</button></div>
+        </div>
         <button id="AP" style="border: 1px solid; width: 100px; font-size: medium; margin-left: 30px;" onclick="endTurn()"></button>
         <button style="border: 1px solid; width: 100px; font-size: medium; margin-left: 30px;" onclick="cancel()"></button>
     </div>

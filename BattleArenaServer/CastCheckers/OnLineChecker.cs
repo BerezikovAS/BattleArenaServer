@@ -6,17 +6,15 @@ namespace BattleArenaServer.CastCheckers
 {
     public class OnLineChecker : ICastChecker
     {
-        public ICastChecker nextChecker { get; set; }
+        public ICastChecker nextChecker { get; set; } = new TerminalChecker();
 
-        public bool Check(List<Hex> _hexes, int _target, int _caster, Skill _skill)
+        public bool Check(Hero caster, Hero? target, Hex? targetHex, Skill skill)
         {
-            UtilityService util = new UtilityService();
-            Hex? target = _hexes.FirstOrDefault(x => x.ID == _target);
-            Hex? caster = _hexes.FirstOrDefault(x => x.ID == _caster);
-            if (target != null && caster != null)
+            Hex? casterHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == caster.Id);
+            if (targetHex != null && casterHex != null)
             {
-                if (util.IsOnLine(caster, target))
-                    return nextChecker.Check(_hexes, _target, _caster, _skill);
+                if (UtilityService.IsOnLine(casterHex, targetHex))
+                    return nextChecker.Check(caster, target, targetHex, skill);
             }
             return false;
         }

@@ -6,32 +6,41 @@ namespace BattleArenaServer.Services
 {
     public class TimingService : ITiming
     {
-        private readonly IField _field;
         private int idActiveHero = 0;
-        private List<int> initList;
-        public List<Hero> heroList;
 
-        public TimingService(IField field)
+        public TimingService()
         {
-            _field = field;
-            heroList = field.GetHeroes();
+        }
+
+        public int GetActiveHero()
+        {
+            return idActiveHero;
         }
 
         public int EndTurn()
         {
-            DecreaseStatusDuration();
-            DecreaseSkillCooldawn(heroList.FirstOrDefault(x => x.Id == idActiveHero));
+            Hero? activeHero = GameData._heroes.FirstOrDefault(x => x.Id == idActiveHero);
+            if (activeHero != null)
+            {
+                DecreaseStatusDuration();
+                DecreaseSkillCooldawn(activeHero);
 
-            heroList.FirstOrDefault(x => x.Id == idActiveHero).AP = 4;
+                activeHero.AP = 4;
+                Hero? hero = null;
 
-            Hero hero = heroList.FirstOrDefault(x => x.Id > idActiveHero && x.HP > 0) ?? heroList.FirstOrDefault(x => x.Id < idActiveHero && x.HP > 0);
-            idActiveHero = hero == null ? -1 : hero.Id;
+                while (hero == null)
+                {
+                    idActiveHero++;
+                    hero = GameData._heroes.FirstOrDefault(x => x.Id == idActiveHero && x.HP > 0);
+                    idActiveHero = idActiveHero >= GameData._heroes.Count ? -1 : idActiveHero;
+                }
+            }            
             return idActiveHero;
         }
 
         public void DecreaseStatusDuration()
         {
-            foreach (var hero in heroList)
+            foreach (var hero in GameData._heroes)
             {
                 List<Effect> removeEffects = new List<Effect>();
                 foreach (var effect in hero.EffectList)
@@ -58,11 +67,6 @@ namespace BattleArenaServer.Services
                 if (skill.coolDownNow > 0)
                     skill.coolDownNow--;
             }
-        }
-
-        public void SetHeroList(List<Hero> _heroes)
-        {
-            //heroes = _heroes;
         }
     }
 }

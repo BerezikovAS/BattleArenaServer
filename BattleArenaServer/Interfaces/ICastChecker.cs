@@ -6,6 +6,6 @@ namespace BattleArenaServer.Interfaces
     {
         ICastChecker nextChecker { get; set; }
 
-        bool Check(List<Hex> _hexes, int _target, int _caster, Skill _skill);
+        bool Check(Hero caster, Hero? target, Hex? targetHex, Skill skill);
     }
 }
