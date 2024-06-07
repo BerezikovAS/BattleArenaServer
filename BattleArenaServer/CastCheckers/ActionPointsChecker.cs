@@ -5,15 +5,14 @@ namespace BattleArenaServer.CastCheckers
 {
     public class ActionPointsChecker : ICastChecker
     {
-        public ICastChecker nextChecker { get; set; }
+        public ICastChecker nextChecker { get; set; } = new TerminalChecker();
 
-        public bool Check(List<Hex> _hexes, int _target, int _caster, Skill _skill)
+        public bool Check(Hero caster, Hero? target, Hex? targetHex, Skill skill)
         {
-            Hero hero = _hexes[_caster].HERO;
-            if(hero != null)
+            if(caster != null)
             {
-                if(hero.AP >= _skill.requireAP)
-                    return nextChecker.Check(_hexes, _target, _caster, _skill);
+                if(caster.AP >= skill.requireAP)
+                    return nextChecker.Check(caster, target, targetHex, skill);
             }
             return false;
         }

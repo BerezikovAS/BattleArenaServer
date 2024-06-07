@@ -6,7 +6,7 @@
         int[] coord = new int[3];
         Hero? Hero { get; set; }
 
-        public Hex(int[] _coord) 
+        public Hex(int[] _coord)
         {
             coord = _coord;
             Hero = null;
@@ -26,53 +26,15 @@
 
         public int ID { get { return id; } }
 
-        public void setHero( Hero _hero )
+        public void setHero( Hero hero )
         {
-            Hero = _hero;
+            Hero = hero;
+            Hero.HexId = id;
         }
 
-        public void removeHero(bool _remove)
+        public void removeHero()
         {
-            if (_remove)
-                Hero = null;
-        }
-
-        public bool SetDamage(int _dmg, string _typeDmg)
-        {
-            if(Hero != null)
-            {
-                double totalDmg = 0;
-                switch (_typeDmg)
-                {
-                    case "phys":
-                        {
-                            int armor = Hero.Armor;
-                            totalDmg = _dmg * (1 - (0.1 * armor) / (1 + 0.1 * armor));
-                        }
-                        break;
-                    case "magic":
-                        {
-                            int resist = Hero.Resist;
-                            totalDmg = _dmg * (1 - (0.1 * resist) / (1 + 0.1 * resist));
-                        }
-                        break;
-                    case "pure":
-                        {
-                            totalDmg = _dmg;
-                        }
-                        break;
-                }
-
-                Hero.HP -= ((int)totalDmg);
-
-                if (Hero.HP <= 0)
-                {
-                    Hero = null;
-                    return true;
-                }
-                return false;
-            }
-            return false;
+            Hero = null;
         }
 
         public int Distance(Hex _hex)

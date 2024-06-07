@@ -11,5 +11,29 @@
             new Hex(new int[3]{ 0, -1, 1 })  //лево-верх    5
         };
 
+        public enum SpellArea
+        {
+            NonTarget,
+            AllyTarget,
+            EnemyTarget,
+            FriendTarget,
+            Radius,
+            Line,
+            Conus
+        }
+
+        public enum DamageType
+        {
+            Physical,
+            Magic,
+            Pure
+        }
+
+        public enum AuraType
+        {
+            Instant,
+            EndTurn,
+            StartTurn
+        }
     }
 }

@@ -11,34 +11,35 @@ namespace BattleArenaServer.Skills.Knight
         public HailStrike()
         {
             name = "Hail Strike";
-            coolDown = 5;
+            title = "Обрушивает мощный град на врагов в области, нанося 200 маг. урона каждому";
+            titleUpg = "+1 к радиусу, +1 к дальности";
+            coolDown = 0; //5;
             coolDownNow = 0;
-            requireAP = 2;
+            requireAP = 1; //2;
             nonTarget = false;
             range = 2;
             radius = 1;
+            area = Consts.SpellArea.Radius;
+            stats = new SkillStats(coolDown, requireAP, range, radius);
         }
 
-        public ISkillCastRequest request => new RangeAoECastRequest();
+        public new ISkillCastRequest request => new RangeAoECastRequest();
 
         public override void Cancel()
         {
             throw new NotImplementedException();
         }
 
-        public override bool Cast(List<Hex> _hexes, int _target, int _caster)
+        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
         {
-            if (request.startRequest(_hexes, _target, _caster, this))
+            if (request.startRequest(caster, target, targetHex, this))
             {
-                Hero caster = _hexes[_caster].HERO;
-                UtilityService util = new UtilityService();
-
-                if (caster != null)
+                if (caster != null && targetHex != null)
                 {
-                    foreach (var n in util.GetHexesRadius(_hexes, _target, radius))
+                    foreach (var n in UtilityService.GetHexesRadius(targetHex, radius))
                     {
                         if (n.HERO != null && n.HERO.Team != caster.Team)
-                            n.SetDamage(200, "magic");
+                            AttackService.SetDamage(caster, n.HERO, 200, Consts.DamageType.Magic);
                     }
                     caster.AP -= requireAP;
                     coolDownNow = coolDown;
@@ -48,14 +49,18 @@ namespace BattleArenaServer.Skills.Knight
             return false;
         }        
 
-        public void UpgradeSkill()
+        public override bool UpgradeSkill()
         {
             if (!upgraded)
             {
                 upgraded = true;
                 range += 1;
                 radius += 1;
+                stats.range += 1;
+                stats.radius += 1;
+                return true;
             }
+            return false;
         }
     }
 }

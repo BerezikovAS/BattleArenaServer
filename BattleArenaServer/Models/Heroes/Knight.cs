@@ -1,5 +1,7 @@
 ﻿using BattleArenaServer.Interfaces;
 using BattleArenaServer.Skills.Knight;
+using BattleArenaServer.Skills.KnightSkills;
+using BattleArenaServer.Skills.KnightSkills.Auras;
 
 namespace BattleArenaServer.Models.Heroes
 {
@@ -11,17 +13,20 @@ namespace BattleArenaServer.Models.Heroes
             Team = "blue";
 
             MaxHP = HP = 1000;
-            Armor = 6;
+            Armor = 5;
             Resist = 3;
 
             AP = 4;
 
-            AttackRadius = 3;
-            Dmg = 105;
+            AttackRadius = 1;
+            Dmg = 100;
 
             SkillList[0] = new SelfHeal();
-        }
+            SkillList[1] = new ShieldBash();
+            SkillList[2] = new BodyGuard();
+            SkillList[3] = new FormationAttack();
 
-        //public Skill Spell1 = new SelfHeal();
+            AuraList.Add(new HighShieldAura());
+        }
     }
 }

@@ -5,13 +5,13 @@ namespace BattleArenaServer.CastCheckers
 {
     public class SelfChecker : ICastChecker
     {
-        public ICastChecker nextChecker { get; set; }
+        public ICastChecker nextChecker { get; set; } = new TerminalChecker();
 
-        public bool Check(List<Hex> _hexes, int _target, int _caster, Skill _skill)
+        public bool Check(Hero caster, Hero? target, Hex? targetHex, Skill skill)
         {
-            if (_target != _caster)
+            if (target != null && target.Id != caster.Id)
                 return false;
-            return nextChecker.Check(_hexes, _target, _caster, _skill);
+            return nextChecker.Check(caster, target, targetHex, skill);
         }
     }
 }

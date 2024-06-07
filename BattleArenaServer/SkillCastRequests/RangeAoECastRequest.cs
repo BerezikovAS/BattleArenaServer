@@ -11,16 +11,16 @@ namespace BattleArenaServer.SkillCastRequests
             throw new NotImplementedException();
         }
 
-        public bool startRequest(List<Hex> _hexes, int _target, int _caster, Skill _skill)
+        public bool startRequest(Hero caster, Hero? target, Hex? targetHex, Skill skill)
         {
             ICastChecker coolDownChecker = new CooldownChecker();
-            ICastChecker rangeChecker = new RanageChecker();
+            ICastChecker rangeChecker = new RangeChecker();
             ICastChecker actionPointsChecker = new ActionPointsChecker();
 
             coolDownChecker.nextChecker = rangeChecker;
             rangeChecker.nextChecker = actionPointsChecker;
             actionPointsChecker.nextChecker = new TerminalChecker();
-            return coolDownChecker.Check(_hexes, _target, _caster, _skill);
+            return coolDownChecker.Check(caster, target, targetHex, skill);
         }
     }
 }

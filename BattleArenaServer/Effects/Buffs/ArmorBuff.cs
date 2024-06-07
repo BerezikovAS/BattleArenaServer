@@ -6,7 +6,7 @@ namespace BattleArenaServer.Effects.Buffs
     {
         public ArmorBuff(int _idCaster, int _value, int _duration)
         {
-            Name = "IncreaseArmor";
+            Name = "AddArmor";
             type = "buff";
             idCaster = _idCaster;
             value = _value;

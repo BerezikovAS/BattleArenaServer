@@ -5,7 +5,6 @@ function httpGet(theUrl)
     xmlHttp.send( null );
     return xmlHttp.responseText;
 }
-
 const field = document.getElementById("field");
 var hexes = [];
 var heroes = [];
@@ -14,9 +13,15 @@ var hero;
 var idActiveHero = 0;
 var idCastingSpell = -1;
 
-fetch("https://localhost:7241/Field/GetField")
-    .then(response => response.json())
-    .then(coord => feelField(coord));
+window.onload = async function() {
+    idActiveHero = await getActiveHero();
+    console.log(idActiveHero + "   onload");
+
+    fetch("https://localhost:7241/Field/GetField")
+        .then(response => response.json())
+        .then(coord => feelField(coord));
+}
+
 
 function feelField(_field) {
     if(_field.length < 1)
@@ -26,6 +31,8 @@ function feelField(_field) {
         field.removeChild(field.firstChild);
     }
     
+    
+
     hexes = [];
     heroes = [];
     _field.forEach(element => {
@@ -51,6 +58,8 @@ function feelField(_field) {
 
             hex.appendChild(teamImg);
             hex.appendChild(heroImg);
+
+            fillEffectsOnHex(hex, element.hero)
             
             element.hero.coordid = element.id;
             heroes.push(element.hero);
@@ -62,13 +71,16 @@ function feelField(_field) {
     heroes = heroes.toSorted((a, b) => a.id - b.id);
     
     hero = heroes.find(x => x.id === idActiveHero);
+    enableUpgrades(hero);
     //btnEndTurn.innerText = hero.ap;
     feelActiveHeroInfo(hero);
-
+console.log(heroes);
     fillFootHovers(hexes[hero.coordid], hexes);
+    enableSpells(hero);
 }
 
 function hexClick(_hex) {
+    console.log(idCastingSpell + "   " + _hex.getAttribute("id"));
     if (idCastingSpell >= 0) {
         console.log("casting spell " + idCastingSpell)
         castSpell(idCastingSpell, _hex.getAttribute("id"));
@@ -94,4 +106,5 @@ function cancel() {
     hero = heroes.find(x => x.id === idActiveHero);
     console.log(hexes[idActiveHero]);
     fillFootHovers(hexes[hero.coordid], hexes);
+    enableSpells(hero);
 }

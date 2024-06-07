@@ -41,6 +41,16 @@
     box-shadow: 3px;
   }
 
+  button.spellActive {
+    width: 100px;
+    height: 100px;
+    background-color: rgb(220, 226, 161);
+    border-radius: 4px;
+    border-color: rgb(165, 184, 1);
+    border-width: 1px;
+    box-shadow: 3px;
+  }
+
   button.spell.cooldawn {
     width: 100px;
     height: 100px;
@@ -49,6 +59,11 @@
     border-color: gray;
     border-width: 1px;
     box-shadow: 3px;
+  }
+
+  button.upgrade {
+    width: 100px;
+    height: 25px;
   }
 
   div.cooldawn {
@@ -83,16 +98,22 @@
   div.hpbar {
     width: 300px;
     height: 30px;
-    background-color: rgb(238, 150, 150);
+    /* background-color: rgb(238, 150, 150); */
     font-size: 26px;
     text-align: center;
   }
 
   div.hpbarCurrent {
     height: 30px;
-    background-color: red;
+    /* background-color: red; */
     position: absolute; z-index: 1;
   }
+
+  /* div.hpbarCurrent {
+    height: 30px;
+    background-color: blue;
+    position: absolute; z-index: 1;
+  } */
 
   td.heroinfo {
     width: 150px;

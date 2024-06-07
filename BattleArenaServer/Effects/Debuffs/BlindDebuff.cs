@@ -1,12 +1,11 @@
 ﻿using BattleArenaServer.Models;
 
-namespace BattleArenaServer.Effects.Buffs
+namespace BattleArenaServer.Effects.Debuffs
 {
-    public class Blind : Effect
+    public class BlindDebuff : Effect
     {
         int prevRange = 0;
-        List<int> prevSkillRange = new List<int>();
-        public Blind(int _idCaster, int _value, int _duration)
+        public BlindDebuff(int _idCaster, int _value, int _duration)
         {
             Name = "Blind";
             type = "debuff";
@@ -22,7 +21,6 @@ namespace BattleArenaServer.Effects.Buffs
 
             foreach (var skill in _hero.SkillList)
             {
-                prevSkillRange.Add(skill.range);
                 skill.range = 1;
             }
         }
@@ -30,11 +28,9 @@ namespace BattleArenaServer.Effects.Buffs
         public override void RemoveEffect(Hero _hero)
         {
             _hero.AttackRadius = prevRange;
-            int i = 0;
             foreach (var skill in _hero.SkillList)
             {
-                skill.range = prevSkillRange[i];
-                i++;
+                skill.range = skill.stats.range;
             }
         }
     }

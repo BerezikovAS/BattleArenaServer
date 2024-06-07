@@ -1,28 +1,24 @@
 ﻿using BattleArenaServer.Models;
-using System.Text.RegularExpressions;
 
 namespace BattleArenaServer.Services
 {
-    public class UtilityService
+    public static class UtilityService
     {
-        public UtilityService() { }
-
-        public List<Hex> GetHexesRadius(List<Hex> _hexes, int _idhex, int _radius)
+        public static List<Hex> GetHexesRadius(Hex targetHex, int radius)
         {
             List<Hex> hexesRadius = new List<Hex>();
-            Hex? hex = _hexes.FirstOrDefault(x => x.ID == _idhex);
-            if(hex != null)
+            if(targetHex != null)
             {
-                foreach (var n in _hexes)
+                foreach (var n in GameData._hexes)
                 {
-                    if(n.Distance(hex) <= _radius)
+                    if(n.Distance(targetHex) <= radius)
                         hexesRadius.Add(n);
                 }
             }
             return hexesRadius;
         }
 
-        public List<Hex> GetHexesLines(List<Hex> _hexes, int _idhex, int _radius = 100)
+        public static List<Hex> GetHexesLines(List<Hex> _hexes, int _idhex, int _radius = 100)
         {
             List<Hex> hexesLines = new List<Hex>();
             Hex? hex = _hexes.FirstOrDefault(x => x.ID == _idhex);
@@ -37,22 +33,21 @@ namespace BattleArenaServer.Services
             return hexesLines;
         }
 
-        public List<Hex> GetHexesOneLine(List<Hex> _hexes, int _idhex, int _direction, int _radius = 100)
+        public static List<Hex> GetHexesOneLine(Hero caster, Hex target, int radius = 100)
         {
             List<Hex> hexesLines = new List<Hex>();
-            Hex? hex = _hexes.FirstOrDefault(x => x.ID == _idhex);
-            Hex? dir = _hexes.FirstOrDefault(x => x.ID == _direction);
-            if (hex != null & dir != null)
+            Hex? hex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == caster.Id);
+            if (hex != null && target != null)
             {
-                if (IsOnLine(hex, dir))
+                if (IsOnLine(hex, target))
                 {
-                    Hex direction = GetDirection(hex, dir);
+                    Hex direction = GetDirection(hex, target);
                     bool endOfField = false;
                     int counter = 1;
 
-                    while(hexesLines.Count < _radius && !endOfField)
+                    while(hexesLines.Count < radius && !endOfField)
                     {
-                        Hex? findHex = _hexes.FirstOrDefault(x => x.COORD[0] == hex.COORD[0] + direction.COORD[0] * counter
+                        Hex? findHex = GameData._hexes.FirstOrDefault(x => x.COORD[0] == hex.COORD[0] + direction.COORD[0] * counter
                             & x.COORD[1] == hex.COORD[1] + direction.COORD[1] * counter
                             & x.COORD[2] == hex.COORD[2] + direction.COORD[2] * counter);
                         if (findHex != null)
@@ -67,7 +62,7 @@ namespace BattleArenaServer.Services
             return hexesLines;
         }
 
-        public bool IsOnLine(Hex h1, Hex h2)
+        public static bool IsOnLine(Hex h1, Hex h2)
         {
             if (h1.Equals(h2))
                 return false;
@@ -80,7 +75,7 @@ namespace BattleArenaServer.Services
             return false;
         }
 
-        public Hex GetDirection(Hex h1, Hex h2)
+        public static Hex GetDirection(Hex h1, Hex h2)
         {
             int dist = h1.Distance(h2);
             int coordX = (h2.COORD[0] - h1.COORD[0]) / dist;
@@ -89,6 +84,5 @@ namespace BattleArenaServer.Services
             Hex direction = new Hex(coordX, coordY, coordZ, -1);
             return direction;
         }
-
     }
 }

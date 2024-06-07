@@ -7,7 +7,7 @@ namespace BattleArenaServer.CastCheckers
     {
         public ICastChecker nextChecker { get; set; }
 
-        public bool Check(List<Hex> _hexes, int _target, int _caster, Skill _skill)
+        public bool Check(Hero caster, Hero? target, Hex? targetHex, Skill skill)
         {
             return true;
         }
