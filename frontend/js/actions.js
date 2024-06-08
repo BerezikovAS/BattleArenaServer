@@ -29,8 +29,6 @@ function attackHero(_hero, _hex) {
 
 function endTurn() {
     fetch("https://localhost:7241/Timing/EndTurn")
-    .then(response => response.json())
-    .then(init => idActiveHero = init)
     .then(init => getField()) ;
 }
 
@@ -48,7 +46,8 @@ function upgradeSkill(_skill) {
 
 function castSpell(_spell, _target = -1)
 {
-    var _hero = heroes[idActiveHero];
+    var _hero = heroes.find(x => x.id === idActiveHero);
+
     if (_hero.skillList[_spell - 1].requireAP > _hero.ap)
         return;
 

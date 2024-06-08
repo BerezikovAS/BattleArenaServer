@@ -16,9 +16,9 @@ namespace BattleArenaServer.Controllers
 
         // GET: TimingController/EndTurn
         [HttpGet]
-        public int EndTurn()
+        public void EndTurn()
         {
-            return _timingService.EndTurn();
+            _timingService.EndTurn();
         }
 
         // GET: TimingController/GetActiveHero

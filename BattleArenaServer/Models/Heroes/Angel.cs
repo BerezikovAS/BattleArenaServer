@@ -1,5 +1,6 @@
 ﻿using BattleArenaServer.Skills.Knight;
 using BattleArenaServer.Skills.Priest;
+using BattleArenaServer.Skills.PriestSkills;
 
 namespace BattleArenaServer.Models.Heroes
 {
@@ -21,6 +22,7 @@ namespace BattleArenaServer.Models.Heroes
 
             SkillList[0] = new SelfHeal();
             SkillList[1] = new Smight();
+            SkillList[2] = new Condemnation();
         }
     }
 }

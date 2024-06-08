@@ -4,7 +4,7 @@ namespace BattleArenaServer.Interfaces
 {
     public interface ITiming
     {
-        public int EndTurn();
+        public void EndTurn();
 
         public int GetActiveHero();
     }

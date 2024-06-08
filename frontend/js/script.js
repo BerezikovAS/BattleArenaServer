@@ -23,7 +23,7 @@ window.onload = async function() {
 }
 
 
-function feelField(_field) {
+async function feelField(_field) {
     if(_field.length < 1)
         return 0;
 
@@ -69,12 +69,17 @@ function feelField(_field) {
         hexes.push(element);
     });
     heroes = heroes.toSorted((a, b) => a.id - b.id);
-    
+    idActiveHero = await getActiveHero();
+
+    //console.log("ID hero turn - " + idActiveHero);
+
     hero = heroes.find(x => x.id === idActiveHero);
+    //console.log(hero);
+
+
     enableUpgrades(hero);
     //btnEndTurn.innerText = hero.ap;
     feelActiveHeroInfo(hero);
-console.log(heroes);
     fillFootHovers(hexes[hero.coordid], hexes);
     enableSpells(hero);
 }

@@ -25,11 +25,6 @@ namespace BattleArenaServer.Skills.Priest
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override void Cancel()
-        {
-            throw new NotImplementedException();
-        }
-
         public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
         {
             if (request.startRequest(caster, target, targetHex, this))

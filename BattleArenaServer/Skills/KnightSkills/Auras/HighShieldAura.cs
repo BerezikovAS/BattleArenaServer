@@ -10,7 +10,7 @@ namespace BattleArenaServer.Skills.KnightSkills.Auras
         {
             Name = "HighShieldAura";
             radius = 1;
-            type = Consts.AuraType.Instant;
+            type = Consts.AuraType.Continuous;
         }
 
         public override void ApplyEffect(Hero source, Hero target)

@@ -38,37 +38,57 @@ namespace BattleArenaServer.Services
 
         public static bool ApplyDamage(Hero attacker, Hero defender, int dmg)
         {
+            // Добавляем модификатор получаемого урона
+            dmg += defender.modifierAppliedDamage(attacker, defender, dmg);
+
             defender.HP -= dmg;
 
             if (defender.HP <= 0)
             {
                 Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == defender.HexId);
                 if (hex != null)
-                    hex.removeHero();
-                GameData._heroes.Remove(defender);
+                    hex.RemoveHero();
+                //GameData._heroes.Remove(defender);
                 return true;
             }
             return false;
         }
 
-        public static void InstantAuraAction(Hero auraSource)
+        public static void ContinuousAuraAction()
         {
-            foreach (var aura in auraSource.AuraList)
+            foreach (var hero in GameData._heroes)
             {
-                if (aura.type == Consts.AuraType.Instant)
+                foreach (var aura in hero.AuraList)
                 {
-                    Hex? hexSource = GameData._hexes.FirstOrDefault(x => x.ID == auraSource.HexId);
+                    if (aura.type == Consts.AuraType.Continuous)
+                    {
+                        aura.CancelEffect();
+                        Hex? hexSource = GameData._hexes.FirstOrDefault(x => x.ID == hero.HexId);
+                        if (hexSource != null)
+                            aura.SetEffect(hero, hexSource);
+                    }
+                }                
+            }
+        }
+
+        public static void EndTurnAuraAction(Hero sourceAura)
+        {
+            foreach (var aura in sourceAura.AuraList)
+            {
+                if (aura.type == Consts.AuraType.EndTurn)
+                {
+                    Hex? hexSource = GameData._hexes.FirstOrDefault(x => x.ID == sourceAura.HexId);
                     if (hexSource != null)
-                        aura.SetEffect(auraSource, hexSource);
+                        aura.SetEffect(sourceAura, hexSource);
                 }
             }
         }
 
         public static void MoveHero(Hero hero, Hex currentHex, Hex targetHex)
         {
-            targetHex.setHero(hero);
-            currentHex.removeHero();
-            InstantAuraAction(hero);
+            targetHex.SetHero(hero);
+            currentHex.RemoveHero();
+            ContinuousAuraAction();
         }
     }
 }

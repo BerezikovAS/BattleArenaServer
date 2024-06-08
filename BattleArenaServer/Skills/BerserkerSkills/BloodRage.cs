@@ -24,11 +24,6 @@ namespace BattleArenaServer.Skills.BerserkerSkills
 
         public new ISkillCastRequest request => new NontargetCastRequest();
 
-        public override void Cancel()
-        {
-            throw new NotImplementedException();
-        }
-
         public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
         {
             if (request.startRequest(caster, target, targetHex, this))

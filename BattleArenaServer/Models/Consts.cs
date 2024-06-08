@@ -31,7 +31,7 @@
 
         public enum AuraType
         {
-            Instant,
+            Continuous,
             EndTurn,
             StartTurn
         }

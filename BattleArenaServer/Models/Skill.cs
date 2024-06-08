@@ -21,8 +21,6 @@ namespace BattleArenaServer.Models
 
         public abstract bool Cast(Hero caster, Hero? target, Hex? targetHex);
         
-        public abstract void Cancel();
-        
         public abstract bool UpgradeSkill();
 
         public ISkillCastRequest request { get; set; } = new NontargetCastRequest();

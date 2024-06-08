@@ -8,7 +8,7 @@ namespace BattleArenaServer.Models
         public string title { get; set; } = "Заглушка";
         public string titleUpg { get; set; } = "Заглушка";
         public int radius { get; set; } = 0;
-        public Consts.AuraType type { get; set; } = Consts.AuraType.Instant;
+        public Consts.AuraType type { get; set; } = Consts.AuraType.Continuous;
 
         public abstract void ApplyEffect(Hero source, Hero target);
         public abstract void CancelEffect();
