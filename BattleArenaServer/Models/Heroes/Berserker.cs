@@ -30,10 +30,9 @@ namespace BattleArenaServer.Models.Heroes
             passiveAttackDamage += BattleTrance;
         }
 
-        private int BattleTrance(Hero attacker, Hero defender)
+        private int BattleTrance(Hero attacker, Hero? defender)
         {
             Hex? attackerHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == attacker.Id);
-            Hex? defenderHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == defender.Id);
 
             int enemiesCount = 0;
             double extraDmg = 0;

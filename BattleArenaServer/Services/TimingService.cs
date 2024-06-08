@@ -17,11 +17,12 @@ namespace BattleArenaServer.Services
             return idActiveHero;
         }
 
-        public int EndTurn()
+        public void EndTurn()
         {
             Hero? activeHero = GameData._heroes.FirstOrDefault(x => x.Id == idActiveHero);
             if (activeHero != null)
             {
+                AttackService.EndTurnAuraAction(activeHero);
                 DecreaseStatusDuration();
                 DecreaseSkillCooldawn(activeHero);
 
@@ -35,7 +36,6 @@ namespace BattleArenaServer.Services
                     idActiveHero = idActiveHero >= GameData._heroes.Count ? -1 : idActiveHero;
                 }
             }            
-            return idActiveHero;
         }
 
         public void DecreaseStatusDuration()

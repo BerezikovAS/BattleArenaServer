@@ -34,11 +34,14 @@ namespace BattleArenaServer.Models
         public delegate int PassiveResistance(Hero attacker, Hero defender);
         public PassiveResistance passiveResistance = delegate { return 0; };
 
-        public delegate int PassiveAttackDamage(Hero attacker, Hero defender);
+        public delegate int PassiveAttackDamage(Hero attacker, Hero? defender);
         public PassiveAttackDamage passiveAttackDamage = delegate { return 0; };
 
-        public delegate bool AfterAttack(Hero attacker, Hero defender, int dmg);
+        public delegate bool AfterAttack(Hero attacker, Hero? defender, int dmg);
         public AfterAttack afterAttack = delegate { return false; };
+
+        public delegate int ModifierAppliedDamage(Hero attacker, Hero defender, int dmg);
+        public ModifierAppliedDamage modifierAppliedDamage = delegate { return 0; };
 
         public void Heal(int _heal)
         {

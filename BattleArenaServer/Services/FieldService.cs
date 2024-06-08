@@ -36,20 +36,18 @@ namespace BattleArenaServer.Services
             Hero hero2 = new Angel();
             Hero hero3 = new Berserker();
             Hero hero4 = new Priest();
-            GameData._hexes[0].setHero(hero1);
-            GameData._hexes[1].setHero(hero2);
-            GameData._hexes[7].setHero(hero3);
-            GameData._hexes[8].setHero(hero4);
+            GameData._hexes[0].SetHero(hero1);
+            GameData._hexes[2].SetHero(hero2);
+            GameData._hexes[30].SetHero(hero3);
+            GameData._hexes[32].SetHero(hero4);
 
             GameData._heroes.Add(hero1);
             GameData._heroes.Add(hero2);
             GameData._heroes.Add(hero3);
             GameData._heroes.Add(hero4);
 
-            foreach (var hero in GameData._heroes)
-            {
-                AttackService.InstantAuraAction(hero);
-            }
+            // Применяем эффекты постоянных аур сразу
+            AttackService.ContinuousAuraAction();
         }
 
         public List<Hex> GetField()
@@ -84,6 +82,7 @@ namespace BattleArenaServer.Services
 
             if (hexCurrent != null && hexTarget != null && hexCurrent.HERO != null)
             {
+                // Перемещаемся строго на одну клеточку. Если стоим в рутах, то двигаться нельзя
                 if (hexCurrent.Distance(hexTarget) != 1 || hexCurrent.HERO.AP < 1 || hexCurrent.HERO.EffectList.FirstOrDefault(x => x.Name == "Root") != null)
                     return new List<Hex>();
 

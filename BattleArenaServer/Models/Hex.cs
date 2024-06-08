@@ -2,52 +2,52 @@
 {
     public class Hex
     {
-        int id = 0;
-        int[] coord = new int[3];
+        int _id = 0;
+        int[] _coord = new int[3];
         Hero? Hero { get; set; }
 
-        public Hex(int[] _coord)
+        public Hex(int[] coord)
         {
-            coord = _coord;
+            _coord = coord;
             Hero = null;
-            id = 0;
+            _id = 0;
         }
 
-        public Hex(int _coordX, int _coordY, int _coordZ, int _id)
+        public Hex(int coordX, int coordY, int coordZ, int id)
         {
-            coord = new int[3] {_coordX, _coordY, _coordZ};
+            _coord = new int[3] {coordX, coordY, coordZ};
             Hero = null;
-            id = _id;
+            _id = id;
         }
 
-        public int[] COORD { get { return coord; } }
+        public int[] COORD { get { return _coord; } }
 
         public Hero? HERO {  get { return Hero; } }
 
-        public int ID { get { return id; } }
+        public int ID { get { return _id; } }
 
-        public void setHero( Hero hero )
+        public void SetHero( Hero hero )
         {
             Hero = hero;
-            Hero.HexId = id;
+            Hero.HexId = _id;
         }
 
-        public void removeHero()
+        public void RemoveHero()
         {
             Hero = null;
         }
 
-        public int Distance(Hex _hex)
+        public int Distance(Hex hex)
         {
             int[] x = new int[3];
-            x[0] = coord[0];
-            x[1] = coord[1];
-            x[2] = coord[2];
+            x[0] = _coord[0];
+            x[1] = _coord[1];
+            x[2] = _coord[2];
 
             int[] y = new int[3];
-            y[0] = _hex.COORD[0];
-            y[1] = _hex.COORD[1];
-            y[2] = _hex.COORD[2];
+            y[0] = hex.COORD[0];
+            y[1] = hex.COORD[1];
+            y[2] = hex.COORD[2];
 
             x[0] -= y[0];
             x[1] -= y[1];

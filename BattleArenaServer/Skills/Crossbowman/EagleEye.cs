@@ -3,27 +3,30 @@ using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
+using System.Xml.Linq;
+using System;
 
-namespace BattleArenaServer.Skills.Priest
+namespace BattleArenaServer.Skills.Crossbowman
 {
-    public class BlindingLight : Skill
+    public class EagleEye : Skill
     {
-        public BlindingLight()
+        int decreaseArmor = 2;
+        public EagleEye()
         {
-            name = "BlindingLight";
-            title = "Враги в области действия теряют 100 ХП и получают ослепление";
-            titleUpg = "-1 к перезарядке, +1 к дальности";
-            coolDown = 4;
+            name = "EagleEye";
+            title = $"Увеличивает дальность атаки на 1 и урон на 20.";
+            titleUpg = "+";
+            coolDown = 3;
             coolDownNow = 0;
-            requireAP = 2;
+            requireAP = 1;
             nonTarget = false;
-            range = 2;
-            radius = 1;
+            radius = 2;
+            range = 0;
             area = Consts.SpellArea.Radius;
             stats = new SkillStats(coolDown, requireAP, range, radius);
         }
 
-        public new ISkillCastRequest request => new RangeAoECastRequest();
+        public new ISkillCastRequest request => new NonTargerAoECastRequest();
 
         public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
         {
@@ -35,10 +38,13 @@ namespace BattleArenaServer.Skills.Priest
                     {
                         if (n.HERO != null && n.HERO.Team != caster.Team)
                         {
-                            BlindDebuff blindDebuff = new BlindDebuff(caster.Id, 0, 2);
-                            n.HERO.EffectList.Add(blindDebuff);
-                            blindDebuff.ApplyEffect(n.HERO);
-                            AttackService.SetDamage(caster, n.HERO, 100, Consts.DamageType.Pure);
+                            int decrArmor = decreaseArmor;
+                            if (upgraded && targetHex.Distance(n) == 1)
+                                decrArmor = 2 * decreaseArmor;
+
+                            ArmorDebuff armorDebuff = new ArmorDebuff(caster.Id, decrArmor, 2);
+                            n.HERO.EffectList.Add(armorDebuff);
+                            armorDebuff.ApplyEffect(n.HERO);
                         }
                     }
                     caster.AP -= requireAP;
@@ -54,9 +60,7 @@ namespace BattleArenaServer.Skills.Priest
             if (!upgraded)
             {
                 upgraded = true;
-                range += 1;
                 coolDown -= 1;
-                stats.range += 1;
                 stats.coolDown -= 1;
                 return true;
             }

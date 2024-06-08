@@ -26,11 +26,6 @@ namespace BattleArenaServer.Skills.KnightSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override void Cancel()
-        {
-            throw new NotImplementedException();
-        }
-
         public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
         {
             int alliesCount = 0;
