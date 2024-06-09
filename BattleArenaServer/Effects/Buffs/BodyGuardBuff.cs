@@ -17,16 +17,16 @@ namespace BattleArenaServer.Effects.Buffs
 
         public override void ApplyEffect(Hero _hero)
         {
-            _hero.Armor += value;
-            _hero.Resist += value;
+            _hero.StatsEffect.Armor += value;
+            _hero.StatsEffect.Resist += value;
             _hero.applyDamage -= AttackService.ApplyDamage;
             _hero.applyDamage += ApplyDamageDelgate;
         }
 
         public override void RemoveEffect(Hero _hero)
         {
-            _hero.Armor -= value;
-            _hero.Resist -= value;
+            _hero.StatsEffect.Armor -= value;
+            _hero.StatsEffect.Resist -= value;
             _hero.applyDamage -= ApplyDamageDelgate;
             _hero.applyDamage += AttackService.ApplyDamage;
         }

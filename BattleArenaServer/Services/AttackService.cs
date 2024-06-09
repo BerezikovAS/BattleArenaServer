@@ -14,13 +14,13 @@ namespace BattleArenaServer.Services
                 {
                     case DamageType.Physical:
                         {
-                            int armor = defender.Armor + defender.passiveArmor(attacker, defender);
+                            int armor = defender.Armor + defender.StatsEffect.Armor + defender.passiveArmor(attacker, defender);
                             totalDmg = dmg * (1 - (0.1 * armor) / (1 + 0.1 * armor));
                         }
                         break;
                     case DamageType.Magic:
                         {
-                            int resist = defender.Resist + defender.passiveResistance(attacker, defender);
+                            int resist = defender.Resist + defender.StatsEffect.Resist + defender.passiveResistance(attacker, defender);
                             totalDmg = dmg * (1 - (0.1 * resist) / (1 + 0.1 * resist));
                         }
                         break;

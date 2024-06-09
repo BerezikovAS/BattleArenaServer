@@ -43,7 +43,7 @@ namespace BattleArenaServer.Models.Heroes
                     if (n.HERO != null && n.HERO.Team != attacker.Team)
                         enemiesCount++;
                 }
-                extraDmg = attacker.Dmg * ((enemiesCount - 1) * 0.2);
+                extraDmg = (attacker.Dmg + attacker.StatsEffect.Dmg) * ((enemiesCount - 1) * 0.2);
                 return (int)(Math.Round(extraDmg));
             }
             return 0;
