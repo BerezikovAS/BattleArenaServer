@@ -25,6 +25,8 @@ namespace BattleArenaServer.Models
 
         public int UpgradePoints { get; set; } = 0;
 
+        public StatsEffect StatsEffect { get; set; } = new StatsEffect();
+
         public delegate bool ApplyDamage(Hero attacker, Hero defender, int dmg);
         public ApplyDamage applyDamage = AttackService.ApplyDamage;
 

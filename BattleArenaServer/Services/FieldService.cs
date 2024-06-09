@@ -15,12 +15,12 @@ namespace BattleArenaServer.Services
                 GameData._hexes.Add(hex);
                 switch (i) 
                 {
-                    case 6: _start = new int[3] { -2, -2, 4 }; break;
-                    case 14: _start = new int[3] { -2, -1, 3 }; break;
-                    case 21: _start = new int[3] { -3, 0, 3 }; break;
-                    case 29: _start = new int[3] { -3, 1, 2 }; break;
-                    case 36: _start = new int[3] { -4, 2, 2 }; break;
-                    case 44: _start = new int[3] { -4, 3, 1 }; break;
+                    case 6: _start = [-2, -2, 4]; break;
+                    case 14: _start = [-2, -1, 3]; break;
+                    case 21: _start = [-3, 0, 3]; break;
+                    case 29: _start = [-3, 1, 2]; break;
+                    case 36: _start = [-4, 2, 2]; break;
+                    case 44: _start = [-4, 3, 1]; break;
                     default:
                     {
                         _start[0] += Consts.directions[1].COORD[0];
@@ -33,9 +33,10 @@ namespace BattleArenaServer.Services
 
             // Создание и размещение героев на поле. (Для тестов)
             Hero hero1 = new Knight();
-            Hero hero2 = new Angel();
+            Hero hero2 = new Crossbowman();
             Hero hero3 = new Berserker();
             Hero hero4 = new Priest();
+            hero4.Armor = 0;
             GameData._hexes[0].SetHero(hero1);
             GameData._hexes[2].SetHero(hero2);
             GameData._hexes[30].SetHero(hero3);
@@ -100,14 +101,17 @@ namespace BattleArenaServer.Services
 
             if (hexCurrent != null && hexTarget != null && hexCurrent.HERO != null && hexTarget.HERO != null)
             {
-                if (hexCurrent.Distance(hexTarget) > hexCurrent.HERO.AttackRadius || hexCurrent.HERO.AP < hexCurrent.HERO.APtoAttack)
+                Hero attacker = hexCurrent.HERO;
+                Hero defender = hexTarget.HERO;
+                if (hexCurrent.Distance(hexTarget) > attacker.AttackRadius + attacker.StatsEffect.AttackRadius || attacker.AP < attacker.APtoAttack)
                     return new List<Hex>();
 
-                hexCurrent.HERO.AP -= hexCurrent.HERO.APtoAttack;
+                attacker.AP -= attacker.APtoAttack;
                 // К урону добавляем дополнительный от пассивок и эффектов
-                AttackService.SetDamage(hexCurrent.HERO, hexTarget.HERO, hexCurrent.HERO.Dmg + hexCurrent.HERO.passiveAttackDamage(hexCurrent.HERO, hexTarget.HERO), Consts.DamageType.Physical);
+                int dmg = attacker.Dmg + attacker.passiveAttackDamage(attacker, defender) + attacker.StatsEffect.Dmg;
+                AttackService.SetDamage(attacker, defender, dmg, Consts.DamageType.Physical);
                 // Применяем эффекты после атаки
-                hexCurrent.HERO.afterAttack(hexCurrent.HERO, hexTarget.HERO, hexCurrent.HERO.Dmg + hexCurrent.HERO.passiveAttackDamage(hexCurrent.HERO, hexTarget.HERO));
+                attacker.afterAttack(attacker, defender, dmg);
             }
 
             return GameData._hexes;

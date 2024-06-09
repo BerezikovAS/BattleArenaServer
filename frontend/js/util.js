@@ -209,16 +209,18 @@ function feelHeroInfo(_hex) {
     icon.setAttribute("style", "background-image: url(" + _hero.name + ".png); background-color: "+ _hero.team);
 
     const dmg = document.getElementById("heroinfo_damage");
-    dmg.innerText = _hero.dmg;
+    dmg.innerText = _hero.dmg + _hero.statsEffect.dmg;
 
     const range = document.getElementById("heroinfo_range");
-    range.innerText = _hero.attackRadius;
+    range.innerText = _hero.attackRadius + _hero.statsEffect.attackRadius;
 
     const armor = document.getElementById("heroinfo_armor");
-    armor.innerText = _hero.armor + " (" + getPercentResist(_hero.armor) + ")";
+    var totalArmor = _hero.armor + _hero.statsEffect.armor;
+    armor.innerText = totalArmor + " (" + getPercentResist(totalArmor) + ")";
 
     const resist = document.getElementById("heroinfo_resist");
-    resist.innerText = _hero.resist + " (" + getPercentResist(_hero.resist) + ")";
+    var totalResist = _hero.resist + _hero.statsEffect.resist;
+    resist.innerText = totalResist + " (" + getPercentResist(totalResist) + ")";
 
     const hp = document.getElementById("heroinfo_hp");
     hp.innerText = _hero.hp;

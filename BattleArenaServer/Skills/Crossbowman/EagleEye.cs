@@ -1,52 +1,38 @@
-﻿using BattleArenaServer.Effects.Debuffs;
-using BattleArenaServer.Interfaces;
+﻿using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
-using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
-using System.Xml.Linq;
-using System;
+using BattleArenaServer.Effects.Buffs;
 
 namespace BattleArenaServer.Skills.Crossbowman
 {
     public class EagleEye : Skill
     {
-        int decreaseArmor = 2;
+        int extraDamage = 20;
         public EagleEye()
         {
             name = "EagleEye";
-            title = $"Увеличивает дальность атаки на 1 и урон на 20.";
-            titleUpg = "+";
-            coolDown = 3;
+            title = $"Увеличивает дальность атаки на 1 и урон на {extraDamage}.";
+            titleUpg = "+30 к дополнительному урону.";
+            coolDown = 1;
             coolDownNow = 0;
             requireAP = 1;
-            nonTarget = false;
-            radius = 2;
-            range = 0;
-            area = Consts.SpellArea.Radius;
+            nonTarget = true;
+            area = Consts.SpellArea.NonTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
         }
 
-        public new ISkillCastRequest request => new NonTargerAoECastRequest();
+        public new ISkillCastRequest request => new NontargetCastRequest();
 
         public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
         {
             if (request.startRequest(caster, target, targetHex, this))
             {
-                if (caster != null && targetHex != null)
+                if (caster != null)
                 {
-                    foreach (var n in UtilityService.GetHexesRadius(targetHex, radius))
-                    {
-                        if (n.HERO != null && n.HERO.Team != caster.Team)
-                        {
-                            int decrArmor = decreaseArmor;
-                            if (upgraded && targetHex.Distance(n) == 1)
-                                decrArmor = 2 * decreaseArmor;
+                    EagleEyeBuff eagleEyeBuff = new EagleEyeBuff(caster.Id, extraDamage, 1);
+                    caster.EffectList.Add(eagleEyeBuff);
+                    eagleEyeBuff.ApplyEffect(caster);
 
-                            ArmorDebuff armorDebuff = new ArmorDebuff(caster.Id, decrArmor, 2);
-                            n.HERO.EffectList.Add(armorDebuff);
-                            armorDebuff.ApplyEffect(n.HERO);
-                        }
-                    }
                     caster.AP -= requireAP;
                     coolDownNow = coolDown;
                     return true;
@@ -60,8 +46,7 @@ namespace BattleArenaServer.Skills.Crossbowman
             if (!upgraded)
             {
                 upgraded = true;
-                coolDown -= 1;
-                stats.coolDown -= 1;
+                extraDamage += 30;
                 return true;
             }
             return false;

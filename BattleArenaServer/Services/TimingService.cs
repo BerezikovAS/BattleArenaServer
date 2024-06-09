@@ -23,7 +23,6 @@ namespace BattleArenaServer.Services
             if (activeHero != null)
             {
                 AttackService.EndTurnAuraAction(activeHero);
-                DecreaseStatusDuration();
                 DecreaseSkillCooldawn(activeHero);
 
                 activeHero.AP = 4;
@@ -31,6 +30,7 @@ namespace BattleArenaServer.Services
 
                 while (hero == null)
                 {
+                    DecreaseStatusDuration(idActiveHero);
                     idActiveHero++;
                     hero = GameData._heroes.FirstOrDefault(x => x.Id == idActiveHero && x.HP > 0);
                     idActiveHero = idActiveHero >= GameData._heroes.Count ? -1 : idActiveHero;
@@ -38,16 +38,16 @@ namespace BattleArenaServer.Services
             }            
         }
 
-        public void DecreaseStatusDuration()
+        public void DecreaseStatusDuration(int heroId)
         {
             foreach (var hero in GameData._heroes)
             {
                 List<Effect> removeEffects = new List<Effect>();
                 foreach (var effect in hero.EffectList)
                 {
-                    if (effect.idCaster == idActiveHero && effect.duration > 1)
+                    if (effect.idCaster == heroId && effect.duration > 1)
                         effect.duration--;
-                    else if (effect.idCaster == idActiveHero && effect.duration == 1)
+                    else if (effect.idCaster == heroId && effect.duration == 1)
                     {
                         effect.RemoveEffect(hero);
                         removeEffects.Add(effect);

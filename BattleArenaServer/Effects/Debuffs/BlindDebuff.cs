@@ -4,7 +4,6 @@ namespace BattleArenaServer.Effects.Debuffs
 {
     public class BlindDebuff : Effect
     {
-        int prevRange = 0;
         public BlindDebuff(int _idCaster, int _value, int _duration)
         {
             Name = "Blind";
@@ -14,21 +13,20 @@ namespace BattleArenaServer.Effects.Debuffs
             duration = _duration;
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero hero)
         {
-            prevRange = _hero.AttackRadius;
-            _hero.AttackRadius = 1;
+            hero.StatsEffect.AttackRadius = 1 - hero.AttackRadius;
 
-            foreach (var skill in _hero.SkillList)
+            foreach (var skill in hero.SkillList)
             {
                 skill.range = 1;
             }
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero hero)
         {
-            _hero.AttackRadius = prevRange;
-            foreach (var skill in _hero.SkillList)
+            hero.StatsEffect.AttackRadius = hero.AttackRadius;
+            foreach (var skill in hero.SkillList)
             {
                 skill.range = skill.stats.range;
             }
