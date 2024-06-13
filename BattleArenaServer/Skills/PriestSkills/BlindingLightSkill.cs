@@ -6,9 +6,9 @@ using BattleArenaServer.SkillCastRequests;
 
 namespace BattleArenaServer.Skills.Priest
 {
-    public class BlindingLight : Skill
+    public class BlindingLightSkill : Skill
     {
-        public BlindingLight()
+        public BlindingLightSkill()
         {
             name = "BlindingLight";
             title = "Враги в области действия теряют 100 ХП и получают ослепление";

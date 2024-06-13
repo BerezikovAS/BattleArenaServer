@@ -1,26 +1,25 @@
 ﻿using BattleArenaServer.Effects.Buffs;
+using BattleArenaServer.Effects.Debuffs;
 using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
+using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
-using System.Xml.Linq;
-using System;
-using BattleArenaServer.Effects.Debuffs;
 
-namespace BattleArenaServer.Skills.PriestSkills
+namespace BattleArenaServer.Skills.BerserkerSkills
 {
-    public class Condemnation : Skill
+    public class BrokenLegSkill : Skill
     {
-        int extraDmgPercent = 30;
-        public Condemnation()
+        int multiply = 2;
+        public BrokenLegSkill()
         {
-            name = "Condemnation";
-            title = $"Выносит врагу обвинительный приговор, отчего тот получает на {extraDmgPercent}% больше урона.";
-            titleUpg = "Враг получает на 50% больше урона";
+            name = "Broken Leg";
+            title = "Мощная атака, которая обездвиживает противника. Наносит двойной урон атаки.";
+            titleUpg = "Способность наносит тройной урон от атаки.";
             coolDown = 4;
             coolDownNow = 0;
-            requireAP = 1;
-            range = 2;
+            requireAP = 3;
             nonTarget = false;
+            range = 1;
             area = Consts.SpellArea.EnemyTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
         }
@@ -33,13 +32,12 @@ namespace BattleArenaServer.Skills.PriestSkills
             {
                 if (caster != null && target != null)
                 {
+                    RootDebuff rootDebuff = new RootDebuff(caster.Id, 0, 2);
+                    target.EffectList.Add(rootDebuff);
+                    rootDebuff.ApplyEffect(target);
                     caster.AP -= requireAP;
-
-                    CondemnationDebuff condemnationDebuff = new CondemnationDebuff(caster.Id, extraDmgPercent, 2);
-                    target.EffectList.Add(condemnationDebuff);
-                    condemnationDebuff.ApplyEffect(target);
-
                     coolDownNow = coolDown;
+                    AttackService.SetDamage(caster, target, caster.Dmg * multiply, Consts.DamageType.Physical);
                     return true;
                 }
             }
@@ -51,7 +49,7 @@ namespace BattleArenaServer.Skills.PriestSkills
             if (!upgraded)
             {
                 upgraded = true;
-                extraDmgPercent = 50;
+                multiply = 3;
                 return true;
             }
             return false;

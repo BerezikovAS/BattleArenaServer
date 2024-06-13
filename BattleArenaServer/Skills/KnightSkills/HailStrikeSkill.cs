@@ -2,28 +2,28 @@
 using BattleArenaServer.Models;
 using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
-
+using System.Xml.Linq;
 
 namespace BattleArenaServer.Skills.Knight
 {
-    public class FireLine : Skill
+    public class HailStrikeSkill : BodyGuardSkill
     {
-        int dmg = 200;
-        public FireLine()
+        public HailStrikeSkill()
         {
-            name = "Fire Line";
-            title = "Поджигает всех врагов по линии перед собой, нанося 200 маг. урона";
-            titleUpg = "+75 урона, +1 к дальности";
-            coolDown = 4;
+            name = "Hail Strike";
+            title = "Обрушивает мощный град на врагов в области, нанося 200 маг. урона каждому";
+            titleUpg = "+1 к радиусу, +1 к дальности";
+            coolDown = 0; //5;
             coolDownNow = 0;
-            requireAP = 2;
+            requireAP = 1; //2;
             nonTarget = false;
-            radius = 3;
-            area = Consts.SpellArea.Line;
+            range = 2;
+            radius = 1;
+            area = Consts.SpellArea.Radius;
             stats = new SkillStats(coolDown, requireAP, range, radius);
         }
 
-        public new ISkillCastRequest request => new LineCastRequest();
+        public new ISkillCastRequest request => new RangeAoECastRequest();
 
         public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
         {
@@ -31,10 +31,10 @@ namespace BattleArenaServer.Skills.Knight
             {
                 if (caster != null && targetHex != null)
                 {
-                    foreach (var n in UtilityService.GetHexesOneLine(caster, targetHex, radius))
+                    foreach (var n in UtilityService.GetHexesRadius(targetHex, radius))
                     {
                         if (n.HERO != null && n.HERO.Team != caster.Team)
-                            AttackService.SetDamage(caster, n.HERO, dmg, Consts.DamageType.Magic);
+                            AttackService.SetDamage(caster, n.HERO, 200, Consts.DamageType.Magic);
                     }
                     caster.AP -= requireAP;
                     coolDownNow = coolDown;
@@ -42,15 +42,16 @@ namespace BattleArenaServer.Skills.Knight
                 }
             }
             return false;
-        }
+        }        
 
         public override bool UpgradeSkill()
         {
             if (!upgraded)
             {
                 upgraded = true;
-                dmg += 75;
+                range += 1;
                 radius += 1;
+                stats.range += 1;
                 stats.radius += 1;
                 return true;
             }

@@ -4,9 +4,9 @@ using BattleArenaServer.Skills.PriestSkills;
 
 namespace BattleArenaServer.Models.Heroes
 {
-    public class Angel : Hero
+    public class AngelHero : Hero
     {
-        public Angel() {
+        public AngelHero() {
             Id = 1;
             Name = "Angel";
             Team = "blue";
@@ -20,9 +20,9 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 100;
 
-            SkillList[0] = new SelfHeal();
-            SkillList[1] = new Smight();
-            SkillList[2] = new Condemnation();
+            SkillList[0] = new SelfHealSkill();
+            SkillList[1] = new SmightSkill();
+            SkillList[2] = new CondemnationSkill();
         }
     }
 }

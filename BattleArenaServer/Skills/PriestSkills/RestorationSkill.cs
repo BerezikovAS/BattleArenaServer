@@ -7,9 +7,9 @@ using BattleArenaServer.Effects;
 
 namespace BattleArenaServer.Skills.Priest
 {
-    public class Restoration : Skill
+    public class RestorationSkill : Skill
     {
-        public Restoration()
+        public RestorationSkill()
         {
             name = "Restoration";
             title = "Восстанавливает себе или союзнику 200 ХП и снимает негативные эффекты";

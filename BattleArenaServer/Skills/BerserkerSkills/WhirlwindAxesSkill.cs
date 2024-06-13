@@ -1,26 +1,23 @@
-﻿using BattleArenaServer.Effects.Debuffs;
+﻿using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
-using BattleArenaServer.Services;
-using System.Xml.Linq;
-using System;
-using BattleArenaServer.Interfaces;
 using BattleArenaServer.SkillCastRequests;
+using BattleArenaServer.Services;
 
 namespace BattleArenaServer.Skills.BerserkerSkills
 {
-    public class BattleCry : Skill
+    public class WhirlwindAxesSkill : Skill
     {
-        int decreaseArmor = 2;
-        public BattleCry()
+        int dmg = 180;
+        public WhirlwindAxesSkill()
         {
-            name = "Battle Cry";
-            title = $"Боевой клич устрашает врагов и снижает их броню на {decreaseArmor}.";
-            titleUpg = "Снижение брони для рядомстоящих врагов удваивается. -1 к длительности перезарядки";
-            coolDown = 3;
+            name = "Whirlwind Axes";
+            title = "Вихрь топоров атакует всех врагов вокруг, нанося 180 маг. урона";
+            titleUpg = "+45 урона, -2 к перезарядке";
+            coolDown = 4;
             coolDownNow = 0;
-            requireAP = 1;
+            requireAP = 2;
             nonTarget = false;
-            radius = 2;
+            radius = 1;
             range = 0;
             area = Consts.SpellArea.Radius;
             stats = new SkillStats(coolDown, requireAP, range, radius);
@@ -37,15 +34,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
                     foreach (var n in UtilityService.GetHexesRadius(targetHex, radius))
                     {
                         if (n.HERO != null && n.HERO.Team != caster.Team)
-                        {
-                            int decrArmor = decreaseArmor;
-                            if (upgraded && targetHex.Distance(n) == 1)
-                                decrArmor = 2 * decreaseArmor;
-
-                            ArmorDebuff armorDebuff = new ArmorDebuff(caster.Id, decrArmor, 2);
-                            n.HERO.EffectList.Add(armorDebuff);
-                            armorDebuff.ApplyEffect(n.HERO);
-                        }
+                            AttackService.SetDamage(caster, n.HERO, dmg, Consts.DamageType.Magic);
                     }
                     caster.AP -= requireAP;
                     coolDownNow = coolDown;
@@ -60,8 +49,9 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             if (!upgraded)
             {
                 upgraded = true;
-                coolDown -= 1;
-                stats.coolDown -= 1;
+                coolDown -= 2;
+                dmg += 45;
+                stats.coolDown -= 2;
                 return true;
             }
             return false;

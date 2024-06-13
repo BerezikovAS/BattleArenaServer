@@ -1,10 +1,13 @@
-﻿namespace BattleArenaServer.Models
+﻿using BattleArenaServer.Models.Obstacles;
+
+namespace BattleArenaServer.Models
 {
     public class Hex
     {
         int _id = 0;
         int[] _coord = new int[3];
         Hero? Hero { get; set; }
+        Obstacle? Obstacle { get; set; }
 
         public Hex(int[] coord)
         {
@@ -24,6 +27,8 @@
 
         public Hero? HERO {  get { return Hero; } }
 
+        public Obstacle? OBSTACLE {  get { return Obstacle; } }
+
         public int ID { get { return _id; } }
 
         public void SetHero( Hero hero )
@@ -35,6 +40,17 @@
         public void RemoveHero()
         {
             Hero = null;
+        }
+
+        public void SetObstacle(Obstacle obstacle)
+        {
+            Obstacle = obstacle;
+            obstacle.HexId = _id;
+        }
+
+        public void RemoveObstacle()
+        {
+            Obstacle = null;
         }
 
         public int Distance(Hex hex)

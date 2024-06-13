@@ -19,7 +19,9 @@
             FriendTarget,
             Radius,
             Line,
-            Conus
+            Conus,
+            HeroTarget,
+            HeroNotSelfTarget
         }
 
         public enum DamageType
@@ -32,6 +34,13 @@
         public enum AuraType
         {
             Continuous,
+            EndTurn,
+            StartTurn
+        }
+
+        public enum EffectType
+        {
+            Instant,
             EndTurn,
             StartTurn
         }

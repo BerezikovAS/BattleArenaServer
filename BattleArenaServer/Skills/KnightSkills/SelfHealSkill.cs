@@ -5,11 +5,11 @@ using BattleArenaServer.SkillCastRequests;
 
 namespace BattleArenaServer.Skills.Knight
 {
-    public class SelfHeal : Skill
+    public class SelfHealSkill : BodyGuardSkill
     {
         int heal = 200;
         int armor = 3;
-        public SelfHeal() 
+        public SelfHealSkill() 
         {
             name = "Self heal";
             title = "Восстанавливает владельцу 200 ХП и дает 3 доп. брони";

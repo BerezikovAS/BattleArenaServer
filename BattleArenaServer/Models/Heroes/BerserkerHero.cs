@@ -3,9 +3,9 @@ using BattleArenaServer.Skills.BerserkerSkills;
 
 namespace BattleArenaServer.Models.Heroes
 {
-    public class Berserker : Hero
+    public class BerserkerHero : Hero
     {
-        public Berserker()
+        public BerserkerHero()
         {
             Id = 2;
             Name = "Berserker";
@@ -22,10 +22,10 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 105;
 
-            SkillList[0] = new WhirlwindAxes();
-            SkillList[1] = new BrokenLeg();
-            SkillList[2] = new BattleCry();
-            SkillList[3] = new BloodRage();
+            SkillList[0] = new WhirlwindAxesSkill();
+            SkillList[1] = new BrokenLegSkill();
+            SkillList[2] = new BattleCrySkill();
+            SkillList[3] = new BloodRageSkill();
 
             passiveAttackDamage += BattleTrance;
         }

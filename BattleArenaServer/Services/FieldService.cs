@@ -32,13 +32,15 @@ namespace BattleArenaServer.Services
             }
 
             // Создание и размещение героев на поле. (Для тестов)
-            Hero hero1 = new Knight();
-            Hero hero2 = new Crossbowman();
-            Hero hero3 = new Berserker();
-            Hero hero4 = new Priest();
+            Hero hero1 = new KnightHero();
+            Hero hero2 = new CrossbowmanHero();
+            Hero hero3 = new BerserkerHero();
+            Hero hero4 = new PriestHero();
+            Hero hero5 = new AeroturgHero();
             hero4.Armor = 0;
             GameData._hexes[0].SetHero(hero1);
             GameData._hexes[2].SetHero(hero2);
+            GameData._hexes[4].SetHero(hero5);
             GameData._hexes[30].SetHero(hero3);
             GameData._hexes[32].SetHero(hero4);
 
@@ -46,6 +48,7 @@ namespace BattleArenaServer.Services
             GameData._heroes.Add(hero2);
             GameData._heroes.Add(hero3);
             GameData._heroes.Add(hero4);
+            GameData._heroes.Add(hero5);
 
             // Применяем эффекты постоянных аур сразу
             AttackService.ContinuousAuraAction();
@@ -122,7 +125,7 @@ namespace BattleArenaServer.Services
             Hero? caster = GameData._hexes.FirstOrDefault(x => x.ID == cur_pos)?.HERO;
             Hero? defender = GameData._hexes.FirstOrDefault(x => x.ID == targer_pos)?.HERO;
             Hex? targetHex = GameData._hexes.FirstOrDefault(x => x.ID == targer_pos);
-            if (caster != null)
+            if (caster != null && caster.EffectList.FirstOrDefault(x => x.Name == "Silence") == null)
             {
                 // Кастуем))
                 return caster.SkillList[skill - 1].Cast(caster, defender, targetHex);

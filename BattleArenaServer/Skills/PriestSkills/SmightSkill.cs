@@ -5,10 +5,10 @@ using BattleArenaServer.SkillCastRequests;
 
 namespace BattleArenaServer.Skills.Priest
 {
-    public class Smight : Skill
+    public class SmightSkill : Skill
     {
         private int extraDmg = 25;
-        public Smight()
+        public SmightSkill()
         {
             name = "Smight";
             title = "Божественная кара настигает врага, нанося тому чистый урон. Урон увеличивается за каждую способность врага в откате (X). ( 120 + 25 * X )";

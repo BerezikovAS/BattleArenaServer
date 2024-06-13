@@ -4,7 +4,7 @@ using BattleArenaServer.Models;
 
 namespace BattleArenaServer.SkillCastRequests
 {
-    public class HexTargetCastRequest : ISkillCastRequest
+    public class HeroNotSelfCastRequest : ISkillCastRequest
     {
         public void cancelRequest()
         {
@@ -16,12 +16,12 @@ namespace BattleArenaServer.SkillCastRequests
             ICastChecker coolDownChecker = new CooldownChecker();
             ICastChecker actionPointsChecker = new ActionPointsChecker();
             ICastChecker rangeChecker = new RangeChecker();
-            ICastChecker hexChecker = new HexChecker();
+            ICastChecker heroNotSelfChecker = new HeroNotSelfChecker();
 
             coolDownChecker.nextChecker = actionPointsChecker;
             actionPointsChecker.nextChecker = rangeChecker;
-            rangeChecker.nextChecker = hexChecker;
-            hexChecker.nextChecker = new TerminalChecker();
+            rangeChecker.nextChecker = heroNotSelfChecker;
+            heroNotSelfChecker.nextChecker = new TerminalChecker();
             return coolDownChecker.Check(caster, target, targetHex, skill);
         }
     }

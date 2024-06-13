@@ -5,15 +5,15 @@ using BattleArenaServer.SkillCastRequests;
 
 namespace BattleArenaServer.Skills.KnightSkills
 {
-    public class FormationAttack : Skill
+    public class FormationAttackSkill : Skill
     {
         int dmg = 100;
         int extraDmg = 40;
-        public FormationAttack()
+        public FormationAttackSkill()
         {
             name = "Formation Attack";
             title = $"Атакуйте врага единым строем. Урон увеличивается за каждого вашего союзника рядом с целью ({extraDmg} за союзника).";
-            titleUpg = "Способность не уходит на перезарядку.";
+            titleUpg = "+10 к урону за союзника. Способность не уходит на перезарядку.";
             coolDown = 1;
             coolDownNow = 0;
             requireAP = 2;
@@ -52,6 +52,7 @@ namespace BattleArenaServer.Skills.KnightSkills
             if (!upgraded)
             {
                 upgraded = true;
+                extraDmg += 10;
                 coolDown = 0;
                 stats.coolDown = 0;
                 return true;
