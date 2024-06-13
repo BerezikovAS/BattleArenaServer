@@ -1,25 +1,28 @@
 ﻿using BattleArenaServer.Effects.Buffs;
-using BattleArenaServer.Effects.Debuffs;
 using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
+using System;
+using static BattleArenaServer.Models.Consts;
 
-namespace BattleArenaServer.Skills.BerserkerSkills
+namespace BattleArenaServer.Skills.Knight
 {
-    public class BrokenLeg : Skill
+    public class ShieldBashSkill : BodyGuardSkill
     {
-        int multiply = 2;
-        public BrokenLeg()
+        int dmg = 60;
+        int extraDmg = 20;
+        int loseAP = 1;
+        public ShieldBashSkill()
         {
-            name = "Broken Leg";
-            title = "Мощная атака, которая обездвиживает противника. Наносит двойной урон атаки.";
-            titleUpg = "Способность наносит тройной урон от атаки.";
+            name = "Shieldbash";
+            title = $"Оглушает врага и наносит ему физический урон, зависящий от брони владельца.\nОглушенный враг теряет {loseAP} ОД в свой ход. ({extraDmg} доп. урона за ед. брони)";
+            titleUpg = "+10 к урону за броню, +1 потере ОД";
             coolDown = 4;
             coolDownNow = 0;
-            requireAP = 3;
-            nonTarget = false;
             range = 1;
+            requireAP = 2;
+            nonTarget = false;
             area = Consts.SpellArea.EnemyTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
         }
@@ -30,14 +33,13 @@ namespace BattleArenaServer.Skills.BerserkerSkills
         {
             if (request.startRequest(caster, target, targetHex, this))
             {
-                if (caster != null && target != null)
+                if (target != null && caster != null)
                 {
-                    RootDebuff rootDebuff = new RootDebuff(caster.Id, 0, 2);
-                    target.EffectList.Add(rootDebuff);
-                    rootDebuff.ApplyEffect(target);
                     caster.AP -= requireAP;
+                    target.AP -= loseAP;
+                    AttackService.SetDamage(caster, target, dmg + extraDmg * caster.Armor, DamageType.Physical);
                     coolDownNow = coolDown;
-                    AttackService.SetDamage(caster, target, caster.Dmg * multiply, Consts.DamageType.Physical);
+
                     return true;
                 }
             }
@@ -49,7 +51,8 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             if (!upgraded)
             {
                 upgraded = true;
-                multiply = 3;
+                loseAP += 1;
+                extraDmg += 10;
                 return true;
             }
             return false;

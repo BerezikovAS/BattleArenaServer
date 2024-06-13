@@ -30,7 +30,7 @@ namespace BattleArenaServer.Models
         public delegate bool ApplyDamage(Hero attacker, Hero defender, int dmg);
         public ApplyDamage applyDamage = AttackService.ApplyDamage;
 
-        public delegate int PassiveArmor(Hero attacker, Hero defender);
+        public delegate int PassiveArmor(Hero? attacker, Hero defender);
         public PassiveArmor passiveArmor = delegate { return 0; };
 
         public delegate int PassiveResistance(Hero attacker, Hero defender);
@@ -42,7 +42,7 @@ namespace BattleArenaServer.Models
         public delegate bool AfterAttack(Hero attacker, Hero? defender, int dmg);
         public AfterAttack afterAttack = delegate { return false; };
 
-        public delegate int ModifierAppliedDamage(Hero attacker, Hero defender, int dmg);
+        public delegate int ModifierAppliedDamage(Hero? attacker, Hero defender, int dmg);
         public ModifierAppliedDamage modifierAppliedDamage = delegate { return 0; };
 
         public void Heal(int _heal)

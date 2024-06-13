@@ -11,6 +11,8 @@ namespace BattleArenaServer.Effects
         public int value {  get; set; }
         public int duration { get; set; }
 
+        public Consts.EffectType effectType { get; set; } = Consts.EffectType.Instant;
+
         public abstract void ApplyEffect(Hero hero);
 
         public abstract void RemoveEffect(Hero hero);

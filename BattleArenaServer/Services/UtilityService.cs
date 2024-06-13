@@ -1,4 +1,5 @@
 ﻿using BattleArenaServer.Models;
+using System.Diagnostics.Metrics;
 
 namespace BattleArenaServer.Services
 {
@@ -83,6 +84,22 @@ namespace BattleArenaServer.Services
             int coordZ = (h2.COORD[2] - h1.COORD[2]) / dist;
             Hex direction = new Hex(coordX, coordY, coordZ, -1);
             return direction;
+        }
+
+        public static Hex? GetOneHexOnDirection(Hex hex, Hex dir, int order)
+        {
+            Hex direction = GetDirection(hex, dir);
+            Hex? findHex = null;
+
+            for (int i = 1; i <= order; i++)
+            {
+                findHex = GameData._hexes.FirstOrDefault(x => x.COORD[0] == hex.COORD[0] + direction.COORD[0] * i
+                                & x.COORD[1] == hex.COORD[1] + direction.COORD[1] * i
+                                & x.COORD[2] == hex.COORD[2] + direction.COORD[2] * i);                
+            }
+            if (findHex != null)
+                return findHex;
+            return null;
         }
     }
 }

@@ -4,27 +4,29 @@ using BattleArenaServer.Skills.PriestSkills.Auras;
 
 namespace BattleArenaServer.Models.Heroes
 {
-    public class Priest : Hero
+    public class PriestHero : Hero
     {
-        public Priest()
+        public PriestHero()
         {
             Id = 3;
             Name = "Priest";
             Team = "red";
 
             MaxHP = HP = 1000;
-            Armor = 3;
+            Armor = 2;
             Resist = 3;
+
+            UpgradePoints = 1;
 
             AP = 4;
 
-            AttackRadius = 2;
+            AttackRadius = 1;
             Dmg = 94;
 
-            SkillList[0] = new BlindingLight();
-            SkillList[1] = new Smight();
-            SkillList[2] = new Restoration();
-            SkillList[3] = new Condemnation();
+            SkillList[0] = new BlindingLightSkill();
+            SkillList[1] = new SmightSkill();
+            SkillList[2] = new RestorationSkill();
+            SkillList[3] = new CondemnationSkill();
 
             AuraList.Add(new BlessAura());
         }

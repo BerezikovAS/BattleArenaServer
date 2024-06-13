@@ -24,6 +24,7 @@ namespace BattleArenaServer.Services
             {
                 AttackService.EndTurnAuraAction(activeHero);
                 DecreaseSkillCooldawn(activeHero);
+                EndTurnStatusApplyEffect(activeHero);
 
                 activeHero.AP = 4;
                 Hero? hero = null;
@@ -60,12 +61,24 @@ namespace BattleArenaServer.Services
             }
         }
 
-        public void DecreaseSkillCooldawn(Hero _hero)
+        public void DecreaseSkillCooldawn(Hero hero)
         {
-            foreach (var skill in _hero.SkillList)
+            foreach (var skill in hero.SkillList)
             {
                 if (skill.coolDownNow > 0)
                     skill.coolDownNow--;
+            }
+        }
+
+        public void EndTurnStatusApplyEffect(Hero hero)
+        {
+            if (hero.HP > 0)
+            {
+                foreach (var effect in hero.EffectList)
+                {
+                    if (effect.effectType == Consts.EffectType.EndTurn)
+                        effect.ApplyEffect(hero);
+                }
             }
         }
     }

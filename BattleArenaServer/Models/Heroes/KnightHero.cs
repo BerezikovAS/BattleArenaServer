@@ -5,9 +5,9 @@ using BattleArenaServer.Skills.KnightSkills.Auras;
 
 namespace BattleArenaServer.Models.Heroes
 {
-    public class Knight : Hero
+    public class KnightHero : Hero
     {
-        public Knight() {
+        public KnightHero() {
             Id = 0;
             Name = "Knight";
             Team = "blue";
@@ -16,15 +16,17 @@ namespace BattleArenaServer.Models.Heroes
             Armor = 5;
             Resist = 3;
 
+            UpgradePoints = 1;
+
             AP = 4;
 
             AttackRadius = 1;
             Dmg = 100;
 
-            SkillList[0] = new SelfHeal();
-            SkillList[1] = new ShieldBash();
-            SkillList[2] = new BodyGuard();
-            SkillList[3] = new FormationAttack();
+            SkillList[0] = new SelfHealSkill();
+            SkillList[1] = new ShieldBashSkill();
+            SkillList[2] = new Skills.Knight.BodyGuardSkill();
+            SkillList[3] = new FormationAttackSkill();
 
             AuraList.Add(new HighShieldAura());
         }

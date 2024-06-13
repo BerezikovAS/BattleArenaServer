@@ -2,27 +2,30 @@
 using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.SkillCastRequests;
+using System.Xml.Linq;
+using System;
+using BattleArenaServer.Effects.Debuffs;
 
-namespace BattleArenaServer.Skills.Knight
+namespace BattleArenaServer.Skills.PriestSkills
 {
-    public class BodyGuard : Skill
+    public class CondemnationSkill : Skill
     {
-        int defence = 2;
-        public BodyGuard()
+        int extraDmgPercent = 30;
+        public CondemnationSkill()
         {
-            name = "Body guard";
-            title = $"Дает +{defence} брони и +{defence} сопротивления. Переносит 50% чистого урона с союзника на себя";
-            titleUpg = "+1 к броне, +1 к сопротивлению, +1 к дальности";
+            name = "Condemnation";
+            title = $"Выносит врагу обвинительный приговор, отчего тот получает на {extraDmgPercent}% больше урона.";
+            titleUpg = "Враг получает на 50% больше урона";
             coolDown = 4;
             coolDownNow = 0;
-            requireAP = 2;
-            range = 1;
+            requireAP = 1;
+            range = 2;
             nonTarget = false;
-            area = Consts.SpellArea.AllyTarget;
+            area = Consts.SpellArea.EnemyTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
         }
 
-        public new ISkillCastRequest request => new AllyTargetCastRequest();
+        public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
         public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
         {
@@ -32,9 +35,9 @@ namespace BattleArenaServer.Skills.Knight
                 {
                     caster.AP -= requireAP;
 
-                    BodyGuardBuff bodyGuardBuff = new BodyGuardBuff(caster.Id, defence, 2);
-                    target.EffectList.Add(bodyGuardBuff);
-                    bodyGuardBuff.ApplyEffect(target);
+                    CondemnationDebuff condemnationDebuff = new CondemnationDebuff(caster.Id, extraDmgPercent, 2);
+                    target.EffectList.Add(condemnationDebuff);
+                    condemnationDebuff.ApplyEffect(target);
 
                     coolDownNow = coolDown;
                     return true;
@@ -48,9 +51,7 @@ namespace BattleArenaServer.Skills.Knight
             if (!upgraded)
             {
                 upgraded = true;
-                defence += 1;
-                range += 1;
-                stats.range += 1;
+                extraDmgPercent = 50;
                 return true;
             }
             return false;

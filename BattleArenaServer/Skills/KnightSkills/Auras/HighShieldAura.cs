@@ -27,7 +27,7 @@ namespace BattleArenaServer.Skills.KnightSkills.Auras
             }
         }
 
-        private int HighShield(Hero attacker, Hero defender)
+        private int HighShield(Hero? attacker, Hero defender)
         {
             Hex? attackerHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == attacker.Id);
             Hex? defenderHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == defender.Id);

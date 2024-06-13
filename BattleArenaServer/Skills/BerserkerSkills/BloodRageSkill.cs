@@ -1,21 +1,22 @@
-﻿using BattleArenaServer.Interfaces;
+﻿using BattleArenaServer.Effects.Buffs;
+using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
+using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
-using BattleArenaServer.Effects.Buffs;
 
-namespace BattleArenaServer.Skills.Crossbowman
+namespace BattleArenaServer.Skills.BerserkerSkills
 {
-    public class EagleEye : Skill
+    public class BloodRageSkill : Skill
     {
-        int extraDamage = 20;
-        public EagleEye()
+        int extraDmg = 0;
+        public BloodRageSkill()
         {
-            name = "EagleEye";
-            title = $"Увеличивает дальность атаки на 1 и урон на {extraDamage}.";
-            titleUpg = "+30 к дополнительному урону.";
-            coolDown = 1;
+            name = "Blood Rage";
+            title = "Ваши атаки стоят всего 1 очко действия, но каждая из них отнимает у Вас 40 ХП.";
+            titleUpg = "+30 к урону от атак";
+            coolDown = 3;
             coolDownNow = 0;
-            requireAP = 1;
+            requireAP = 0;
             nonTarget = true;
             area = Consts.SpellArea.NonTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
@@ -29,9 +30,9 @@ namespace BattleArenaServer.Skills.Crossbowman
             {
                 if (caster != null)
                 {
-                    EagleEyeBuff eagleEyeBuff = new EagleEyeBuff(caster.Id, extraDamage, 1);
-                    caster.EffectList.Add(eagleEyeBuff);
-                    eagleEyeBuff.ApplyEffect(caster);
+                    BloodRageBuff bloodRageBuff = new BloodRageBuff(caster.Id, extraDmg, 1);
+                    caster.EffectList.Add(bloodRageBuff);
+                    bloodRageBuff.ApplyEffect(caster);
 
                     caster.AP -= requireAP;
                     coolDownNow = coolDown;
@@ -46,7 +47,7 @@ namespace BattleArenaServer.Skills.Crossbowman
             if (!upgraded)
             {
                 upgraded = true;
-                extraDamage += 30;
+                extraDmg = 30;
                 return true;
             }
             return false;

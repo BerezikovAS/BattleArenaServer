@@ -1,27 +1,25 @@
-﻿using BattleArenaServer.Effects.Buffs;
-using BattleArenaServer.Interfaces;
+﻿using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
+using System.Xml.Linq;
 using System;
-using static BattleArenaServer.Models.Consts;
+using BattleArenaServer.Effects.Debuffs;
 
-namespace BattleArenaServer.Skills.Knight
+namespace BattleArenaServer.Skills.Crossbowman
 {
-    public class ShieldBash : Skill
+    public class PinDownSkill : Skill
     {
-        int dmg = 60;
-        int extraDmg = 20;
-        int loseAP = 1;
-        public ShieldBash()
+        int dmg = 150;
+        public PinDownSkill()
         {
-            name = "Shieldbash";
-            title = "Оглушает врага и наносит ему физический урон, зависящий от брони владельца";
-            titleUpg = "+75 к лечению, +1 к доп. броне";
+            name = "Pin Down";
+            title = $"Массивный болт прибивает врага к земле, отчего тот не может передвигаться. {dmg} физического урона.";
+            titleUpg = "+100 к урону.";
             coolDown = 4;
             coolDownNow = 0;
-            range = 1;
             requireAP = 2;
+            range = 2;
             nonTarget = false;
             area = Consts.SpellArea.EnemyTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
@@ -33,13 +31,14 @@ namespace BattleArenaServer.Skills.Knight
         {
             if (request.startRequest(caster, target, targetHex, this))
             {
-                if (target != null && caster != null)
+                if (caster != null && target != null)
                 {
+                    RootDebuff rootDebuff = new RootDebuff(caster.Id, 0, 2);
+                    target.EffectList.Add(rootDebuff);
+                    rootDebuff.ApplyEffect(target);
                     caster.AP -= requireAP;
-                    target.AP -= loseAP;
-                    AttackService.SetDamage(caster, target, dmg + extraDmg * caster.Armor, DamageType.Physical);
                     coolDownNow = coolDown;
-
+                    AttackService.SetDamage(caster, target, dmg, Consts.DamageType.Physical);
                     return true;
                 }
             }
@@ -51,8 +50,7 @@ namespace BattleArenaServer.Skills.Knight
             if (!upgraded)
             {
                 upgraded = true;
-                loseAP += 1;
-                extraDmg += 10;
+                dmg += 100;
                 return true;
             }
             return false;

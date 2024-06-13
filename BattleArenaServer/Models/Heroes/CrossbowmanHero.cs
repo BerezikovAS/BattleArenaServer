@@ -5,9 +5,9 @@ using System;
 
 namespace BattleArenaServer.Models.Heroes
 {
-    public class Crossbowman : Hero
+    public class CrossbowmanHero : Hero
     {
-        public Crossbowman()
+        public CrossbowmanHero()
         {
             Id = 1;
             Name = "Crossbowman";
@@ -24,10 +24,10 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 3;
             Dmg = 80;
 
-            SkillList[0] = new EagleEye();
-            SkillList[1] = new BrokenLeg();
-            SkillList[2] = new BattleCry();
-            SkillList[3] = new BloodRage();
+            SkillList[0] = new EagleEyeSkill();
+            SkillList[1] = new CaltropSkill();
+            SkillList[2] = new SharpFangSkill();
+            SkillList[3] = new PinDownSkill();
 
             passiveAttackDamage += LongShot;
         }

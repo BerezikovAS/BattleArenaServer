@@ -35,6 +35,7 @@ async function feelField(_field) {
 
     hexes = [];
     heroes = [];
+
     _field.forEach(element => {
         const hex = document.createElement("div");
         hex.setAttribute("id", element.id);
@@ -63,6 +64,13 @@ async function feelField(_field) {
             
             element.hero.coordid = element.id;
             heroes.push(element.hero);
+        }
+        if (element.obstacle != null) {
+            console.log(element.obstacle);
+            const obstImg = document.createElement("img");
+            obstImg.setAttribute("src", "obstacles/" + element.obstacle.name + ".png");
+            obstImg.setAttribute("style", "position: absolute; width: 80px; padding-left: 10px; padding-top: 16px;");
+            hex.appendChild(obstImg);
         }
         
         field.appendChild(hex);

@@ -1,11 +1,12 @@
 ﻿using BattleArenaServer.Models;
+using BattleArenaServer.Models.Obstacles;
 using static BattleArenaServer.Models.Consts;
 
 namespace BattleArenaServer.Services
 {
     public static class AttackService
     {
-        public static bool SetDamage(Hero attacker, Hero defender, int dmg, DamageType damageType)
+        public static bool SetDamage(Hero? attacker, Hero defender, int dmg, DamageType damageType)
         {
             if (defender != null)
             {
@@ -36,7 +37,7 @@ namespace BattleArenaServer.Services
             return false;
         }
 
-        public static bool ApplyDamage(Hero attacker, Hero defender, int dmg)
+        public static bool ApplyDamage(Hero? attacker, Hero defender, int dmg)
         {
             // Добавляем модификатор получаемого урона
             dmg += defender.modifierAppliedDamage(attacker, defender, dmg);
@@ -89,6 +90,11 @@ namespace BattleArenaServer.Services
             targetHex.SetHero(hero);
             currentHex.RemoveHero();
             ContinuousAuraAction();
+
+            if (targetHex.OBSTACLE != null && targetHex.OBSTACLE is FillableObstacle)
+            {
+                (targetHex.OBSTACLE as FillableObstacle).ApplyEffect(hero, targetHex);
+            }
         }
     }
 }
