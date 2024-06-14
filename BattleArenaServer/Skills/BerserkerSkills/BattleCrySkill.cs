@@ -1,8 +1,6 @@
 ﻿using BattleArenaServer.Effects.Debuffs;
 using BattleArenaServer.Models;
 using BattleArenaServer.Services;
-using System.Xml.Linq;
-using System;
 using BattleArenaServer.Interfaces;
 using BattleArenaServer.SkillCastRequests;
 
@@ -28,26 +26,26 @@ namespace BattleArenaServer.Skills.BerserkerSkills
 
         public new ISkillCastRequest request => new NonTargerAoECastRequest();
 
-        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
+        public override bool Cast(RequestData requestData)
         {
-            if (request.startRequest(caster, target, targetHex, this))
+            if (request.startRequest(requestData, this))
             {
-                if (caster != null && targetHex != null)
+                if (requestData.Caster != null && requestData.TargetHex != null)
                 {
-                    foreach (var n in UtilityService.GetHexesRadius(targetHex, radius))
+                    foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
                     {
-                        if (n.HERO != null && n.HERO.Team != caster.Team)
+                        if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                         {
                             int decrArmor = decreaseArmor;
-                            if (upgraded && targetHex.Distance(n) == 1)
+                            if (upgraded && requestData.TargetHex.Distance(n) == 1)
                                 decrArmor = 2 * decreaseArmor;
 
-                            ArmorDebuff armorDebuff = new ArmorDebuff(caster.Id, decrArmor, 2);
+                            ArmorDebuff armorDebuff = new ArmorDebuff(requestData.Caster.Id, decrArmor, 2);
                             n.HERO.EffectList.Add(armorDebuff);
                             armorDebuff.ApplyEffect(n.HERO);
                         }
                     }
-                    caster.AP -= requireAP;
+                    requestData.Caster.AP -= requireAP;
                     coolDownNow = coolDown;
                     return true;
                 }

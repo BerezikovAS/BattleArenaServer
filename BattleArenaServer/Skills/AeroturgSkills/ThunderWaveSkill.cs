@@ -2,10 +2,7 @@
 using BattleArenaServer.Models;
 using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
-using System.Xml.Linq;
-using System;
 using BattleArenaServer.Effects.Debuffs;
-using BattleArenaServer.Skills.Crossbowman.Obstacles;
 
 namespace BattleArenaServer.Skills.AeroturgSkills
 {
@@ -30,38 +27,38 @@ namespace BattleArenaServer.Skills.AeroturgSkills
 
         public new ISkillCastRequest request => new NonTargerAoECastRequest();
 
-        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
+        public override bool Cast(RequestData requestData)
         {
-            if (request.startRequest(caster, target, targetHex, this))
+            if (!request.startRequest(requestData, this))
+                return false;
+
+            if (requestData.Caster != null && requestData.TargetHex != null)
             {
-                if (caster != null && targetHex != null)
+                foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, 1))
                 {
-                    foreach (var hex in UtilityService.GetHexesRadius(targetHex, 1))
+                    if (hex.HERO != null && hex.HERO.Team != requestData.Caster.Team)
                     {
-                        if (hex.HERO != null && hex.HERO.Team != caster.Team)
+                        SilenceDebuff silenceDebuff = new SilenceDebuff(requestData.Caster.Id, 0, 2);
+                        hex.HERO.EffectList.Add(silenceDebuff);
+
+                        if (upgraded)
                         {
-                            SilenceDebuff silenceDebuff = new SilenceDebuff(caster.Id, 0, 2);
-                            hex.HERO.EffectList.Add(silenceDebuff);
-
-                            if (upgraded)
-                            {
-                                ResistDebuff resistDebuff = new ResistDebuff(caster.Id, resistReduction, 2);
-                                hex.HERO.EffectList.Add(resistDebuff);
-                                resistDebuff.ApplyEffect(hex.HERO);
-                            }
-
-                            AttackService.SetDamage(caster, hex.HERO, dmg, Consts.DamageType.Magic);
-
-                            Hex? moveHex = UtilityService.GetOneHexOnDirection(targetHex, hex, 2);
-                            if (moveHex != null && moveHex.HERO == null)
-                                AttackService.MoveHero(hex.HERO, hex, moveHex);
+                            ResistDebuff resistDebuff = new ResistDebuff(requestData.Caster.Id, resistReduction, 2);
+                            hex.HERO.EffectList.Add(resistDebuff);
+                            resistDebuff.ApplyEffect(hex.HERO);
                         }
-                    }
 
-                    caster.AP -= requireAP;
-                    coolDownNow = coolDown;
-                    return true;
+                        AttackService.SetDamage(requestData.Caster, hex.HERO, dmg, Consts.DamageType.Magic);
+
+                        Hex? moveHex = UtilityService.GetOneHexOnDirection(requestData.TargetHex, hex, 2);
+                        if (moveHex != null && moveHex.IsFree())
+                            AttackService.MoveHero(hex.HERO, hex, moveHex);
+                    }
                 }
+
+                requestData.Caster.AP -= requireAP;
+                coolDownNow = coolDown;
+                return true;
             }
             return false;
         }

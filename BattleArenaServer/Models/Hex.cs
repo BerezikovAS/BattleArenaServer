@@ -46,11 +46,20 @@ namespace BattleArenaServer.Models
         {
             Obstacle = obstacle;
             obstacle.HexId = _id;
+            GameData._obstacles.Add(obstacle);
         }
 
         public void RemoveObstacle()
         {
             Obstacle = null;
+            GameData._obstacles.Remove(Obstacle);
+        }
+
+        public bool IsFree()
+        {
+            if (Hero != null || (Obstacle is SolidObstacle))
+                return false;
+            return true;
         }
 
         public int Distance(Hex hex)

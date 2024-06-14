@@ -19,7 +19,7 @@ namespace BattleArenaServer.Models
         public SpellArea area {  get; set; } = 0;
         public SkillStats stats { get; set; } = new SkillStats(0, 0, 0, 0);
 
-        public abstract bool Cast(Hero caster, Hero? target, Hex? targetHex);
+        public abstract bool Cast(RequestData requestData);
         
         public abstract bool UpgradeSkill();
 

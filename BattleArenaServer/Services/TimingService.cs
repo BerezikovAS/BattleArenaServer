@@ -25,6 +25,7 @@ namespace BattleArenaServer.Services
                 AttackService.EndTurnAuraAction(activeHero);
                 DecreaseSkillCooldawn(activeHero);
                 EndTurnStatusApplyEffect(activeHero);
+                DecreaseLifeTimeObstacle(activeHero);
 
                 activeHero.AP = 4;
                 Hero? hero = null;
@@ -67,6 +68,22 @@ namespace BattleArenaServer.Services
             {
                 if (skill.coolDownNow > 0)
                     skill.coolDownNow--;
+            }
+        }
+
+        public void DecreaseLifeTimeObstacle(Hero hero)
+        {
+            foreach (var obst in GameData._obstacles)
+            {
+                if (obst.CasterId == hero.Id)
+                {
+                    if (--obst.LifeTime <= 0)
+                    {
+                        Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == obst.HexId);
+                        if (hex != null)
+                            hex.RemoveObstacle();
+                    }
+                }
             }
         }
 

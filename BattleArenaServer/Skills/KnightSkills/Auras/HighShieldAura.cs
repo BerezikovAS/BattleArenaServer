@@ -1,6 +1,4 @@
 ﻿using BattleArenaServer.Models;
-using BattleArenaServer.Models.Heroes;
-using static BattleArenaServer.Models.Hero;
 
 namespace BattleArenaServer.Skills.KnightSkills.Auras
 {
@@ -19,7 +17,7 @@ namespace BattleArenaServer.Skills.KnightSkills.Auras
                 target.passiveArmor += HighShield;
         }
 
-        public override void CancelEffect()
+        public override void CancelEffect(Hero source)
         {
             foreach (var hero in GameData._heroes)
             {

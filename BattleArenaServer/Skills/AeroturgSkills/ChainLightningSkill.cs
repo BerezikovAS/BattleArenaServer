@@ -24,27 +24,27 @@ namespace BattleArenaServer.Skills.AeroturgSkills
 
         public new ISkillCastRequest request => new HeroTargetCastRequest();
 
-        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
+        public override bool Cast(RequestData requestData)
         {
-            if (request.startRequest(caster, target, targetHex, this))
+            if (!request.startRequest(requestData, this))
+                return false;
+
+            if (requestData.Caster != null && requestData.Target != null && requestData.TargetHex != null)
             {
-                if (caster != null && target != null && targetHex != null)
+                List<Hero> heroes = new List<Hero>([requestData.Target]);
+                heroes = AddNearbyHeroes(requestData.TargetHex, heroes);
+
+                foreach (var hero in heroes)
                 {
-                    List<Hero> heroes = new List<Hero>([target]);
-                    heroes = AddNearbyHeroes(targetHex, heroes);
-
-                    foreach (var hero in heroes)
+                    if (requestData.Caster.Team != hero.Team)
                     {
-                        if (caster.Team != hero.Team)
-                        {
-                            AttackService.SetDamage(caster, hero, dmg, Consts.DamageType.Magic);
-                        }
+                        AttackService.SetDamage(requestData.Caster, hero, dmg, Consts.DamageType.Magic);
                     }
-
-                    caster.AP -= requireAP;
-                    coolDownNow = coolDown;
-                    return true;
                 }
+
+                requestData.Caster.AP -= requireAP;
+                coolDownNow = coolDown;
+                return true;
             }
             return false;
         }

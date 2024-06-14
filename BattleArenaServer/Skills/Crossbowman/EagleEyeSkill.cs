@@ -23,21 +23,22 @@ namespace BattleArenaServer.Skills.Crossbowman
 
         public new ISkillCastRequest request => new NontargetCastRequest();
 
-        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
+        public override bool Cast(RequestData requestData)
         {
-            if (request.startRequest(caster, target, targetHex, this))
-            {
-                if (caster != null)
-                {
-                    EagleEyeBuff eagleEyeBuff = new EagleEyeBuff(caster.Id, extraDamage, 1);
-                    caster.EffectList.Add(eagleEyeBuff);
-                    eagleEyeBuff.ApplyEffect(caster);
+            if (!request.startRequest(requestData, this))
+                return false;
 
-                    caster.AP -= requireAP;
-                    coolDownNow = coolDown;
-                    return true;
-                }
+            if (requestData.Caster != null)
+            {
+                EagleEyeBuff eagleEyeBuff = new EagleEyeBuff(requestData.Caster.Id, extraDamage, 1);
+                requestData.Caster.EffectList.Add(eagleEyeBuff);
+                eagleEyeBuff.ApplyEffect(requestData.Caster);
+
+                requestData.Caster.AP -= requireAP;
+                coolDownNow = coolDown;
+                return true;
             }
+
             return false;
         }
 

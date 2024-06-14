@@ -1,8 +1,5 @@
-﻿using BattleArenaServer.Interfaces;
-using BattleArenaServer.Models;
-using Microsoft.AspNetCore.Http;
+﻿using BattleArenaServer.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Xml.Linq;
 
 namespace BattleArenaServer.Controllers
 {
@@ -25,30 +22,23 @@ namespace BattleArenaServer.Controllers
 
         // GET: FieldController/GetField
         [HttpGet]
-        public ActionResult<List<Hex>> StepHero(int _cur_pos, int _targer_pos)
+        public ActionResult<List<Hex>> StepHero(int cur_pos, int targer_pos)
         {
-            return _fieldService.StepHero(_cur_pos, _targer_pos);
+            return _fieldService.StepHero(cur_pos, targer_pos);
         }
 
         // GET: FieldController/GetField
         [HttpGet]
-        public ActionResult<List<Hex>> AttackHero(int _cur_pos, int _targer_pos)
+        public ActionResult<List<Hex>> AttackHero(int cur_pos, int targer_pos)
         {
-            return _fieldService.AttackHero(_cur_pos, _targer_pos);
+            return _fieldService.AttackHero(cur_pos, targer_pos);
         }
 
         // GET: FieldController/GetField
         [HttpGet]
-        public bool SpellCast(int _target, int _caster, int _spell)
+        public bool SpellCast(int target, int caster, int spell)
         {
-            return _fieldService.SpellCast(_target, _caster, _spell);
-        }
-
-        // GET: FieldController/GetField
-        [HttpGet]
-        public ActionResult<List<Hex>> SpellArea(int _target, int _caster, int _spell)
-        {
-            return _fieldService.SpellArea(_target, _caster, _spell);
+            return _fieldService.SpellCast(target, caster, spell);
         }
 
         // GET: FieldController/GetField

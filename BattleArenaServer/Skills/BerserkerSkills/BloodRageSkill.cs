@@ -24,17 +24,17 @@ namespace BattleArenaServer.Skills.BerserkerSkills
 
         public new ISkillCastRequest request => new NontargetCastRequest();
 
-        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
+        public override bool Cast(RequestData requestData)
         {
-            if (request.startRequest(caster, target, targetHex, this))
+            if (request.startRequest(requestData, this))
             {
-                if (caster != null)
+                if (requestData.Caster != null)
                 {
-                    BloodRageBuff bloodRageBuff = new BloodRageBuff(caster.Id, extraDmg, 1);
-                    caster.EffectList.Add(bloodRageBuff);
-                    bloodRageBuff.ApplyEffect(caster);
+                    BloodRageBuff bloodRageBuff = new BloodRageBuff(requestData.Caster.Id, extraDmg, 1);
+                    requestData.Caster.EffectList.Add(bloodRageBuff);
+                    bloodRageBuff.ApplyEffect(requestData.Caster);
 
-                    caster.AP -= requireAP;
+                    requestData.Caster.AP -= requireAP;
                     coolDownNow = coolDown;
                     return true;
                 }

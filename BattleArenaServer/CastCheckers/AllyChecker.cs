@@ -7,13 +7,10 @@ namespace BattleArenaServer.CastCheckers
     {
         public ICastChecker nextChecker { get; set; } = new TerminalChecker();
 
-        public bool Check(Hero caster, Hero? target, Hex? targetHex, Skill skill)
+        public bool Check(RequestData requestData, Skill skill)
         {
-            if (caster != null && target != null)
-            {
-                if (caster.Team == target.Team)
-                    return nextChecker.Check(caster, target, targetHex, skill);
-            }
+            if (requestData.Caster?.Team == requestData.Target?.Team)
+                return nextChecker.Check(requestData, skill);
             return false;
         }
     }
