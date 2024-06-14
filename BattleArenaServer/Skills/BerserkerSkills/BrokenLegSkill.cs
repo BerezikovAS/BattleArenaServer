@@ -1,5 +1,4 @@
-﻿using BattleArenaServer.Effects.Buffs;
-using BattleArenaServer.Effects.Debuffs;
+﻿using BattleArenaServer.Effects.Debuffs;
 using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.Services;
@@ -26,21 +25,22 @@ namespace BattleArenaServer.Skills.BerserkerSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
+        public override bool Cast(RequestData requestData)
         {
-            if (request.startRequest(caster, target, targetHex, this))
+            if (!request.startRequest(requestData, this))
+                return false;
+
+            if (requestData.Caster != null && requestData.Target != null)
             {
-                if (caster != null && target != null)
-                {
-                    RootDebuff rootDebuff = new RootDebuff(caster.Id, 0, 2);
-                    target.EffectList.Add(rootDebuff);
-                    rootDebuff.ApplyEffect(target);
-                    caster.AP -= requireAP;
-                    coolDownNow = coolDown;
-                    AttackService.SetDamage(caster, target, caster.Dmg * multiply, Consts.DamageType.Physical);
-                    return true;
-                }
+                RootDebuff rootDebuff = new RootDebuff(requestData.Caster.Id, 0, 2);
+                requestData.Target.EffectList.Add(rootDebuff);
+                rootDebuff.ApplyEffect(requestData.Target);
+                requestData.Caster.AP -= requireAP;
+                coolDownNow = coolDown;
+                AttackService.SetDamage(requestData.Caster, requestData.Target, requestData.Caster.Dmg * multiply, Consts.DamageType.Physical);
+                return true;
             }
+
             return false;
         }
 

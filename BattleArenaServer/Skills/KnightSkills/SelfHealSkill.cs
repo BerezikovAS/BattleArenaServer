@@ -24,23 +24,24 @@ namespace BattleArenaServer.Skills.Knight
 
         public new ISkillCastRequest request => new NontargetCastRequest();
 
-        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
+        public override bool Cast(RequestData requestData)
         {
-            if(request.startRequest(caster, target, targetHex, this))
+            if (!request.startRequest(requestData, this))
+                return false;
+
+            if (requestData.Caster != null)
             {
-                if(caster != null)
-                {
-                    caster.AP -= requireAP;
-                    caster.Heal(heal);
-                    coolDownNow = coolDown;
+                requestData.Caster.AP -= requireAP;
+                requestData.Caster.Heal(heal);
+                coolDownNow = coolDown;
 
-                    ArmorBuff buffArmor = new ArmorBuff(caster.Id, armor, 2);
-                    caster.EffectList.Add(buffArmor);
-                    buffArmor.ApplyEffect(caster);
+                ArmorBuff buffArmor = new ArmorBuff(requestData.Caster.Id, armor, 2);
+                requestData.Caster.EffectList.Add(buffArmor);
+                buffArmor.ApplyEffect(requestData.Caster);
 
-                    return true;
-                }
+                return true;
             }
+
             return false;
         }
 

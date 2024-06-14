@@ -18,7 +18,7 @@ namespace BattleArenaServer.Skills
 
         public new ISkillCastRequest request => new NontargetCastRequest();
 
-        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
+        public override bool Cast(RequestData requestData)
         {
             return false;
         }

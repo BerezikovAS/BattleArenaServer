@@ -3,6 +3,7 @@ using BattleArenaServer.Models;
 using BattleArenaServer.SkillCastRequests;
 using BattleArenaServer.Effects.Buffs;
 using BattleArenaServer.Interfaces;
+using BattleArenaServer.Services;
 
 namespace BattleArenaServer.Skills.AeroturgSkills
 {
@@ -25,27 +26,27 @@ namespace BattleArenaServer.Skills.AeroturgSkills
 
         public new ISkillCastRequest request => new HeroNotSelfCastRequest();
 
-        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
+        public override bool Cast(RequestData requestData)
         {
-            Hex? casterHex = GameData._hexes.FirstOrDefault(x => x.ID == caster.HexId);
-            if (request.startRequest(caster, target, targetHex, this) && casterHex != null && targetHex != null && target != null)
+            if (request.startRequest(requestData, this) && requestData.CasterHex != null && requestData.TargetHex != null && requestData.Target != null)
             {
                 //Меняем местами героев
-                casterHex.SetHero(target);
-                targetHex.SetHero(caster);
-                if (caster.Team != target.Team)
+                requestData.CasterHex.SetHero(requestData.Target);
+                requestData.TargetHex.SetHero(requestData.Caster);
+                if (requestData.Caster.Team != requestData.Target.Team)
                 {
-                    ArmorDebuff armorDebuff = new ArmorDebuff(caster.Id, extraArmor, 2);
-                    target.EffectList.Add(armorDebuff);
-                    armorDebuff.ApplyEffect(target);
+                    ArmorDebuff armorDebuff = new ArmorDebuff(requestData.Caster.Id, extraArmor, 2);
+                    requestData.Target.EffectList.Add(armorDebuff);
+                    armorDebuff.ApplyEffect(requestData.Target);
                 }
                 else
                 {
-                    ArmorBuff armorBuff = new ArmorBuff(caster.Id, extraArmor, 2);
-                    target.EffectList.Add(armorBuff);
-                    armorBuff.ApplyEffect(target);
+                    ArmorBuff armorBuff = new ArmorBuff(requestData.Caster.Id, extraArmor, 2);
+                    requestData.Target.EffectList.Add(armorBuff);
+                    armorBuff.ApplyEffect(requestData.Target);
                 }
-                caster.AP -= requireAP;
+                AttackService.ContinuousAuraAction();
+                requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;
                 return true;
             }

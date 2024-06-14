@@ -25,22 +25,23 @@ namespace BattleArenaServer.Skills.BerserkerSkills
 
         public new ISkillCastRequest request => new NonTargerAoECastRequest();
 
-        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
+        public override bool Cast(RequestData requestData)
         {
-            if (request.startRequest(caster, target, targetHex, this))
+            if (!request.startRequest(requestData, this))
+                return false;
+
+            if (requestData.Caster != null && requestData.TargetHex != null)
             {
-                if (caster != null && targetHex != null)
+                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
                 {
-                    foreach (var n in UtilityService.GetHexesRadius(targetHex, radius))
-                    {
-                        if (n.HERO != null && n.HERO.Team != caster.Team)
-                            AttackService.SetDamage(caster, n.HERO, dmg, Consts.DamageType.Magic);
-                    }
-                    caster.AP -= requireAP;
-                    coolDownNow = coolDown;
-                    return true;
+                    if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, Consts.DamageType.Magic);
                 }
+                requestData.Caster.AP -= requireAP;
+                coolDownNow = coolDown;
+                return true;
             }
+
             return false;
         }
 

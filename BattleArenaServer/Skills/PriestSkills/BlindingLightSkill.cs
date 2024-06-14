@@ -8,11 +8,12 @@ namespace BattleArenaServer.Skills.Priest
 {
     public class BlindingLightSkill : Skill
     {
+        int dmg = 100;
         public BlindingLightSkill()
         {
             name = "BlindingLight";
-            title = "Враги в области действия теряют 100 ХП и получают ослепление";
-            titleUpg = "-1 к перезарядке, +1 к дальности";
+            title = $"Враги в области действия теряют {dmg} ХП и получают ослепление";
+            titleUpg = "+40 к урону, +1 к дальности";
             coolDown = 4;
             coolDownNow = 0;
             requireAP = 2;
@@ -25,27 +26,28 @@ namespace BattleArenaServer.Skills.Priest
 
         public new ISkillCastRequest request => new RangeAoECastRequest();
 
-        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
+        public override bool Cast(RequestData requestData)
         {
-            if (request.startRequest(caster, target, targetHex, this))
+            if (!request.startRequest(requestData, this))
+                return false;
+
+            if (requestData.Caster != null && requestData.TargetHex != null)
             {
-                if (caster != null && targetHex != null)
+                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
                 {
-                    foreach (var n in UtilityService.GetHexesRadius(targetHex, radius))
+                    if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                     {
-                        if (n.HERO != null && n.HERO.Team != caster.Team)
-                        {
-                            BlindDebuff blindDebuff = new BlindDebuff(caster.Id, 0, 2);
-                            n.HERO.EffectList.Add(blindDebuff);
-                            blindDebuff.ApplyEffect(n.HERO);
-                            AttackService.SetDamage(caster, n.HERO, 100, Consts.DamageType.Pure);
-                        }
+                        BlindDebuff blindDebuff = new BlindDebuff(requestData.Caster.Id, 0, 2);
+                        n.HERO.EffectList.Add(blindDebuff);
+                        blindDebuff.ApplyEffect(n.HERO);
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, Consts.DamageType.Pure);
                     }
-                    caster.AP -= requireAP;
-                    coolDownNow = coolDown;
-                    return true;
                 }
+                requestData.Caster.AP -= requireAP;
+                coolDownNow = coolDown;
+                return true;
             }
+
             return false;
         }
 
@@ -55,9 +57,8 @@ namespace BattleArenaServer.Skills.Priest
             {
                 upgraded = true;
                 range += 1;
-                coolDown -= 1;
+                dmg += 40;
                 stats.range += 1;
-                stats.coolDown -= 1;
                 return true;
             }
             return false;

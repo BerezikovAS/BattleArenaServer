@@ -1,6 +1,4 @@
 ﻿using BattleArenaServer.Models;
-using BattleArenaServer.Services;
-using static BattleArenaServer.Models.Hero;
 
 namespace BattleArenaServer.Effects.Debuffs
 {

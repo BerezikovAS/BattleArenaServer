@@ -8,11 +8,11 @@ namespace BattleArenaServer.CastCheckers
     {
         public ICastChecker nextChecker { get; set; } = new TerminalChecker();
 
-        public bool Check(Hero caster, Hero? target, Hex? targetHex, Skill skill)
+        public bool Check(RequestData requestData, Skill skill)
         {
             if (skill.coolDownNow > 0)
                 return false;
-            return nextChecker.Check(caster, target, targetHex, skill);
+            return nextChecker.Check(requestData, skill);
         }
     }
 }

@@ -8,12 +8,11 @@ namespace BattleArenaServer.CastCheckers
     {
         public ICastChecker nextChecker { get; set; } = new TerminalChecker();
 
-        public bool Check(Hero caster, Hero? target, Hex? targetHex, Skill skill)
+        public bool Check(RequestData requestData, Skill skill)
         {
-            Hex? casterHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == caster.Id);
-            if (casterHex != null && targetHex != null && skill.range < casterHex.Distance(targetHex))
+            if (requestData.CasterHex != null && requestData.TargetHex != null && skill.range < requestData.CasterHex.Distance(requestData.TargetHex))
                 return false;
-            return nextChecker.Check(caster, target, targetHex, skill);
+            return nextChecker.Check(requestData, skill);
         }
     }
 }

@@ -1,9 +1,6 @@
-﻿using BattleArenaServer.Effects.Buffs;
-using BattleArenaServer.Interfaces;
+﻿using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.SkillCastRequests;
-using System.Xml.Linq;
-using System;
 using BattleArenaServer.Services;
 
 namespace BattleArenaServer.Skills.Crossbowman
@@ -27,22 +24,23 @@ namespace BattleArenaServer.Skills.Crossbowman
 
         public new ISkillCastRequest request => new LineCastRequest();
 
-        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
+        public override bool Cast(RequestData requestData)
         {
-            if (request.startRequest(caster, target, targetHex, this))
+            if (!request.startRequest(requestData, this))
+                return false;
+
+            if (requestData.Caster != null && requestData.TargetHex != null)
             {
-                if (caster != null && targetHex != null)
+                foreach (var n in UtilityService.GetHexesOneLine(requestData.Caster, requestData.TargetHex, radius))
                 {
-                    foreach (var n in UtilityService.GetHexesOneLine(caster, targetHex, radius))
-                    {
-                        if (n.HERO != null && n.HERO.Team != caster.Team)
-                            AttackService.SetDamage(caster, n.HERO, dmg, Consts.DamageType.Pure);
-                    }
-                    caster.AP -= requireAP;
-                    coolDownNow = coolDown;
-                    return true;
+                    if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, Consts.DamageType.Pure);
                 }
+                requestData.Caster.AP -= requireAP;
+                coolDownNow = coolDown;
+                return true;
             }
+
             return false;
         }
 

@@ -1,6 +1,7 @@
 ﻿using BattleArenaServer.Effects;
 using BattleArenaServer.Services;
 using BattleArenaServer.Skills;
+using BattleArenaServer.Skills._CommonSkills;
 
 namespace BattleArenaServer.Models
 {
@@ -25,9 +26,12 @@ namespace BattleArenaServer.Models
 
         public int UpgradePoints { get; set; } = 0;
 
+        public Skill MoveSkill { get; } = new MoveSkill();
+        //public Skill MoveSkill { get; } = new MoveSkill();
+
         public StatsEffect StatsEffect { get; set; } = new StatsEffect();
 
-        public delegate bool ApplyDamage(Hero attacker, Hero defender, int dmg);
+        public delegate bool ApplyDamage(Hero? attacker, Hero defender, int dmg);
         public ApplyDamage applyDamage = AttackService.ApplyDamage;
 
         public delegate int PassiveArmor(Hero? attacker, Hero defender);
@@ -39,7 +43,10 @@ namespace BattleArenaServer.Models
         public delegate int PassiveAttackDamage(Hero attacker, Hero? defender);
         public PassiveAttackDamage passiveAttackDamage = delegate { return 0; };
 
-        public delegate bool AfterAttack(Hero attacker, Hero? defender, int dmg);
+        public delegate bool BeforeAttack(Hero attacker, Hero defender, int dmg);
+        public BeforeAttack beforeAttack = delegate { return false; };
+
+        public delegate bool AfterAttack(Hero attacker, Hero defender, int dmg);
         public AfterAttack afterAttack = delegate { return false; };
 
         public delegate int ModifierAppliedDamage(Hero? attacker, Hero defender, int dmg);

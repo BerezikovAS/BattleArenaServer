@@ -15,8 +15,6 @@ namespace BattleArenaServer
 
         public bool SpellCast(int _target, int _caster, int _spell);
 
-        public List<Hex> SpellArea(int _target, int _caster, int _spell);
-
         public bool UpgradeSkill(int _cur_pos, int _skill);
     }
 }

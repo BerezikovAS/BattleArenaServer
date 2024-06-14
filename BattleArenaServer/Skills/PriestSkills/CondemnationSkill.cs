@@ -1,9 +1,6 @@
-﻿using BattleArenaServer.Effects.Buffs;
-using BattleArenaServer.Interfaces;
+﻿using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.SkillCastRequests;
-using System.Xml.Linq;
-using System;
 using BattleArenaServer.Effects.Debuffs;
 
 namespace BattleArenaServer.Skills.PriestSkills
@@ -27,22 +24,22 @@ namespace BattleArenaServer.Skills.PriestSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
+        public override bool Cast(RequestData requestData)
         {
-            if (request.startRequest(caster, target, targetHex, this))
+            if (!request.startRequest(requestData, this))
+                return false;
+
+            if (requestData.Caster != null && requestData.Target != null)
             {
-                if (caster != null && target != null)
-                {
-                    caster.AP -= requireAP;
+                CondemnationDebuff condemnationDebuff = new CondemnationDebuff(requestData.Caster.Id, extraDmgPercent, 2);
+                requestData.Target.EffectList.Add(condemnationDebuff);
+                condemnationDebuff.ApplyEffect(requestData.Target);
 
-                    CondemnationDebuff condemnationDebuff = new CondemnationDebuff(caster.Id, extraDmgPercent, 2);
-                    target.EffectList.Add(condemnationDebuff);
-                    condemnationDebuff.ApplyEffect(target);
-
-                    coolDownNow = coolDown;
-                    return true;
-                }
+                requestData.Caster.AP -= requireAP;
+                coolDownNow = coolDown;
+                return true;
             }
+
             return false;
         }
 

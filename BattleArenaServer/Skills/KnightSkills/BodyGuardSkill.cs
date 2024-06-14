@@ -25,22 +25,22 @@ namespace BattleArenaServer.Skills.Knight
 
         public new ISkillCastRequest request => new FriendTargetCastRequest();
 
-        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
+        public override bool Cast(RequestData requestData)
         {
-            if (request.startRequest(caster, target, targetHex, this))
+            if (!request.startRequest(requestData, this))
+                return false;
+
+            if (requestData.Caster != null && requestData.Target != null)
             {
-                if (caster != null && target != null)
-                {
-                    caster.AP -= requireAP;
+                BodyGuardBuff bodyGuardBuff = new BodyGuardBuff(requestData.Caster.Id, defence, duration);
+                requestData.Target.EffectList.Add(bodyGuardBuff);
+                bodyGuardBuff.ApplyEffect(requestData.Target);
 
-                    BodyGuardBuff bodyGuardBuff = new BodyGuardBuff(caster.Id, defence, duration);
-                    target.EffectList.Add(bodyGuardBuff);
-                    bodyGuardBuff.ApplyEffect(target);
-
-                    coolDownNow = coolDown;
-                    return true;
-                }
+                requestData.Caster.AP -= requireAP;
+                coolDownNow = coolDown;
+                return true;
             }
+
             return false;
         }
 

@@ -1,5 +1,4 @@
 ﻿using BattleArenaServer.Models;
-using System.Xml.Linq;
 
 namespace BattleArenaServer.Skills.PriestSkills.Auras
 {
@@ -27,7 +26,7 @@ namespace BattleArenaServer.Skills.PriestSkills.Auras
             }    
         }
 
-        public override void CancelEffect()
+        public override void CancelEffect(Hero source)
         {
 
         }

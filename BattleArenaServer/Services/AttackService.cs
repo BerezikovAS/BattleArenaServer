@@ -63,7 +63,7 @@ namespace BattleArenaServer.Services
                 {
                     if (aura.type == Consts.AuraType.Continuous)
                     {
-                        aura.CancelEffect();
+                        aura.CancelEffect(hero);
                         Hex? hexSource = GameData._hexes.FirstOrDefault(x => x.ID == hero.HexId);
                         if (hexSource != null)
                             aura.SetEffect(hero, hexSource);

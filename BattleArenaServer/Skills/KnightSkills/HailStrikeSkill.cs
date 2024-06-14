@@ -2,7 +2,6 @@
 using BattleArenaServer.Models;
 using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
-using System.Xml.Linq;
 
 namespace BattleArenaServer.Skills.Knight
 {
@@ -13,9 +12,9 @@ namespace BattleArenaServer.Skills.Knight
             name = "Hail Strike";
             title = "Обрушивает мощный град на врагов в области, нанося 200 маг. урона каждому";
             titleUpg = "+1 к радиусу, +1 к дальности";
-            coolDown = 0; //5;
+            coolDown = 5; //5;
             coolDownNow = 0;
-            requireAP = 1; //2;
+            requireAP = 2; //2;
             nonTarget = false;
             range = 2;
             radius = 1;
@@ -25,22 +24,23 @@ namespace BattleArenaServer.Skills.Knight
 
         public new ISkillCastRequest request => new RangeAoECastRequest();
 
-        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
+        public override bool Cast(RequestData requestData)
         {
-            if (request.startRequest(caster, target, targetHex, this))
+            if (!request.startRequest(requestData, this))
+                return false;
+
+            if (requestData.Caster != null && requestData.TargetHex != null)
             {
-                if (caster != null && targetHex != null)
+                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
                 {
-                    foreach (var n in UtilityService.GetHexesRadius(targetHex, radius))
-                    {
-                        if (n.HERO != null && n.HERO.Team != caster.Team)
-                            AttackService.SetDamage(caster, n.HERO, 200, Consts.DamageType.Magic);
-                    }
-                    caster.AP -= requireAP;
-                    coolDownNow = coolDown;
-                    return true;
+                    if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
+                        AttackService.SetDamage(requestData.Caster, n.HERO, 200, Consts.DamageType.Magic);
                 }
+                requestData.Caster.AP -= requireAP;
+                coolDownNow = coolDown;
+                return true;
             }
+
             return false;
         }        
 

@@ -26,24 +26,25 @@ namespace BattleArenaServer.Skills.KnightSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
+        public override bool Cast(RequestData requestData)
         {
             int alliesCount = 0;
-            if (request.startRequest(caster, target, targetHex, this))
+            if (!request.startRequest(requestData, this))
+                return false;
+
+            if (requestData.Caster != null && requestData.Target != null && requestData.TargetHex != null)
             {
-                if (caster != null && target != null && targetHex != null)
+                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
                 {
-                    foreach (var n in UtilityService.GetHexesRadius(targetHex, radius))
-                    {
-                        if (n.HERO != null && n.HERO.Team == caster.Team && n.HERO.Id != caster.Id)
-                            alliesCount++;
-                    }
-                    caster.AP -= requireAP;
-                    coolDownNow = coolDown;
-                    AttackService.SetDamage(caster, target, dmg + alliesCount * extraDmg, Consts.DamageType.Physical);
-                    return true;
+                    if (n.HERO != null && n.HERO.Team == requestData.Caster.Team && n.HERO.Id != requestData.Caster.Id)
+                        alliesCount++;
                 }
+                requestData.Caster.AP -= requireAP;
+                coolDownNow = coolDown;
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg + alliesCount * extraDmg, Consts.DamageType.Physical);
+                return true;
             }
+
             return false;
         }
 

@@ -6,12 +6,7 @@ namespace BattleArenaServer.SkillCastRequests
 {
     public class RangeAoECastRequest : ISkillCastRequest
     {
-        public void cancelRequest()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool startRequest(Hero caster, Hero? target, Hex? targetHex, Skill skill)
+        public bool startRequest(RequestData requestData, Skill skill)
         {
             ICastChecker coolDownChecker = new CooldownChecker();
             ICastChecker rangeChecker = new RangeChecker();
@@ -20,7 +15,7 @@ namespace BattleArenaServer.SkillCastRequests
             coolDownChecker.nextChecker = rangeChecker;
             rangeChecker.nextChecker = actionPointsChecker;
             actionPointsChecker.nextChecker = new TerminalChecker();
-            return coolDownChecker.Check(caster, target, targetHex, skill);
+            return coolDownChecker.Check(requestData, skill);
         }
     }
 }

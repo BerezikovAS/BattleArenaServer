@@ -1,5 +1,4 @@
-﻿using BattleArenaServer.Interfaces;
-using BattleArenaServer.Skills.Knight;
+﻿using BattleArenaServer.Skills.Knight;
 using BattleArenaServer.Skills.KnightSkills;
 using BattleArenaServer.Skills.KnightSkills.Auras;
 
@@ -25,7 +24,7 @@ namespace BattleArenaServer.Models.Heroes
 
             SkillList[0] = new SelfHealSkill();
             SkillList[1] = new ShieldBashSkill();
-            SkillList[2] = new Skills.Knight.BodyGuardSkill();
+            SkillList[2] = new BodyGuardSkill();
             SkillList[3] = new FormationAttackSkill();
 
             AuraList.Add(new HighShieldAura());

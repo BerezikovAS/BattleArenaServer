@@ -2,8 +2,6 @@
 using BattleArenaServer.Models;
 using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
-using System.Xml.Linq;
-using System;
 using BattleArenaServer.Effects.Debuffs;
 
 namespace BattleArenaServer.Skills.Crossbowman
@@ -27,21 +25,22 @@ namespace BattleArenaServer.Skills.Crossbowman
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(Hero caster, Hero? target, Hex? targetHex)
+        public override bool Cast(RequestData requestData)
         {
-            if (request.startRequest(caster, target, targetHex, this))
+            if (!request.startRequest(requestData, this))
+                return false;
+
+            if (requestData.Caster != null && requestData.Target != null)
             {
-                if (caster != null && target != null)
-                {
-                    RootDebuff rootDebuff = new RootDebuff(caster.Id, 0, 2);
-                    target.EffectList.Add(rootDebuff);
-                    rootDebuff.ApplyEffect(target);
-                    caster.AP -= requireAP;
-                    coolDownNow = coolDown;
-                    AttackService.SetDamage(caster, target, dmg, Consts.DamageType.Physical);
-                    return true;
-                }
+                RootDebuff rootDebuff = new RootDebuff(requestData.Caster.Id, 0, 2);
+                requestData.Target.EffectList.Add(rootDebuff);
+                rootDebuff.ApplyEffect(requestData.Target);
+                requestData.Caster.AP -= requireAP;
+                coolDownNow = coolDown;
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, Consts.DamageType.Physical);
+                return true;
             }
+
             return false;
         }
 

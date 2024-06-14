@@ -11,9 +11,9 @@ namespace BattleArenaServer.Models
         public Consts.AuraType type { get; set; } = Consts.AuraType.Continuous;
 
         public abstract void ApplyEffect(Hero source, Hero target);
-        public abstract void CancelEffect();
+        public abstract void CancelEffect(Hero source);
 
-        public void SetEffect(Hero heroSource, Hex hexSource)
+        public virtual void SetEffect(Hero heroSource, Hex hexSource)
         {
             foreach (var n in UtilityService.GetHexesRadius(hexSource, radius))
             {

@@ -1,7 +1,5 @@
-﻿using BattleArenaServer.Skills.Priest;
-using BattleArenaServer.Skills.PriestSkills.Auras;
-using BattleArenaServer.Skills.PriestSkills;
-using BattleArenaServer.Skills.AeroturgSkills;
+﻿using BattleArenaServer.Skills.AeroturgSkills;
+using BattleArenaServer.Services;
 
 namespace BattleArenaServer.Models.Heroes
 {
@@ -27,9 +25,27 @@ namespace BattleArenaServer.Models.Heroes
             SkillList[0] = new SwapSkill();
             SkillList[1] = new ChainLightningSkill();
             SkillList[2] = new ThunderWaveSkill();
-            SkillList[3] = new CondemnationSkill();
+            SkillList[3] = new AirFormSkill();
 
-            AuraList.Add(new BlessAura());
+            afterAttack += AfterAttackDelegate;
+        }
+
+        private bool AfterAttackDelegate(Hero attacker, Hero? defender, int dmg)
+        {
+            Hex? targetHex = GameData._hexes.FirstOrDefault(x => x.ID == defender?.HexId);
+            if (targetHex != null && defender != null)
+            {
+                foreach (var hex in UtilityService.GetHexesRadius(targetHex, 1))
+                {
+                    if (hex.HERO != null && hex.HERO.Team != attacker.Team && hex.HERO.Id != defender.Id)
+                    {
+                        double splashDmg = Math.Round(dmg * 0.3);
+                        AttackService.SetDamage(attacker, hex.HERO, (int)splashDmg, Consts.DamageType.Magic);
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }
