@@ -7,11 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <Compile Remove="Effects\Auras\**" />
+    <Content Remove="Effects\Auras\**" />
+    <EmbeddedResource Remove="Effects\Auras\**" />
+    <None Remove="Effects\Auras\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Effects\Auras\" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
 </Project>

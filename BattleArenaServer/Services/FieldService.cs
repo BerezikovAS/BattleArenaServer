@@ -1,36 +1,19 @@
-﻿using BattleArenaServer.Models;
+﻿using BattleArenaServer.Interfaces;
+using BattleArenaServer.Models;
 using BattleArenaServer.Models.Heroes;
 
 namespace BattleArenaServer.Services
 {
     public class FieldService : IField
     {
-        public FieldService() 
+        public FieldService()
         {
-            // Создание поля
-            int[] _start = [-1, -3, 4];
-            for (int i = 0; i < 52; i++)
-            {
-                Hex hex = new Hex(_start[0], _start[1], _start[2], i);
-                GameData._hexes.Add(hex);
-                switch (i) 
-                {
-                    case 6: _start = [-2, -2, 4]; break;
-                    case 14: _start = [-2, -1, 3]; break;
-                    case 21: _start = [-3, 0, 3]; break;
-                    case 29: _start = [-3, 1, 2]; break;
-                    case 36: _start = [-4, 2, 2]; break;
-                    case 44: _start = [-4, 3, 1]; break;
-                    default:
-                    {
-                        _start[0] += Consts.directions[1].COORD[0];
-                        _start[1] += Consts.directions[1].COORD[1];
-                        _start[2] += Consts.directions[1].COORD[2];
-                        break;
-                    }
-                }
-            }
+            CreateGameField();
+            CreateHeroList();
+        }
 
+        private static void CreateHeroList()
+        {
             // Создание и размещение героев на поле. (Для тестов)
             Hero hero1 = new KnightHero();
             Hero hero2 = new CrossbowmanHero();
@@ -38,7 +21,7 @@ namespace BattleArenaServer.Services
             Hero hero4 = new PriestHero();
             Hero hero5 = new AeroturgHero();
             Hero hero6 = new GeomantHero();
-            hero4.Armor = 0;
+
             GameData._hexes[7].SetHero(hero1);
             GameData._hexes[22].SetHero(hero2);
             GameData._hexes[37].SetHero(hero6);
@@ -55,6 +38,33 @@ namespace BattleArenaServer.Services
 
             // Применяем эффекты постоянных аур сразу
             AttackService.ContinuousAuraAction();
+        }
+
+        private void CreateGameField()
+        {
+            // Создание поля
+            int[] _start = [-1, -3, 4];
+            for (int i = 0; i < 52; i++)
+            {
+                Hex hex = new Hex(_start[0], _start[1], _start[2], i);
+                GameData._hexes.Add(hex);
+                switch (i)
+                {
+                    case 6: _start = [-2, -2, 4]; break;
+                    case 14: _start = [-2, -1, 3]; break;
+                    case 21: _start = [-3, 0, 3]; break;
+                    case 29: _start = [-3, 1, 2]; break;
+                    case 36: _start = [-4, 2, 2]; break;
+                    case 44: _start = [-4, 3, 1]; break;
+                    default:
+                        {
+                            _start[0] += Consts.directions[1].COORD[0];
+                            _start[1] += Consts.directions[1].COORD[1];
+                            _start[2] += Consts.directions[1].COORD[2];
+                            break;
+                        }
+                }
+            }
         }
 
         public List<Hex> GetField()
@@ -98,7 +108,10 @@ namespace BattleArenaServer.Services
             {
                 Hero attacker = requestData.Caster;
                 Hero defender = requestData.Target;
-                if (requestData.CasterHex.Distance(requestData.TargetHex) > attacker.AttackRadius + attacker.StatsEffect.AttackRadius || attacker.AP < attacker.APtoAttack)
+
+                int range = attacker.EffectList.FirstOrDefault(x => x.Name == "Blind") == null ? attacker.AttackRadius + attacker.StatsEffect.AttackRadius : 1;
+
+                if (requestData.CasterHex.Distance(requestData.TargetHex) > range || attacker.AP < attacker.APtoAttack)
                     return new List<Hex>();
 
                 attacker.AP -= attacker.APtoAttack;

@@ -34,6 +34,11 @@ function mouseMoveHoverOut(_hex) {
 
 
 function fillFootHovers(_hex, _hexes) {
+
+    var attackRange = _hex.hero.attackRadius + _hex.hero.statsEffect.attackRadius;
+    if (_hex.hero.effectList.find(x => x.name === "Blind") != null)
+        attackRange = 1;
+
     _hexes.forEach(el => {
         if (el.hero == null && getDistance(_hex, el) == 1)
         {
@@ -41,7 +46,7 @@ function fillFootHovers(_hex, _hexes) {
             _hexHover.setAttribute("onmouseenter", "mouseMoveHoverIn(this)");
             _hexHover.setAttribute("onmouseleave", "mouseMoveHoverOut(this)");
         } 
-        else if (el.hero != null && getDistance(_hex, el) <= _hex.hero.attackRadius + _hex.hero.statsEffect.attackRadius)
+        else if (el.hero != null && getDistance(_hex, el) <= attackRange)
         {
             if (el.hero.team != _hex.hero.team) {
                 const _hexHover = document.getElementById(el.id);
