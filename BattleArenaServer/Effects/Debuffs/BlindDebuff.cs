@@ -15,21 +15,21 @@ namespace BattleArenaServer.Effects.Debuffs
 
         public override void ApplyEffect(Hero hero)
         {
-            hero.StatsEffect.AttackRadius = 1 - hero.AttackRadius;
+            //hero.StatsEffect.AttackRadius = 1 - hero.AttackRadius;
 
-            foreach (var skill in hero.SkillList)
-            {
-                skill.range = 1;
-            }
+            //foreach (var skill in hero.SkillList)
+            //{
+            //    skill.range = 1;
+            //}
         }
 
         public override void RemoveEffect(Hero hero)
         {
-            hero.StatsEffect.AttackRadius = hero.AttackRadius;
-            foreach (var skill in hero.SkillList)
-            {
-                skill.range = skill.stats.range;
-            }
+            //hero.StatsEffect.AttackRadius = hero.AttackRadius;
+            //foreach (var skill in hero.SkillList)
+            //{
+            //    skill.range = skill.stats.range;
+            //}
         }
     }
 }

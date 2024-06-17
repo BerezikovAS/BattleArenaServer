@@ -1,6 +1,5 @@
 ﻿using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
-using System.Collections.Generic;
 
 namespace BattleArenaServer.CastCheckers
 {
@@ -10,7 +9,9 @@ namespace BattleArenaServer.CastCheckers
 
         public bool Check(RequestData requestData, Skill skill)
         {
-            if (requestData.CasterHex != null && requestData.TargetHex != null && skill.range < requestData.CasterHex.Distance(requestData.TargetHex))
+            int range = requestData.Caster?.EffectList.FirstOrDefault(x => x.Name == "Blind") == null ? skill.range : 1;
+
+            if (requestData.CasterHex != null && requestData.TargetHex != null && range < requestData.CasterHex.Distance(requestData.TargetHex))
                 return false;
             return nextChecker.Check(requestData, skill);
         }

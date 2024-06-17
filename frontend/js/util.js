@@ -80,29 +80,34 @@ function feelAP(_ap) {
 function getHexesSpellArea(_target, _caster, _spell) {
     var spellArea = [];
     //console.log("spell area: " + _spell.area);
+
+    var spellRange = _spell.range;
+    if (hexes[_caster].hero.effectList.find(x => x.name === "Blind") != null)
+        spellRange = 1;
+
     switch (_spell.area) {
         case 1:
-            if (getDistance(hexes[_target], hexes[_caster]) <= _spell.range) {
+            if (getDistance(hexes[_target], hexes[_caster]) <= spellRange) {
                 if (hexes[_target].hero != null && hexes[_target].hero.team == hexes[_caster].hero.team)
                     spellArea.push(_target);
             }
             break;
         case 2:
-            if (getDistance(hexes[_target], hexes[_caster]) <= _spell.range) {
+            if (getDistance(hexes[_target], hexes[_caster]) <= spellRange) {
                 if (hexes[_target].hero != null && hexes[_target].hero.team != hexes[_caster].hero.team)
                     spellArea.push(_target);
             }
             break;
         case 3:
             let _dist = getDistance(hexes[_target], hexes[_caster]);
-            if (_dist <= _spell.range && _dist > 0) {
+            if (_dist <= spellRange && _dist > 0) {
                 if (hexes[_target].hero != null && hexes[_target].hero.team == hexes[_caster].hero.team)
                     spellArea.push(_target);
             }
             break;
         case 4:
             // Тыкать нужно в радиусе досягаемости
-            if (getDistance(hexes[_target], hexes[_caster]) <= _spell.range) {
+            if (getDistance(hexes[_target], hexes[_caster]) <= spellRange) {
                 hexes.forEach(hex => {
                     // Нашли нужный гекс, от 
                     if (getDistance(hex, hexes[_target]) <= _spell.radius) {
@@ -129,12 +134,12 @@ function getHexesSpellArea(_target, _caster, _spell) {
             }
             break;
         case 7:
-            if (getDistance(hexes[_target], hexes[_caster]) <= _spell.range) {
+            if (getDistance(hexes[_target], hexes[_caster]) <= spellRange) {
                 if (hexes[_target].hero != null)
                     spellArea.push(_target);
             }
         case 8:
-            if (getDistance(hexes[_target], hexes[_caster]) <= _spell.range) {
+            if (getDistance(hexes[_target], hexes[_caster]) <= spellRange) {
                 if (hexes[_target].hero != null && hexes[_target].hero.id != hexes[_caster].hero.id)
                     spellArea.push(_target);
             }

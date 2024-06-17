@@ -26,7 +26,7 @@ namespace BattleArenaServer.Models.Heroes
             SkillList[0] = new StalaktiteSkill();
             SkillList[1] = new GiantBoulderSkill();
             SkillList[2] = new StoneBloodSkill();
-            SkillList[3] = new AirFormSkill();
+            SkillList[3] = new EarthquakeSkill();
 
             AuraList.Add(new StoneStrengthAura());
         }
