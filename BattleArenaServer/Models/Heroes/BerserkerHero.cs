@@ -20,32 +20,11 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 105;
 
-            SkillList[0] = new BattleTrancePSkill();
+            SkillList[0] = new BattleTrancePSkill(this);
             SkillList[1] = new WhirlwindAxesSkill();
             SkillList[2] = new BrokenLegSkill();
             SkillList[3] = new BattleCrySkill();
             SkillList[4] = new BloodRageSkill();
-
-            passiveAttackDamage += BattleTrance;
-        }
-
-        private int BattleTrance(Hero attacker, Hero? defender)
-        {
-            Hex? attackerHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == attacker.Id);
-
-            int enemiesCount = 0;
-            double extraDmg = 0;
-            if (attackerHex != null)
-            {
-                foreach (var n in UtilityService.GetHexesRadius(attackerHex, 1))
-                {
-                    if (n.HERO != null && n.HERO.Team != attacker.Team)
-                        enemiesCount++;
-                }
-                extraDmg = (attacker.Dmg + attacker.StatsEffect.Dmg) * ((enemiesCount - 1) * 0.2);
-                return (int)(Math.Round(extraDmg));
-            }
-            return 0;
         }
     }
 }

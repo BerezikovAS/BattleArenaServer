@@ -1,10 +1,10 @@
 .main {
     width: 825px;
-    display:flex;
-    --s: 100px;  /* size  */
-    --m: 1px;    /* margin */
-    --f: calc(1.732 * var(--s) + 4 * var(--m)  - 1px);
-  }
+    display: flex;
+    --s: 100px; /* size  */
+    --m: 1px; /* margin */
+    --f: calc(1.732 * var(--s) + 4 * var(--m) - 1px);
+}
   
   
 
@@ -31,14 +31,18 @@
     background: rgb(0, 99, 248);
   }
 
-  button.spell {
+button.spell {
     width: 100px;
     height: 100px;
     background-color: rgb(151, 248, 142);
     border: 3px solid rgb(1, 73, 1);
     border-radius: 10px;
     font-weight: 600;
-  }
+}
+
+    button.passive {
+        border-radius: 50px;
+    }
 
   button.spellActive {
     width: 100px;
@@ -58,10 +62,27 @@
     font-weight: 600;
   }
 
-  button.upgrade {
+button.upgrade {
     width: 100px;
     height: 25px;
-  }
+    background-color: yellow;
+    border: 3px solid rgb(1, 73, 1);
+    border-radius: 10px;
+    font-weight: 600;
+    margin-right: 6px;
+}
+
+button.controls {
+    width: 100px;
+    background-color: rgb(151, 248, 142);
+    border: 3px solid rgb(1, 73, 1);
+    border-radius: 10px;
+}
+
+button.cancel {
+    background-image: url("Cancel.png");
+    background-size: unset ;
+}
 
   div.cooldawn {
     position: absolute;
@@ -137,12 +158,23 @@
     border-radius: 10px;
   }
 
-  #heroinfo_icon_img {
+  .heroinfo_icon_img {
     width: 90px;
     height: 90px;
     position: absolute;
     padding-left: 5px;
     padding-top: 5px;
   }
+
+div.AP_container {
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 50px;
+    width: 186px;
+    background-color: rgb(151, 248, 142);
+    border: 3px solid rgb(1, 73, 1);
+    border-radius: 40px;
+    margin-left: 20px;
+}
 
   

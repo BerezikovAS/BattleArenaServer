@@ -16,7 +16,7 @@ namespace BattleArenaServer.Skills.Knight
             titleUpg = "Действует 2 хода";
             coolDown = 4;
             coolDownNow = 0;
-            requireAP = 2;
+            requireAP = 1;
             range = 1;
             nonTarget = false;
             area = Consts.SpellArea.AllyTarget;

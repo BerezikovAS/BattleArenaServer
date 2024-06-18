@@ -33,7 +33,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
             if (!request.startRequest(requestData, this))
                 return false;
 
-            if (requestData.Caster != null && requestData.TargetHex != null)
+            if (requestData.Caster != null && requestData.TargetHex != null && requestData.TargetHex.OBSTACLE == null)
             {
                 //Ставим столоктит
                 int Id = GameData._hexes.Max(x => x.HERO != null ? x.HERO.Id : 0) + 1;

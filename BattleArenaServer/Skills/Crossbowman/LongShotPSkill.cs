@@ -2,13 +2,15 @@
 
 namespace BattleArenaServer.Skills.Crossbowman
 {
-    public class LongShotPSkill : Skill
+    public class LongShotPSkill : PassiveSkill
     {
-        public LongShotPSkill()
+        double extraDmgPercent = 0.14;
+        public LongShotPSkill(Hero hero) : base(hero)
         {
             name = "Long Shot";
-            title = "Чем дальше цель атаки, тем больше урона она получит. +10% к урону за каждую клетку между Вами и целью.";
-            skillType = Consts.SkillType.Passive;
+            title = $"Чем дальше цель атаки, тем больше урона она получит. +{extraDmgPercent * 100}% к урону за каждую клетку между Вами и целью.";
+            titleUpg = "+8% к бонусу урона за клетку.";
+            hero.passiveAttackDamage += LongShot;
         }
 
         public override bool Cast(RequestData requestData)
@@ -18,7 +20,30 @@ namespace BattleArenaServer.Skills.Crossbowman
 
         public override bool UpgradeSkill()
         {
+            if (!upgraded)
+            {
+                upgraded = true;
+                hero.passiveAttackDamage -= LongShot;
+                extraDmgPercent += 0.08;
+                hero.passiveAttackDamage += LongShot;
+                return true;
+            }
             return false;
+        }
+        private int LongShot(Hero attacker, Hero? defender)
+        {
+            if (defender == null)
+                return 0;
+
+            Hex? attackerHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == attacker.Id);
+            Hex? defenderHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == defender.Id);
+
+            if (attackerHex != null && defenderHex != null)
+            {
+                double extraDmg = (attacker.Dmg + attacker.StatsEffect.Dmg) * extraDmgPercent * (attackerHex.Distance(defenderHex) - 1);
+                return (int)(Math.Round(extraDmg));
+            }
+            return 0;
         }
     }
 }
