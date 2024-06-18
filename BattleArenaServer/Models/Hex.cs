@@ -57,9 +57,7 @@ namespace BattleArenaServer.Models
 
         public bool IsFree()
         {
-            if (Hero != null || (Obstacle is SolidObstacle))
-                return false;
-            return true;
+            return Hero == null;
         }
 
         public int Distance(Hex hex)

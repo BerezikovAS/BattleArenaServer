@@ -33,7 +33,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             if (requestData.Caster != null && requestData.Target != null)
             {
                 RootDebuff rootDebuff = new RootDebuff(requestData.Caster.Id, 0, 2);
-                requestData.Target.EffectList.Add(rootDebuff);
+                requestData.Target.AddEffect(rootDebuff);
                 rootDebuff.ApplyEffect(requestData.Target);
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;

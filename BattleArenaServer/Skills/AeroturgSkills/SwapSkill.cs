@@ -36,13 +36,13 @@ namespace BattleArenaServer.Skills.AeroturgSkills
                 if (requestData.Caster.Team != requestData.Target.Team)
                 {
                     ArmorDebuff armorDebuff = new ArmorDebuff(requestData.Caster.Id, extraArmor, 2);
-                    requestData.Target.EffectList.Add(armorDebuff);
+                    requestData.Target.AddEffect(armorDebuff);
                     armorDebuff.ApplyEffect(requestData.Target);
                 }
                 else
                 {
                     ArmorBuff armorBuff = new ArmorBuff(requestData.Caster.Id, extraArmor, 2);
-                    requestData.Target.EffectList.Add(armorBuff);
+                    requestData.Target.AddEffect(armorBuff);
                     armorBuff.ApplyEffect(requestData.Target);
                 }
                 AttackService.ContinuousAuraAction();

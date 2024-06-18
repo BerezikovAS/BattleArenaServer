@@ -77,7 +77,7 @@ function clearSpellAreaHovers() {
 }
 
 function mouseSpellHoverIn(_hex, _spell) {
-    var spell = heroes[idActiveHero].skillList[_spell - 1];
+    var spell = heroes[idActiveHero].skillList[_spell];
     var spellArea = getHexesSpellArea(_hex.getAttribute("id"), heroes[idActiveHero].coordid, spell)
 
     spellArea.forEach(el => {

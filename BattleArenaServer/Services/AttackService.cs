@@ -48,13 +48,18 @@ namespace BattleArenaServer.Services
             {
                 Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == defender.HexId);
                 if (hex != null)
+                {
                     hex.RemoveHero();
-                //GameData._heroes.Remove(defender);
+                    ContinuousAuraAction();
+                }
                 return true;
             }
             return false;
         }
 
+        /// <summary>
+        /// Обновление эффектов постоянных аур
+        /// </summary>
         public static void ContinuousAuraAction()
         {
             foreach (var hero in GameData._heroes)
@@ -72,6 +77,10 @@ namespace BattleArenaServer.Services
             }
         }
 
+        /// <summary>
+        /// Применение эффекта ауры в конце хода текущего героя
+        /// </summary>
+        /// <param name="sourceAura"></param>
         public static void EndTurnAuraAction(Hero sourceAura)
         {
             foreach (var aura in sourceAura.AuraList)
@@ -85,6 +94,12 @@ namespace BattleArenaServer.Services
             }
         }
 
+        /// <summary>
+        /// Перемещение героя с одного гекса на другой
+        /// </summary>
+        /// <param name="hero"></param>
+        /// <param name="currentHex"></param>
+        /// <param name="targetHex"></param>
         public static void MoveHero(Hero hero, Hex currentHex, Hex targetHex)
         {
             targetHex.SetHero(hero);

@@ -6,11 +6,9 @@ namespace BattleArenaServer.Models.Heroes
 {
     public class GeomantHero : Hero
     {
-        public GeomantHero()
+        public GeomantHero(int Id, string Team) : base(Id, Team)
         {
-            Id = 5;
             Name = "Geomant";
-            Team = "blue";
 
             MaxHP = HP = 850;
             Armor = 1;
@@ -23,10 +21,11 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 3;
             Dmg = 90;
 
-            SkillList[0] = new StalaktiteSkill();
-            SkillList[1] = new GiantBoulderSkill();
-            SkillList[2] = new StoneBloodSkill();
-            SkillList[3] = new EarthquakeSkill();
+            SkillList[0] = new StoneStrenghtPSkill();
+            SkillList[1] = new StalaktiteSkill();
+            SkillList[2] = new GiantBoulderSkill();
+            SkillList[3] = new StoneBloodSkill();
+            SkillList[4] = new EarthquakeSkill();
 
             AuraList.Add(new StoneStrengthAura());
         }

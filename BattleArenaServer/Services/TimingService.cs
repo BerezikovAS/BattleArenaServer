@@ -1,6 +1,7 @@
 ﻿using BattleArenaServer.Effects;
 using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
+using BattleArenaServer.Models.Obstacles;
 
 namespace BattleArenaServer.Services
 {
@@ -73,6 +74,7 @@ namespace BattleArenaServer.Services
 
         public void DecreaseLifeTimeObstacle(Hero hero)
         {
+            // Пробегаемся по обычным преградам
             foreach (var obst in GameData._obstacles)
             {
                 if (obst.CasterId == hero.Id)
@@ -82,9 +84,30 @@ namespace BattleArenaServer.Services
                         Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == obst.HexId);
                         if (hex != null)
                             hex.RemoveObstacle();
+                        AttackService.ContinuousAuraAction();
                     }
                 }
             }
+
+            // Теперь по блокирующим перемещение
+            List<SolidObstacle> removeObst = new List<SolidObstacle>();
+            foreach (var obst in GameData._solidObstacles)
+            {
+                if (obst.casterId == hero.Id)
+                {
+                    if (--obst.lifeTime <= 0)
+                    {
+                        Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == obst.HexId);
+                        if (hex != null)
+                            hex.RemoveHero();
+                        AttackService.ContinuousAuraAction();
+                        removeObst.Add(obst);
+                    }
+                }
+            }
+            // Удалем то что уже протухло
+            foreach (var obst in removeObst)
+                GameData._solidObstacles.Remove(obst);
         }
 
         public void EndTurnStatusApplyEffect(Hero hero)

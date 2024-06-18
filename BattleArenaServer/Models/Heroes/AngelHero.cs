@@ -6,7 +6,8 @@ namespace BattleArenaServer.Models.Heroes
 {
     public class AngelHero : Hero
     {
-        public AngelHero() {
+        public AngelHero(int Id, string Team) : base(Id, Team)
+        {
             Id = 1;
             Name = "Angel";
             Team = "blue";

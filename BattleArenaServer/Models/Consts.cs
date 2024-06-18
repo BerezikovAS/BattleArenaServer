@@ -44,5 +44,17 @@
             EndTurn,
             StartTurn
         }
+
+        public enum HeroType
+        {
+            Hero,
+            Obstacle
+        }
+
+        public enum SkillType
+        {
+            Active,
+            Passive
+        }
     }
 }

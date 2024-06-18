@@ -5,11 +5,9 @@ namespace BattleArenaServer.Models.Heroes
 {
     public class BerserkerHero : Hero
     {
-        public BerserkerHero()
+        public BerserkerHero(int Id, string Team) : base(Id, Team)
         {
-            Id = 2;
             Name = "Berserker";
-            Team = "red";
 
             MaxHP = HP = 1000;
             Armor = 4;
@@ -22,10 +20,11 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 105;
 
-            SkillList[0] = new WhirlwindAxesSkill();
-            SkillList[1] = new BrokenLegSkill();
-            SkillList[2] = new BattleCrySkill();
-            SkillList[3] = new BloodRageSkill();
+            SkillList[0] = new BattleTrancePSkill();
+            SkillList[1] = new WhirlwindAxesSkill();
+            SkillList[2] = new BrokenLegSkill();
+            SkillList[3] = new BattleCrySkill();
+            SkillList[4] = new BloodRageSkill();
 
             passiveAttackDamage += BattleTrance;
         }

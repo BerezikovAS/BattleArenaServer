@@ -1,16 +1,21 @@
-﻿using BattleArenaServer.Models.Obstacles;
+﻿using BattleArenaServer.Effects;
+using BattleArenaServer.Models;
+using BattleArenaServer.Models.Obstacles;
 
 namespace BattleArenaServer.Skills.GeomantSkills.Obstacles
 {
     public class StalaktiteObstacle : SolidObstacle
     {
-        public StalaktiteObstacle(int casterId, int hexId, int lifeTime, string team)
+        public StalaktiteObstacle(int id, int casterId, int hexId, int hp, string team, int lifeTime) : base(id, team, casterId, lifeTime)
         {
             Name = "Stalaktite";
-            CasterId = casterId;
             HexId = hexId;
-            LifeTime = lifeTime;
-            Team = team;
+            MaxHP = HP = hp;
+        }
+
+        public override void AddEffect(Effect effect)
+        {
+
         }
     }
 }

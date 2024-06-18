@@ -43,7 +43,7 @@ namespace BattleArenaServer.Skills.Crossbowman.Obstacles
 
                 //Вешаем кровотечение
                 BleedingDebuff bleedingDebuff = new BleedingDebuff(CasterId, bleedingDmg, bleedingDur);
-                hero.EffectList.Add(bleedingDebuff);
+                hero.AddEffect(bleedingDebuff);
 
                 //Наносим мгновенный дамаг
                 Hero? attacker = GameData._heroes.FirstOrDefault(x => x.Id == CasterId);

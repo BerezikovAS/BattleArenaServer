@@ -31,7 +31,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
                 if (requestData.Caster != null)
                 {
                     BloodRageBuff bloodRageBuff = new BloodRageBuff(requestData.Caster.Id, extraDmg, 1);
-                    requestData.Caster.EffectList.Add(bloodRageBuff);
+                    requestData.Caster.AddEffect(bloodRageBuff);
                     bloodRageBuff.ApplyEffect(requestData.Caster);
 
                     requestData.Caster.AP -= requireAP;

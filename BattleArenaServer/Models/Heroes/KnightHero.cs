@@ -6,10 +6,9 @@ namespace BattleArenaServer.Models.Heroes
 {
     public class KnightHero : Hero
     {
-        public KnightHero() {
-            Id = 0;
+        public KnightHero(int Id, string Team) : base( Id, Team)
+        {
             Name = "Knight";
-            Team = "blue";
 
             MaxHP = HP = 1000;
             Armor = 5;
@@ -22,10 +21,11 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 100;
 
-            SkillList[0] = new SelfHealSkill();
-            SkillList[1] = new ShieldBashSkill();
-            SkillList[2] = new BodyGuardSkill();
-            SkillList[3] = new FormationAttackSkill();
+            SkillList[0] = new HighShieldPSkill();
+            SkillList[1] = new SelfHealSkill();
+            SkillList[2] = new ShieldBashSkill();
+            SkillList[3] = new BodyGuardSkill();
+            SkillList[4] = new FormationAttackSkill();
 
             AuraList.Add(new HighShieldAura());
         }

@@ -39,19 +39,19 @@ namespace BattleArenaServer.Skills.AeroturgSkills
                     if (hex.HERO != null && hex.HERO.Team != requestData.Caster.Team)
                     {
                         SilenceDebuff silenceDebuff = new SilenceDebuff(requestData.Caster.Id, 0, 2);
-                        hex.HERO.EffectList.Add(silenceDebuff);
+                        hex.HERO.AddEffect(silenceDebuff);
 
                         if (upgraded)
                         {
                             ResistDebuff resistDebuff = new ResistDebuff(requestData.Caster.Id, resistReduction, 2);
-                            hex.HERO.EffectList.Add(resistDebuff);
+                            hex.HERO.AddEffect(resistDebuff);
                             resistDebuff.ApplyEffect(hex.HERO);
                         }
 
                         AttackService.SetDamage(requestData.Caster, hex.HERO, dmg, Consts.DamageType.Magic);
 
                         Hex? moveHex = UtilityService.GetOneHexOnDirection(requestData.TargetHex, hex, 2);
-                        if (moveHex != null && moveHex.IsFree())
+                        if (hex.HERO != null && moveHex != null && moveHex.IsFree())
                             AttackService.MoveHero(hex.HERO, hex, moveHex);
                     }
                 }
