@@ -4,11 +4,13 @@ namespace BattleArenaServer.Skills.KnightSkills.Auras
 {
     public class HighShieldAura : Aura
     {
-        public HighShieldAura()
+        bool upgraded = false;
+        public HighShieldAura(bool upgraded)
         {
             Name = "HighShieldAura";
             radius = 1;
             type = Consts.AuraType.Continuous;
+            this.upgraded = upgraded;
         }
 
         public override void ApplyEffect(Hero source, Hero target)
@@ -31,7 +33,11 @@ namespace BattleArenaServer.Skills.KnightSkills.Auras
             Hex? defenderHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == defender.Id);
 
             if (attackerHex != null && defenderHex != null && attackerHex.Distance(defenderHex) > 1)
+            {
+                if (upgraded)
+                    return 4;
                 return 2;
+            }
             return 0;
         }
     }

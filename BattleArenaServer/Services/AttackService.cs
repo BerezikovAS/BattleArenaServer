@@ -47,8 +47,10 @@ namespace BattleArenaServer.Services
             if (defender.HP <= 0)
             {
                 Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == defender.HexId);
-                if (hex != null)
+                if (hex != null && hex.HERO != null)
                 {
+                    if (hex.HERO is SolidObstacle)
+                        GameData._solidObstacles.Remove((SolidObstacle)hex.HERO);
                     hex.RemoveHero();
                     ContinuousAuraAction();
                 }

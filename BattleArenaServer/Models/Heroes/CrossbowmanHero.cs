@@ -1,7 +1,4 @@
-﻿using BattleArenaServer.Services;
-using BattleArenaServer.Skills.BerserkerSkills;
-using BattleArenaServer.Skills.Crossbowman;
-using System;
+﻿using BattleArenaServer.Skills.Crossbowman;
 
 namespace BattleArenaServer.Models.Heroes
 {
@@ -22,29 +19,11 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 3;
             Dmg = 80;
 
-            SkillList[0] = new LongShotPSkill();
+            SkillList[0] = new LongShotPSkill(this);
             SkillList[1] = new EagleEyeSkill();
             SkillList[2] = new CaltropSkill();
             SkillList[3] = new SharpFangSkill();
             SkillList[4] = new PinDownSkill();
-
-            passiveAttackDamage += LongShot;
-        }
-
-        private int LongShot(Hero attacker, Hero? defender)
-        {
-            if (defender == null)
-                return 0;
-
-            Hex? attackerHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == attacker.Id);
-            Hex? defenderHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == defender.Id);
-
-            if (attackerHex != null && defenderHex != null)
-            {
-                double extraDmg = (attacker.Dmg + attacker.StatsEffect.Dmg) * 0.1 * (attackerHex.Distance(defenderHex) - 1);
-                return (int)(Math.Round(extraDmg));
-            }
-            return 0;
         }
     }
 }

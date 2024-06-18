@@ -4,22 +4,26 @@ namespace BattleArenaServer.Skills.PriestSkills.Auras
 {
     public class BlessAura : Aura
     {
-        public BlessAura()
+        double basicHeal;
+        double extraHeal;
+        public BlessAura(double basicHeal, double extraHeal)
         {
             Name = "BlessAura";
             radius = 1;
             type = Consts.AuraType.EndTurn;
+            this.basicHeal = basicHeal;
+            this.extraHeal = extraHeal;
         }
 
         public override void ApplyEffect(Hero source, Hero target)
         {
             if (source.Team == target.Team)
             {
-                double healPercent = 0.05;
+                double healPercent = basicHeal;
                 foreach (var effect in target.EffectList)
                 {
                     if (effect.type == "debuff")
-                        healPercent += 0.02;
+                        healPercent += extraHeal;
                 }
                 double restoreHP = Math.Round((target.MaxHP - target.HP) * healPercent);
                 target.Heal((int)restoreHP);

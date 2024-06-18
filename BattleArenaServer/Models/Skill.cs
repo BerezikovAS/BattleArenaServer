@@ -21,7 +21,7 @@ namespace BattleArenaServer.Models
         public Consts.SkillType skillType { get; set; } = SkillType.Active;
 
         public abstract bool Cast(RequestData requestData);
-        
+
         public abstract bool UpgradeSkill();
 
         public ISkillCastRequest request { get; set; } = new NontargetCastRequest();

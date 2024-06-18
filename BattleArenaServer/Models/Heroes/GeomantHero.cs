@@ -1,6 +1,4 @@
-﻿using BattleArenaServer.Skills.AeroturgSkills;
-using BattleArenaServer.Skills.GeomantSkills;
-using BattleArenaServer.Skills.GeomantSkills.Auras;
+﻿using BattleArenaServer.Skills.GeomantSkills;
 
 namespace BattleArenaServer.Models.Heroes
 {
@@ -21,13 +19,11 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 3;
             Dmg = 90;
 
-            SkillList[0] = new StoneStrenghtPSkill();
+            SkillList[0] = new StoneStrenghtPSkill(this);
             SkillList[1] = new StalaktiteSkill();
             SkillList[2] = new GiantBoulderSkill();
             SkillList[3] = new StoneBloodSkill();
             SkillList[4] = new EarthquakeSkill();
-
-            AuraList.Add(new StoneStrengthAura());
         }
     }
 }

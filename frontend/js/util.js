@@ -32,7 +32,10 @@ function feelSpells(_hero) {
         spellDiv.title = skill.title;
         spellUpg.title = skill.titleUpg;
 
-        if(skill.coolDownNow > 0) {
+        if (skill.skillType == 1) {
+            spell.setAttribute("class", "spell passive");
+        }
+        if (skill.coolDownNow > 0) {
             spell.setAttribute("class", "spell cooldawn");
             spellDiv.setAttribute("onclick", "");
             cdInfo.innerText = skill.coolDownNow;
@@ -64,15 +67,29 @@ function feelAP(_ap) {
         AProw.appendChild(apImg);
     }
 
-    const btnEndTurn = document.getElementById("AP");
-    while(btnEndTurn.firstChild) {
-        btnEndTurn.removeChild(btnEndTurn.firstChild);
+    var _hero = heroes[idActiveHero];
+    var _color = "red";
+    var _excolor = "rgb(238, 150, 150)";
+    if (_hero != null & _hero.team == "blue") {
+        _color = "rgb(0, 99, 248)";
+        _excolor = "rgb(135, 165, 228)";
     }
 
-    const apImg = document.createElement("img");
-    apImg.setAttribute("src", hero.name + ".png");
-    apImg.setAttribute("style", "width: 60px; padding: 3px;");
-    btnEndTurn.appendChild(apImg);
+    const iconDiv = document.getElementById("hero_icon");
+    iconDiv.setAttribute("style", "margin-bottom: 20px; background-color: " + _color);
+
+    const icon = document.getElementById("hero_icon_img");
+    icon.setAttribute("src", _hero.name + ".png");
+
+    const hp = document.getElementById("heroinfo_hpcur");
+    hp.innerText = _hero.hp;
+
+    var hpPercent = 300 * _hero.hp / _hero.maxHP;
+    const hpbar = document.getElementById("heroinfo_hpbarcur");
+    hpbar.setAttribute("style", "width: " + hpPercent + "px; background-color: " + _color);
+
+    const hpbarhp = document.getElementById("hpbarcur");
+    hpbarhp.setAttribute("style", "margin-top: 14px; background-color: " + _excolor);
 }
 
 // Получить все клетки попадающие под действие скила
@@ -260,8 +277,10 @@ function feelHeroInfo(_hex) {
         const spInfo = document.getElementById("spInfo" + i);
         spell.innerText = skill.name;
         spInfo.title = skill.title;
-
-        if(skill.coolDownNow > 0) {
+        if (skill.skillType == 1) {
+            spell.setAttribute("class", "spell passive");
+        }
+        else if (skill.coolDownNow > 0) {
             spell.setAttribute("class", "spell cooldawn");
             cdInfo.innerText = skill.coolDownNow;
         }

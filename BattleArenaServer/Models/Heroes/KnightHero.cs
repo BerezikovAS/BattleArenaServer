@@ -21,13 +21,11 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 100;
 
-            SkillList[0] = new HighShieldPSkill();
+            SkillList[0] = new HighShieldPSkill(this);
             SkillList[1] = new SelfHealSkill();
             SkillList[2] = new ShieldBashSkill();
             SkillList[3] = new BodyGuardSkill();
             SkillList[4] = new FormationAttackSkill();
-
-            AuraList.Add(new HighShieldAura());
         }
     }
 }

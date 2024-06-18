@@ -1,15 +1,21 @@
 ﻿using BattleArenaServer.Models;
+using BattleArenaServer.Skills.PriestSkills.Auras;
 
 namespace BattleArenaServer.Skills.PriestSkills
 {
-    public class BlessAuraPSkill : Skill
+    public class BlessAuraPSkill : PassiveSkill
     {
-        public BlessAuraPSkill()
+        double basicHeal = 0.10;
+        double extraHeal = 0.03;
+        Aura Aura;
+        public BlessAuraPSkill(Hero hero) : base(hero)
         {
             name = "Bless Aura";
-            title = "Святое благословение излечивает героя и союзников рядом на 5% потерянного здоровья.\n" +
-                "Лечение усиливается на 2% за каждый негативный эффект у цели.";
-            skillType = Consts.SkillType.Passive;
+            title = $"Святое благословение излечивает героя и союзников рядом на {basicHeal * 100}% потерянного здоровья.\n" +
+                $"Лечение усиливается на {extraHeal * 100}% за каждый негативный эффект у цели.";
+            titleUpg = "+5% к лечению. +2% к лечению за негативный эффект.";
+            Aura = new BlessAura(basicHeal, extraHeal);
+            hero.AuraList.Add(Aura);
         }
 
         public override bool Cast(RequestData requestData)
@@ -19,7 +25,13 @@ namespace BattleArenaServer.Skills.PriestSkills
 
         public override bool UpgradeSkill()
         {
-            return false;
+            upgraded = true;
+            basicHeal += 0.05;
+            extraHeal += 0.02;
+            hero.AuraList.Remove(Aura);
+            Aura = new BlessAura(basicHeal, extraHeal);
+            hero.AuraList.Add(Aura);
+            return true;
         }
     }
 }

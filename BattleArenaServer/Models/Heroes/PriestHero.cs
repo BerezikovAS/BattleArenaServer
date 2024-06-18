@@ -1,6 +1,5 @@
 ﻿using BattleArenaServer.Skills.Priest;
 using BattleArenaServer.Skills.PriestSkills;
-using BattleArenaServer.Skills.PriestSkills.Auras;
 
 namespace BattleArenaServer.Models.Heroes
 {
@@ -21,13 +20,11 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 94;
 
-            SkillList[0] = new BlessAuraPSkill();
+            SkillList[0] = new BlessAuraPSkill(this);
             SkillList[1] = new BlindingLightSkill();
             SkillList[2] = new SmightSkill();
             SkillList[3] = new RestorationSkill();
             SkillList[4] = new CondemnationSkill();
-
-            AuraList.Add(new BlessAura());
         }
     }
 }

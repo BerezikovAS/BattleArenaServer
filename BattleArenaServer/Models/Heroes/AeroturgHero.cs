@@ -20,31 +20,11 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 3;
             Dmg = 95;
 
-            SkillList[0] = new OverChargePSkill();
+            SkillList[0] = new OverChargePSkill(this);
             SkillList[1] = new SwapSkill();
             SkillList[2] = new ChainLightningSkill();
             SkillList[3] = new ThunderWaveSkill();
             SkillList[4] = new AirFormSkill();
-
-            afterAttack += AfterAttackDelegate;
-        }
-
-        private bool AfterAttackDelegate(Hero attacker, Hero? defender, int dmg)
-        {
-            Hex? targetHex = GameData._hexes.FirstOrDefault(x => x.ID == defender?.HexId);
-            if (targetHex != null && defender != null)
-            {
-                foreach (var hex in UtilityService.GetHexesRadius(targetHex, 1))
-                {
-                    if (hex.HERO != null && hex.HERO.Team != attacker.Team && hex.HERO.Id != defender.Id)
-                    {
-                        double splashDmg = Math.Round(dmg * 0.3);
-                        AttackService.SetDamage(attacker, hex.HERO, (int)splashDmg, Consts.DamageType.Magic);
-                    }
-                }
-            }
-
-            return true;
         }
     }
 }

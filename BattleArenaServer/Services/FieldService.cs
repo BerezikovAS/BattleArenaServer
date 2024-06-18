@@ -14,19 +14,19 @@ namespace BattleArenaServer.Services
         private static void CreateHeroList()
         {
             // Создание и размещение героев на поле. (Для тестов)
-            Hero hero1 = new KnightHero(0, "red");
-            Hero hero2 = new CrossbowmanHero(1, "red");
+            /*Hero hero1 = new KnightHero(0, "red");
+            Hero hero2 = new CrossbowmanHero(1, "blue");
             Hero hero3 = new BerserkerHero(2, "red");
-            Hero hero4 = new PriestHero(3, "blue");
+            Hero hero4 = new PriestHero(3, "red");
             Hero hero5 = new AeroturgHero(4, "blue");
             Hero hero6 = new GeomantHero(5, "blue");
 
             GameData._hexes[7].SetHero(hero1);
             GameData._hexes[22].SetHero(hero3);
-            GameData._hexes[37].SetHero(hero2);
+            GameData._hexes[37].SetHero(hero4);
 
             GameData._hexes[29].SetHero(hero5);
-            GameData._hexes[14].SetHero(hero4);
+            GameData._hexes[14].SetHero(hero2);
             GameData._hexes[44].SetHero(hero6);
 
             GameData._heroes.Add(hero1);
@@ -34,10 +34,70 @@ namespace BattleArenaServer.Services
             GameData._heroes.Add(hero3);
             GameData._heroes.Add(hero4);
             GameData._heroes.Add(hero5);
-            GameData._heroes.Add(hero6);
+            GameData._heroes.Add(hero6);*/
 
+            SetRandomCommands();
             // Применяем эффекты постоянных аур сразу
             AttackService.ContinuousAuraAction();
+        }
+
+        private static void SetRandomCommands()
+        {
+            List<Hero> heroes = new List<Hero>();
+            List<int> redCoords = [7, 22, 37];
+            List<int> blueCoords = [14, 29, 44];
+
+            Hero hero1 = new KnightHero(0, "");
+            Hero hero2 = new CrossbowmanHero(0, "");
+            Hero hero3 = new BerserkerHero(0, "");
+            Hero hero4 = new PriestHero(0, "");
+            Hero hero5 = new AeroturgHero(0, "");
+            Hero hero6 = new GeomantHero(0, "");
+
+            heroes.Add(hero1);
+            heroes.Add(hero2);
+            heroes.Add(hero3);
+            heroes.Add(hero4);
+            heroes.Add(hero5);
+            heroes.Add(hero6);
+
+            string team = "red";
+            Random rnd = new Random();
+            int rndCoords = 0;
+
+            for (int i = 0; i < 6; i++)
+            {
+                Hero hero = GetRandomHero(heroes);
+                heroes.Remove(hero);
+                hero.Id = i;
+                hero.Team = team;                
+
+                if (team == "red")
+                {
+                    rndCoords = rnd.Next(redCoords.Count);
+                    hero.HexId = redCoords[rndCoords];
+                    redCoords.Remove(redCoords[rndCoords]);
+                    team = "blue";
+                }
+                else
+                {
+                    rndCoords = rnd.Next(blueCoords.Count);
+                    hero.HexId = blueCoords[rndCoords];
+                    blueCoords.Remove(blueCoords[rndCoords]);
+                    team = "red";
+                }
+                GameData._hexes[hero.HexId].SetHero(hero);
+                GameData._heroes.Add(hero);
+            }
+        }
+
+        private static Hero GetRandomHero(List<Hero> heroes)
+        {
+            Random rnd = new Random();
+            Hero hero = heroes[rnd.Next(0, heroes.Count)];
+            heroes.Remove(hero);
+
+            return hero;
         }
 
         private void CreateGameField()
