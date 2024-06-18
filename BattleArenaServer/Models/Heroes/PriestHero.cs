@@ -6,11 +6,9 @@ namespace BattleArenaServer.Models.Heroes
 {
     public class PriestHero : Hero
     {
-        public PriestHero()
+        public PriestHero(int Id, string Team) : base(Id, Team)
         {
-            Id = 3;
             Name = "Priest";
-            Team = "red";
 
             MaxHP = HP = 1000;
             Armor = 2;
@@ -23,10 +21,11 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 94;
 
-            SkillList[0] = new BlindingLightSkill();
-            SkillList[1] = new SmightSkill();
-            SkillList[2] = new RestorationSkill();
-            SkillList[3] = new CondemnationSkill();
+            SkillList[0] = new BlessAuraPSkill();
+            SkillList[1] = new BlindingLightSkill();
+            SkillList[2] = new SmightSkill();
+            SkillList[3] = new RestorationSkill();
+            SkillList[4] = new CondemnationSkill();
 
             AuraList.Add(new BlessAura());
         }

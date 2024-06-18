@@ -10,5 +10,6 @@ namespace BattleArenaServer.Models
 
         public static List<Obstacle> _obstacles = new List<Obstacle>();
 
+        public static List<SolidObstacle> _solidObstacles = new List<SolidObstacle>();
     }
 }

@@ -36,7 +36,7 @@ namespace BattleArenaServer.Skills.Knight
                 coolDownNow = coolDown;
 
                 ArmorBuff buffArmor = new ArmorBuff(requestData.Caster.Id, armor, 2);
-                requestData.Caster.EffectList.Add(buffArmor);
+                requestData.Caster.AddEffect(buffArmor);
                 buffArmor.ApplyEffect(requestData.Caster);
 
                 return true;

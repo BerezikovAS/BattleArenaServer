@@ -1,6 +1,15 @@
 ﻿namespace BattleArenaServer.Models.Obstacles
 {
-    public class SolidObstacle : Obstacle
+    public class SolidObstacle : Hero
     {
+        public int casterId { get; set; }
+        public int lifeTime { get; set; }
+
+        public SolidObstacle(int Id, string Team, int casterId, int lifeTime) : base(Id, Team)
+        {
+            type = Consts.HeroType.Obstacle;
+            this.casterId = casterId;
+            this.lifeTime = lifeTime;
+        }
     }
 }

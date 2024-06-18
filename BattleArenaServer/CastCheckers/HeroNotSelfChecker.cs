@@ -9,7 +9,7 @@ namespace BattleArenaServer.CastCheckers
 
         public bool Check(RequestData requestData, Skill skill)
         {
-            if (requestData.Target?.Id != requestData.Caster?.Id)
+            if (requestData.Target?.Id != requestData.Caster?.Id && requestData.Target?.type != Consts.HeroType.Obstacle)
                 return nextChecker.Check(requestData, skill);
             return false;
         }

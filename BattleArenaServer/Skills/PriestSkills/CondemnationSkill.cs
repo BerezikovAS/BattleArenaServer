@@ -32,7 +32,7 @@ namespace BattleArenaServer.Skills.PriestSkills
             if (requestData.Caster != null && requestData.Target != null)
             {
                 CondemnationDebuff condemnationDebuff = new CondemnationDebuff(requestData.Caster.Id, extraDmgPercent, 2);
-                requestData.Target.EffectList.Add(condemnationDebuff);
+                requestData.Target.AddEffect(condemnationDebuff);
                 condemnationDebuff.ApplyEffect(requestData.Target);
 
                 requestData.Caster.AP -= requireAP;

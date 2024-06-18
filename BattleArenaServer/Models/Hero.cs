@@ -7,6 +7,12 @@ namespace BattleArenaServer.Models
 {
     public abstract class Hero
     {
+        public Hero(int Id, string Team)
+        {
+            this.Id = Id;
+            this.Team = Team;
+        }
+
         public int Id { get; set; }
         public string Name { get; set; } = "hero";
         public string Team { get; set; } = "red";
@@ -14,17 +20,19 @@ namespace BattleArenaServer.Models
 
         public int HP { get; set; }
         public int MaxHP { get; set; }
-        public int Armor {  get; set; }
-        public int Resist { get; set; }
+        public int Armor { get; set; } = 0;
+        public int Resist { get; set; } = 0;
 
         public int APtoAttack { get; set; } = 2;
-        
-        public int AP {  get; set; }
 
-        public int AttackRadius { get; set; }
-        public int Dmg { get; set; }
+        public int AP { get; set; } = 0;
+
+        public int AttackRadius { get; set; } = 0;
+        public int Dmg { get; set; } = 0;
 
         public int UpgradePoints { get; set; } = 0;
+
+        public Consts.HeroType type { get; set; } = Consts.HeroType.Hero;
 
         public Skill MoveSkill { get; } = new MoveSkill();
         //public Skill MoveSkill { get; } = new MoveSkill();
@@ -59,7 +67,12 @@ namespace BattleArenaServer.Models
                 HP = MaxHP;
         }
 
-        public List<Skill> SkillList { get; set; } = new List<Skill> { new EmptySkill(), new EmptySkill(), new EmptySkill(), new EmptySkill() };
+        public virtual void AddEffect(Effect effect)
+        {
+            EffectList.Add(effect);
+        }
+
+        public List<Skill> SkillList { get; set; } = new List<Skill> { new EmptySkill(), new EmptySkill(), new EmptySkill(), new EmptySkill(), new EmptySkill() };
         public List<Effect> EffectList { get; set; } = new List<Effect>();
         public List<Aura> AuraList { get; set; } = new List<Aura>();
     }

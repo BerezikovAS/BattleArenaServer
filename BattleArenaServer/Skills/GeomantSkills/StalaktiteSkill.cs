@@ -8,13 +8,15 @@ namespace BattleArenaServer.Skills.GeomantSkills
 {
     public class StalaktiteSkill : Skill
     {
-        int dmg = 100;
-        int lifeTime = 3;
+        int dmg = 80;
+        int stalaktiteHP = 80;
+        int lifeTime = 4;
+
         public StalaktiteSkill()
         {
             name = "Stalaktite";
-            title = $"Из-под земли вырывается каменный шпиль, нанося {dmg} магического урона врагам вокруг. Шпиль блокирует перемещение и существует {lifeTime} хода.";
-            titleUpg = "+40 к урону, +1 к времени жизни столоктита.";
+            title = $"Из-под земли вырывается каменный шпиль, нанося {dmg} магического урона врагам вокруг. Шпиль блокирует перемещение, имеет {stalaktiteHP} ХП и существует {lifeTime - 1} хода.";
+            titleUpg = "+40 к урону, +40 к ХП.";
             coolDown = 1;
             coolDownNow = 0;
             requireAP = 2;
@@ -34,8 +36,11 @@ namespace BattleArenaServer.Skills.GeomantSkills
             if (requestData.Caster != null && requestData.TargetHex != null)
             {
                 //Ставим столоктит
-                StalaktiteObstacle stalaktiteObstacle = new StalaktiteObstacle(requestData.Caster.Id, requestData.TargetHex.ID, lifeTime, requestData.Caster.Team);
-                requestData.TargetHex.SetObstacle(stalaktiteObstacle);
+                int Id = GameData._hexes.Max(x => x.HERO != null ? x.HERO.Id : 0) + 1;
+                StalaktiteObstacle stalaktiteObstacle = new StalaktiteObstacle(Id, requestData.Caster.Id, requestData.TargetHex.ID, stalaktiteHP, requestData.Caster.Team, lifeTime);
+                requestData.TargetHex.SetHero(stalaktiteObstacle);
+                GameData._solidObstacles.Add(stalaktiteObstacle);
+                //GameData._heroes.Add(stalaktiteObstacle);
 
                 //Наносим урон врагам вокруг него
                 foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, 1))
@@ -60,7 +65,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
             {
                 upgraded = true;
                 dmg += 40;
-                lifeTime += 1;
+                stalaktiteHP += 40;
                 return true;
             }
             return false;

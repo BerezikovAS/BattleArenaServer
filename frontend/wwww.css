@@ -28,37 +28,34 @@
   }
 
   div.hero.blue {
-    background: rgb(0, 81, 255);
+    background: rgb(0, 99, 248);
   }
 
   button.spell {
     width: 100px;
     height: 100px;
-    background-color: lightblue;
-    border-radius: 4px;
-    border-color: blue;
-    border-width: 1px;
-    box-shadow: 3px;
+    background-color: rgb(151, 248, 142);
+    border: 3px solid rgb(1, 73, 1);
+    border-radius: 10px;
+    font-weight: 600;
   }
 
   button.spellActive {
     width: 100px;
     height: 100px;
     background-color: rgb(220, 226, 161);
-    border-radius: 4px;
-    border-color: rgb(165, 184, 1);
-    border-width: 1px;
-    box-shadow: 3px;
+    border: 3px solid rgb(165, 184, 1);
+    border-radius: 10px;
+    font-weight: 600;
   }
 
   button.spell.cooldawn {
     width: 100px;
     height: 100px;
     background-color: lightgray;
-    border-radius: 4px;
-    border-color: gray;
-    border-width: 1px;
-    box-shadow: 3px;
+    border: 3px solid rgb(1, 73, 1);
+    border-radius: 10px;
+    font-weight: 600;
   }
 
   button.upgrade {
@@ -100,12 +97,17 @@
     /* background-color: rgb(238, 150, 150); */
     font-size: 26px;
     text-align: center;
+    border: 3px solid rgb(1, 73, 1);
+    border-radius: 10px;
+    margin-left: 10px;
   }
 
   div.hpbarCurrent {
     height: 30px;
     /* background-color: red; */
     position: absolute; z-index: 1;
+    border: 0px solid;
+    border-radius: 6px;
   }
 
   /* div.hpbarCurrent {
@@ -115,19 +117,32 @@
   } */
 
   td.heroinfo {
-    width: 150px;
+    min-width: 60px;
     padding-left: 10px;
     font-size: 24px;
     font-weight: bold;
     display: inline-flex;
+    padding: 4px;
+    margin-left: 10px;
+    border: 3px solid rgb(1, 73, 1);
+    border-radius: 10px;
   }
 
-  #heroinfo_icon {
+  div.heroinfo_icon {
     width: 100px;
     height: 100px;
     background-color: red;
-    background-image: url(Angel.png);
     background-size: cover;
+    border: 3px solid rgb(1, 73, 1);
+    border-radius: 10px;
+  }
+
+  #heroinfo_icon_img {
+    width: 90px;
+    height: 90px;
+    position: absolute;
+    padding-left: 5px;
+    padding-top: 5px;
   }
 
   

@@ -7,11 +7,9 @@ namespace BattleArenaServer.Models.Heroes
 {
     public class CrossbowmanHero : Hero
     {
-        public CrossbowmanHero()
+        public CrossbowmanHero(int Id, string Team) : base(Id, Team)
         {
-            Id = 1;
             Name = "Crossbowman";
-            Team = "blue";
 
             MaxHP = HP = 875;
             Armor = 2;
@@ -24,10 +22,11 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 3;
             Dmg = 80;
 
-            SkillList[0] = new EagleEyeSkill();
-            SkillList[1] = new CaltropSkill();
-            SkillList[2] = new SharpFangSkill();
-            SkillList[3] = new PinDownSkill();
+            SkillList[0] = new LongShotPSkill();
+            SkillList[1] = new EagleEyeSkill();
+            SkillList[2] = new CaltropSkill();
+            SkillList[3] = new SharpFangSkill();
+            SkillList[4] = new PinDownSkill();
 
             passiveAttackDamage += LongShot;
         }

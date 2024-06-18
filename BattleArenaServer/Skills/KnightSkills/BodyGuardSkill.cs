@@ -33,7 +33,7 @@ namespace BattleArenaServer.Skills.Knight
             if (requestData.Caster != null && requestData.Target != null)
             {
                 BodyGuardBuff bodyGuardBuff = new BodyGuardBuff(requestData.Caster.Id, defence, duration);
-                requestData.Target.EffectList.Add(bodyGuardBuff);
+                requestData.Target.AddEffect(bodyGuardBuff);
                 bodyGuardBuff.ApplyEffect(requestData.Target);
 
                 requestData.Caster.AP -= requireAP;

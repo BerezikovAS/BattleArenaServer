@@ -1,5 +1,4 @@
-﻿using BattleArenaServer.Interfaces;
-using BattleArenaServer.Models;
+﻿using BattleArenaServer.Models;
 using BattleArenaServer.Models.Heroes;
 
 namespace BattleArenaServer.Services
@@ -15,19 +14,20 @@ namespace BattleArenaServer.Services
         private static void CreateHeroList()
         {
             // Создание и размещение героев на поле. (Для тестов)
-            Hero hero1 = new KnightHero();
-            Hero hero2 = new CrossbowmanHero();
-            Hero hero3 = new BerserkerHero();
-            Hero hero4 = new PriestHero();
-            Hero hero5 = new AeroturgHero();
-            Hero hero6 = new GeomantHero();
+            Hero hero1 = new KnightHero(0, "red");
+            Hero hero2 = new CrossbowmanHero(1, "red");
+            Hero hero3 = new BerserkerHero(2, "red");
+            Hero hero4 = new PriestHero(3, "blue");
+            Hero hero5 = new AeroturgHero(4, "blue");
+            Hero hero6 = new GeomantHero(5, "blue");
 
             GameData._hexes[7].SetHero(hero1);
-            GameData._hexes[22].SetHero(hero2);
-            GameData._hexes[37].SetHero(hero6);
-            GameData._hexes[29].SetHero(hero3);
+            GameData._hexes[22].SetHero(hero3);
+            GameData._hexes[37].SetHero(hero2);
+
+            GameData._hexes[29].SetHero(hero5);
             GameData._hexes[14].SetHero(hero4);
-            GameData._hexes[44].SetHero(hero5);
+            GameData._hexes[44].SetHero(hero6);
 
             GameData._heroes.Add(hero1);
             GameData._heroes.Add(hero2);
@@ -83,7 +83,7 @@ namespace BattleArenaServer.Services
             if (hero != null)
             {
                 // Пытаемся прокачать скилл
-                if (hero.SkillList[skill - 1].UpgradeSkill())
+                if (hero.SkillList[skill].UpgradeSkill())
                 {
                     hero.UpgradePoints--;
                     return true;
@@ -135,7 +135,7 @@ namespace BattleArenaServer.Services
             if (requestData.Caster != null && requestData.Caster.EffectList.FirstOrDefault(x => x.Name == "Silence") == null)
             {
                 // Кастуем))
-                return requestData.Caster.SkillList[skill - 1].Cast(requestData);
+                return requestData.Caster.SkillList[skill].Cast(requestData);
             }
             return false;
         }

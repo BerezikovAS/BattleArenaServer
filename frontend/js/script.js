@@ -53,6 +53,10 @@ async function feelField(_field) {
             const heroImg = document.createElement("img");
             heroImg.setAttribute("src", element.hero.name + ".png");
             heroImg.setAttribute("style", "position: absolute; width: 80px; padding-left: 10px; padding-top: 16px;");
+            if(element.hero.type == 1) {
+                heroImg.setAttribute("src", "obstacles/" + element.hero.name + ".png");
+                heroImg.setAttribute("style", "position: absolute; width: 64px; padding-left: 16px; padding-top: 24px;");
+            }
 
             hex.setAttribute("class", "hero " + element.hero.team);
             hex.setAttribute("onmouseenter", "feelHeroInfo(this)");
@@ -63,7 +67,8 @@ async function feelField(_field) {
             fillEffectsOnHex(hex, element.hero)
             
             element.hero.coordid = element.id;
-            heroes.push(element.hero);
+            if(element.hero.type === 0)
+                heroes[element.hero.id] = element.hero;
         }
         if (element.obstacle != null) {
             console.log(element.obstacle);
@@ -76,13 +81,10 @@ async function feelField(_field) {
         field.appendChild(hex);
         hexes.push(element);
     });
-    heroes = heroes.toSorted((a, b) => a.id - b.id);
+    //heroes = heroes.toSorted((a, b) => a.id - b.id);
     idActiveHero = await getActiveHero();
 
-    //console.log("ID hero turn - " + idActiveHero);
-
-    hero = heroes.find(x => x.id === idActiveHero);
-    //console.log(hero);
+    hero = heroes[idActiveHero];
 
 
     enableUpgrades(hero);
@@ -93,19 +95,15 @@ async function feelField(_field) {
 }
 
 function hexClick(_hex) {
-    console.log(idCastingSpell + "   " + _hex.getAttribute("id"));
     if (idCastingSpell >= 0) {
-        console.log("casting spell " + idCastingSpell)
         castSpell(idCastingSpell, _hex.getAttribute("id"));
         return;
     }
     
     var _target = hexes[_hex.getAttribute("id")].hero;
     if (_target == null) {
-        console.log("stepping")
         stepHero(hero, _hex);
     } else if (_target.team !== hero.team) {
-        console.log("attcking")
         attackHero(hero, _hex);
     } else if (_target.team === hero.team) {
         
@@ -116,7 +114,7 @@ function cancel() {
     idCastingSpell = -1;
     clearHovers();
     clearHoversActions();
-    hero = heroes.find(x => x.id === idActiveHero);
+    hero = heroes[idActiveHero];
     console.log(hexes[idActiveHero]);
     fillFootHovers(hexes[hero.coordid], hexes);
     enableSpells(hero);

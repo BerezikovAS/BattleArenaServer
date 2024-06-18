@@ -6,7 +6,7 @@ using BattleArenaServer.SkillCastRequests;
 
 namespace BattleArenaServer.Skills.Knight
 {
-    public class FireLineSkill : BodyGuardSkill
+    public class FireLineSkill : Skill
     {
         int dmg = 200;
         public FireLineSkill()

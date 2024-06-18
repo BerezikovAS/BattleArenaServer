@@ -3,7 +3,6 @@ async function getActiveHero() {
     await fetch("https://localhost:7241/Timing/GetActiveHero")
     .then(response => response.json())
     .then(_idActiveHero => {return _idActiveHero});
-    console.log("idAH = " + _idAH);
     return _idAH;
 }
 
@@ -46,12 +45,13 @@ function upgradeSkill(_skill) {
 
 function castSpell(_spell, _target = -1)
 {
-    var _hero = heroes.find(x => x.id === idActiveHero);
+    var _hero = heroes[idActiveHero];
 
-    if (_hero.skillList[_spell - 1].requireAP > _hero.ap)
+    if (_hero.skillList[_spell].requireAP > _hero.ap)
         return;
 
-    if (idCastingSpell != _spell & !_hero.skillList[_spell - 1].nonTarget) {
+    if (idCastingSpell != _spell & !_hero.skillList[_spell].nonTarget) {
+        
         idCastingSpell = _spell;
         fillSpellAreaHovers(_spell);
         disableSpells(_spell);
@@ -59,6 +59,7 @@ function castSpell(_spell, _target = -1)
         return;
     }
     var params = "target=" + _target + "&caster=" + _hero.coordid + "&spell=" + _spell;
+    console.log(params);
     clearSpellAreaHovers();
     fillFootHovers(hexes[_hero.coordid], hexes)
 

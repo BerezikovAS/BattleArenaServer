@@ -22,7 +22,7 @@ function feelActiveHeroInfo(_hero) {
 
 // Заполнить инфу по скилам
 function feelSpells(_hero) {
-    var i = 1;
+    var i = 0;
     _hero.skillList.forEach(skill => {
         const spell = document.getElementById("spell" + i);
         const cdInfo = document.getElementById("cd" + i);
@@ -41,7 +41,7 @@ function feelSpells(_hero) {
             spell.setAttribute("class", "spell cooldawn");
             spellDiv.setAttribute("onclick", "");
         }
-        else {
+        else if (skill.skillType == 0) {
             spell.setAttribute("class", "spell");
             spellDiv.setAttribute("onclick", "castSpell(" + i + ")");
             cdInfo.innerText = "";
@@ -216,15 +216,18 @@ function feelHeroInfo(_hex) {
     var _color = "red";
     var _excolor = "rgb(238, 150, 150)";
     if (_hero != null & _hero.team == "blue") {
-        _color = "rgb(0, 81, 255)";
+        _color = "rgb(0, 99, 248)";
         _excolor = "rgb(135, 165, 228)";
     }
 
     const name = document.getElementById("heroinfo_name");
     name.innerText = _hero.name;
 
-    const icon = document.getElementById("heroinfo_icon");    
-    icon.setAttribute("style", "background-image: url(" + _hero.name + ".png); background-color: "+ _hero.team);
+    const iconDiv = document.getElementById("heroinfo_icon");
+    iconDiv.setAttribute("style", "background-color: " + _color);
+
+    const icon = document.getElementById("heroinfo_icon_img");    
+    icon.setAttribute("src", _hero.name + ".png");
 
     const dmg = document.getElementById("heroinfo_damage");
     dmg.innerText = _hero.dmg + _hero.statsEffect.dmg;
@@ -249,6 +252,31 @@ function feelHeroInfo(_hex) {
 
     const hpbarhp = document.getElementById("hpbar");
     hpbarhp.setAttribute("style", "background-color: " + _excolor);
+
+    var i = 0;
+    _hero.skillList.forEach(skill => {
+        const spell = document.getElementById("spellInfo" + i);
+        const cdInfo = document.getElementById("cdInfo" + i);
+        const spInfo = document.getElementById("spInfo" + i);
+        spell.innerText = skill.name;
+        spInfo.title = skill.title;
+
+        if(skill.coolDownNow > 0) {
+            spell.setAttribute("class", "spell cooldawn");
+            cdInfo.innerText = skill.coolDownNow;
+        }
+        else {
+            spell.setAttribute("class", "spell");
+            cdInfo.innerText = "";
+        }
+        i++;
+    });
+
+
+
+
+
+
 }
 
 function fillEffectsOnHex(_hex, _hero)
@@ -271,7 +299,7 @@ function fillEffectsOnHex(_hex, _hero)
 }
 
 function enableUpgrades(_hero) {
-    let i = 1;
+    let i = 0;
     _hero.skillList.forEach(skill => {
         const spellUp = document.getElementById("upgrade" + i);
         if(_hero.upgradePoints > 0 & !skill.upgraded) {

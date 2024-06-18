@@ -38,7 +38,7 @@ namespace BattleArenaServer.Skills.Priest
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                     {
                         BlindDebuff blindDebuff = new BlindDebuff(requestData.Caster.Id, 0, 2);
-                        n.HERO.EffectList.Add(blindDebuff);
+                        n.HERO.AddEffect(blindDebuff);
                         blindDebuff.ApplyEffect(n.HERO);
                         AttackService.SetDamage(requestData.Caster, n.HERO, dmg, Consts.DamageType.Pure);
                     }
