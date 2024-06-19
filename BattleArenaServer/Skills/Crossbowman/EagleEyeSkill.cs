@@ -12,7 +12,7 @@ namespace BattleArenaServer.Skills.Crossbowman
         {
             name = "EagleEye";
             title = $"Увеличивает дальность атаки на 1 и урон на {extraDamage}.";
-            titleUpg = "+40 к дополнительному урону.";
+            titleUpg = "+30 к дополнительному урону.";
             coolDown = 1;
             coolDownNow = 0;
             requireAP = 1;
@@ -48,6 +48,7 @@ namespace BattleArenaServer.Skills.Crossbowman
             {
                 upgraded = true;
                 extraDamage += 30;
+                title = $"Увеличивает дальность атаки на 1 и урон на {extraDamage}.";
                 return true;
             }
             return false;

@@ -8,7 +8,7 @@ namespace BattleArenaServer.Skills.Crossbowman
         public LongShotPSkill(Hero hero) : base(hero)
         {
             name = "Long Shot";
-            title = $"Чем дальше цель атаки, тем больше урона она получит. +{extraDmgPercent * 100}% к урону за каждую клетку между Вами и целью.";
+            title = $"Чем дальше цель атаки, тем больше урона она получит. +{Math.Round(extraDmgPercent * 100)}% к урону за каждую клетку между Вами и целью.";
             titleUpg = "+8% к бонусу урона за клетку.";
             hero.passiveAttackDamage += LongShot;
         }
@@ -26,6 +26,7 @@ namespace BattleArenaServer.Skills.Crossbowman
                 hero.passiveAttackDamage -= LongShot;
                 extraDmgPercent += 0.08;
                 hero.passiveAttackDamage += LongShot;
+                title = $"Чем дальше цель атаки, тем больше урона она получит. +{Math.Round(extraDmgPercent * 100)}% к урону за каждую клетку между Вами и целью.";
                 return true;
             }
             return false;

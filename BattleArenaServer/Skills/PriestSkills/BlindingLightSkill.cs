@@ -59,6 +59,7 @@ namespace BattleArenaServer.Skills.Priest
                 range += 1;
                 dmg += 40;
                 stats.range += 1;
+                title = $"Враги в области действия теряют {dmg} ХП и получают ослепление";
                 return true;
             }
             return false;

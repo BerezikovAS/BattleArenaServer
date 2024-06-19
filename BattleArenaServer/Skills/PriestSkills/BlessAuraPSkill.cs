@@ -31,6 +31,8 @@ namespace BattleArenaServer.Skills.PriestSkills
             hero.AuraList.Remove(Aura);
             Aura = new BlessAura(basicHeal, extraHeal);
             hero.AuraList.Add(Aura);
+            title = $"Святое благословение излечивает героя и союзников рядом на {basicHeal * 100}% потерянного здоровья.\n" +
+                $"Лечение усиливается на {extraHeal * 100}% за каждый негативный эффект у цели.";
             return true;
         }
     }

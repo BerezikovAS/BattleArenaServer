@@ -29,6 +29,7 @@ namespace BattleArenaServer.Skills.AeroturgSkills
                 damageType = Consts.DamageType.Pure;
                 damageTypeName = "чистый";
                 hero.afterAttack += AfterAttackDelegate;
+                title = $"Атаки героя электризуют врага, нанося ему и соседним врагам {damageTypeName} урон в размере 30% от наносимого атакой урона.";
                 return true;
             }
             return false;

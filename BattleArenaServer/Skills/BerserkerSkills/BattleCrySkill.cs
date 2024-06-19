@@ -60,6 +60,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
                 upgraded = true;
                 coolDown -= 1;
                 stats.coolDown -= 1;
+                title += "\nСнижение брони для рядомстоящих врагов удваивается.";
                 return true;
             }
             return false;

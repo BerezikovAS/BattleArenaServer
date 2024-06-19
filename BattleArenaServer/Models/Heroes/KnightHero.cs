@@ -1,6 +1,5 @@
 ﻿using BattleArenaServer.Skills.Knight;
 using BattleArenaServer.Skills.KnightSkills;
-using BattleArenaServer.Skills.KnightSkills.Auras;
 
 namespace BattleArenaServer.Models.Heroes
 {
@@ -14,7 +13,7 @@ namespace BattleArenaServer.Models.Heroes
             Armor = 5;
             Resist = 3;
 
-            UpgradePoints = 1;
+            UpgradePoints = 3;
 
             AP = 4;
 

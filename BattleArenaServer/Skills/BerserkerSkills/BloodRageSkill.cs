@@ -1,7 +1,6 @@
 ﻿using BattleArenaServer.Effects.Buffs;
 using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
-using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
 
 namespace BattleArenaServer.Skills.BerserkerSkills
@@ -13,7 +12,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
         {
             name = "Blood Rage";
             title = "Ваши атаки стоят всего 1 очко действия, но каждая из них отнимает у Вас 40 ХП.";
-            titleUpg = "+30 к урону от атак";
+            titleUpg = $"+{extraDmg} к урону от атак.";
             coolDown = 3;
             coolDownNow = 0;
             requireAP = 0;
@@ -48,6 +47,8 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             {
                 upgraded = true;
                 extraDmg = 30;
+                titleUpg = $"+{extraDmg} к урону от атак.";
+                title += "\n" + titleUpg;
                 return true;
             }
             return false;

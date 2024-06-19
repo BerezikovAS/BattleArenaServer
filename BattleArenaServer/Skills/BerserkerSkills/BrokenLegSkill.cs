@@ -9,10 +9,11 @@ namespace BattleArenaServer.Skills.BerserkerSkills
     public class BrokenLegSkill : Skill
     {
         int multiply = 2;
+        string upgString = "двойной";
         public BrokenLegSkill()
         {
             name = "Broken Leg";
-            title = "Мощная атака, которая обездвиживает противника. Наносит двойной урон атаки.";
+            title = $"Мощная атака, которая обездвиживает противника. Наносит {upgString} урон атаки.";
             titleUpg = "Способность наносит тройной урон от атаки.";
             coolDown = 4;
             coolDownNow = 0;
@@ -50,6 +51,8 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             {
                 upgraded = true;
                 multiply = 3;
+                upgString = "тройной";
+                title = $"Мощная атака, которая обездвиживает противника. Наносит {upgString} урон атаки.";
                 return true;
             }
             return false;

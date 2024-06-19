@@ -66,6 +66,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
                 upgraded = true;
                 dmg += 40;
                 stalaktiteHP += 40;
+                title = $"Из-под земли вырывается каменный шпиль, нанося {dmg} магического урона врагам вокруг. Шпиль блокирует перемещение, имеет {stalaktiteHP} ХП и существует {lifeTime - 1} хода.";
                 return true;
             }
             return false;

@@ -57,6 +57,7 @@ namespace BattleArenaServer.Skills.Priest
                 extraDmg += 20;
                 range += 1;
                 stats.range += 1;
+                title = $"Божественная кара настигает врага, нанося тому чистый урон. Урон увеличивается за каждую способность врага в откате (X). ( {defaultdmg} + {extraDmg} * X )";
                 return true;
             }
             return false;

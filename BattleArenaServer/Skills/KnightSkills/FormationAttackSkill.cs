@@ -56,6 +56,7 @@ namespace BattleArenaServer.Skills.KnightSkills
                 extraDmg += 10;
                 coolDown = 0;
                 stats.coolDown = 0;
+                title = $"Атакуйте врага единым строем. Урон увеличивается за каждого вашего союзника рядом с целью ({extraDmg} за союзника).";
                 return true;
             }
             return false;

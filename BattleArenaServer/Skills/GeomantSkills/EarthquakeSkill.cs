@@ -67,6 +67,9 @@ namespace BattleArenaServer.Skills.GeomantSkills
                 extraDmg += 10;
                 radius += 1;
                 stats.radius += 1;
+                title = $"Землятрясение поражает врагов вокруг, нанося магический урон и сбивая с ног, отчего те теряют 1 ОД.\n" +
+                    $"Урон зависит от количества свободных клеток вокруг цели (X). Столоктиты считаются свободными гексами и дают двойной бонус.\n" +
+                    $"({dmg} + {extraDmg} * X)";
                 return true;
             }
             return false;

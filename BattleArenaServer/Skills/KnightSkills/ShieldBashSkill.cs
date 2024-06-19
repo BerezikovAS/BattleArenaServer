@@ -52,6 +52,7 @@ namespace BattleArenaServer.Skills.Knight
                 upgraded = true;
                 loseAP += 1;
                 extraDmg += 10;
+                title = $"Оглушает врага и наносит ему физический урон, зависящий от брони владельца.\nОглушенный враг теряет {loseAP} ОД в свой ход. ({extraDmg} доп. урона за ед. брони)";
                 return true;
             }
             return false;

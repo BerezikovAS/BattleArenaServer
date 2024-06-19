@@ -35,8 +35,8 @@ namespace BattleArenaServer.Skills.KnightSkills.Auras
             if (attackerHex != null && defenderHex != null && attackerHex.Distance(defenderHex) > 1)
             {
                 if (upgraded)
-                    return 4;
-                return 2;
+                    return 6;
+                return 3;
             }
             return 0;
         }

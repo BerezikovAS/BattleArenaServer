@@ -12,7 +12,7 @@ namespace BattleArenaServer.Skills.Knight
         public SelfHealSkill() 
         {
             name = "Self heal";
-            title = "Восстанавливает владельцу 200 ХП и дает 3 доп. брони";
+            title = $"Восстанавливает владельцу {heal} ХП и дает {armor} доп. брони";
             titleUpg = "+75 к лечению, +1 к доп. броне";
             coolDown = 4;
             coolDownNow = 0; 
@@ -52,6 +52,7 @@ namespace BattleArenaServer.Skills.Knight
                 upgraded = true;
                 heal += 75;
                 armor += 1;
+                title = $"Восстанавливает владельцу {heal} ХП и дает {armor} доп. брони";
                 return true;
             }
             return false;

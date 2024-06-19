@@ -48,6 +48,7 @@ namespace BattleArenaServer.Skills.AeroturgSkills
             {
                 upgraded = true;
                 percentReduce += 25;
+                title = $"Превращает свое тело в газообразную форму и получает только {percentReduce}% урона.";
                 return true;
             }
             return false;

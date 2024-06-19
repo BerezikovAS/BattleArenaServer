@@ -12,7 +12,7 @@ namespace BattleArenaServer.Skills.Knight
         public FireLineSkill()
         {
             name = "Fire Line";
-            title = "Поджигает всех врагов по линии перед собой, нанося 200 маг. урона";
+            title = $"Поджигает всех врагов по линии перед собой, нанося {dmg} маг. урона";
             titleUpg = "+75 урона, +1 к дальности";
             coolDown = 4;
             coolDownNow = 0;

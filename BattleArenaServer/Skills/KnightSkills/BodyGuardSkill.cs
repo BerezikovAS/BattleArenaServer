@@ -50,6 +50,7 @@ namespace BattleArenaServer.Skills.Knight
             {
                 upgraded = true;
                 duration += 1;
+                title += "\n" + titleUpg;
                 return true;
             }
             return false;

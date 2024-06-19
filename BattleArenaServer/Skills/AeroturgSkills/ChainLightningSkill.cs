@@ -70,6 +70,7 @@ namespace BattleArenaServer.Skills.AeroturgSkills
                 dmg += 50;
                 coolDown -= 1;
                 stats.coolDown -= 1;
+                title = $"Выпускает молнию, которая наносит {dmg} магического урона всем врагам в цепи.";
                 return true;
             }
             return false;

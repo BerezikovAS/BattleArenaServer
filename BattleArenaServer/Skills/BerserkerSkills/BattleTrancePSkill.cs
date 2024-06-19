@@ -30,6 +30,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
                 cntEnemiesPenalty = 0;
                 skillDesc = "";
                 hero.passiveAttackDamage += BattleTrance;
+                title = $"Чем больше врагов вокруг, тем яростнее атаки. +20% к урону от атак за каждого врага вокруг{skillDesc}.";
                 return true;
             }
             return false;
@@ -45,7 +46,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             {
                 foreach (var n in UtilityService.GetHexesRadius(attackerHex, 1))
                 {
-                    if (n.HERO != null && n.HERO.Team != attacker.Team)
+                    if (n.HERO != null && n.HERO.Team != attacker.Team && n.HERO.type != Consts.HeroType.Obstacle)
                         enemiesCount++;
                 }
                 extraDmg = (attacker.Dmg + attacker.StatsEffect.Dmg) * ((enemiesCount - cntEnemiesPenalty) * 0.2);

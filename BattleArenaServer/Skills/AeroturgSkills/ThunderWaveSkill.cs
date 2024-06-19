@@ -68,6 +68,7 @@ namespace BattleArenaServer.Skills.AeroturgSkills
             if (!upgraded)
             {
                 upgraded = true;
+                title += "\n" + titleUpg;
                 return true;
             }
             return false;
