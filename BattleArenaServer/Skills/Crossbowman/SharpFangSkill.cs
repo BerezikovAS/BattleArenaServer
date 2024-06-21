@@ -52,6 +52,7 @@ namespace BattleArenaServer.Skills.Crossbowman
                 dmg += 50;
                 radius += 10;
                 stats.radius += 10;
+                title = $"Острый шип пронзает врагов на линии, нанося {dmg} чистого урона.";
                 return true;
             }
             return false;

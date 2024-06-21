@@ -5,16 +5,16 @@ using BattleArenaServer.SkillCastRequests;
 
 namespace BattleArenaServer.Skills.Knight
 {
-    public class SelfHealSkill : BodyGuardSkill
+    public class SecondBreathSkill : BodyGuardSkill
     {
         int heal = 200;
         int armor = 3;
-        public SelfHealSkill() 
+        public SecondBreathSkill() 
         {
-            name = "Self heal";
-            title = "Восстанавливает владельцу 200 ХП и дает 3 доп. брони";
-            titleUpg = "+75 к лечению, +1 к доп. броне";
-            coolDown = 4;
+            name = "Second Breath";
+            title = $"Восстанавливает владельцу {heal} ХП и дает {armor} доп. брони";
+            titleUpg = "-2 к перезарядке, +1 к доп. броне";
+            coolDown = 6;
             coolDownNow = 0; 
             requireAP = 1;
             nonTarget = true;
@@ -50,8 +50,10 @@ namespace BattleArenaServer.Skills.Knight
             if (!upgraded)
             {
                 upgraded = true;
-                heal += 75;
+                coolDown -= 2;
+                stats.coolDown -= 2;
                 armor += 1;
+                title = $"Восстанавливает владельцу {heal} ХП и дает {armor} доп. брони";
                 return true;
             }
             return false;

@@ -38,7 +38,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
                 while (pos <= radius && target == null)
                 {
                     targetHex = UtilityService.GetOneHexOnDirection(requestData.CasterHex, requestData.TargetHex, pos);
-                    target = targetHex?.HERO;
+                    target = targetHex?.HERO?.Team != requestData.Caster.Team ? targetHex?.HERO : null;
                     pos++;
                 }
 
@@ -71,6 +71,8 @@ namespace BattleArenaServer.Skills.GeomantSkills
                 dmg += 60;
                 radius += 1;
                 stats.radius += 1;
+                title = $"Запускает гигантский валун по прямой, который наносит первому врагу на линии {dmg} магического урона и отбрасывает назад." +
+                    $"\n Если позади врага нет свободной клетки, то он теряет 1 ОД.";
                 return true;
             }
             return false;

@@ -49,6 +49,7 @@ namespace BattleArenaServer.Skills.PriestSkills
             {
                 upgraded = true;
                 extraDmgPercent = 50;
+                title = $"Выносит врагу обвинительный приговор, отчего тот получает на {extraDmgPercent}% больше урона.";
                 return true;
             }
             return false;

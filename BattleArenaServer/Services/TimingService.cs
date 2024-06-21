@@ -8,6 +8,7 @@ namespace BattleArenaServer.Services
     public class TimingService : ITiming
     {
         private int idActiveHero = 0;
+        private int turn = 1;
 
         public TimingService()
         {
@@ -36,7 +37,11 @@ namespace BattleArenaServer.Services
                     DecreaseStatusDuration(idActiveHero);
                     idActiveHero++;
                     hero = GameData._heroes.FirstOrDefault(x => x.Id == idActiveHero && x.HP > 0);
-                    idActiveHero = idActiveHero >= GameData._heroes.Count ? -1 : idActiveHero;
+                    if (idActiveHero >= GameData._heroes.Count)
+                    {
+                        AddUpgradePoints(++turn);
+                        idActiveHero = -1;
+                    }
                 }
             }            
         }
@@ -120,6 +125,13 @@ namespace BattleArenaServer.Services
                         effect.ApplyEffect(hero);
                 }
             }
+        }
+
+        public void AddUpgradePoints(int turn)
+        {
+            if (turn % 2 == 0)
+                foreach (var hero in GameData._heroes)
+                    hero.UpgradePoints++;
         }
     }
 }

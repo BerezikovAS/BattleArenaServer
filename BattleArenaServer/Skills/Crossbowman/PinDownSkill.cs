@@ -50,6 +50,7 @@ namespace BattleArenaServer.Skills.Crossbowman
             {
                 upgraded = true;
                 dmg += 100;
+                title = $"Массивный болт прибивает врага к земле, отчего тот не может передвигаться. {dmg} физического урона.";
                 return true;
             }
             return false;

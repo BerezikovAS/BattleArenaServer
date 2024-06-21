@@ -1,6 +1,5 @@
 ﻿using BattleArenaServer.Skills.Knight;
 using BattleArenaServer.Skills.KnightSkills;
-using BattleArenaServer.Skills.KnightSkills.Auras;
 
 namespace BattleArenaServer.Models.Heroes
 {
@@ -11,10 +10,8 @@ namespace BattleArenaServer.Models.Heroes
             Name = "Knight";
 
             MaxHP = HP = 1000;
-            Armor = 5;
-            Resist = 3;
-
-            UpgradePoints = 1;
+            Armor = 4;
+            Resist = 2;
 
             AP = 4;
 
@@ -22,7 +19,7 @@ namespace BattleArenaServer.Models.Heroes
             Dmg = 100;
 
             SkillList[0] = new HighShieldPSkill(this);
-            SkillList[1] = new SelfHealSkill();
+            SkillList[1] = new SecondBreathSkill();
             SkillList[2] = new ShieldBashSkill();
             SkillList[3] = new BodyGuardSkill();
             SkillList[4] = new FormationAttackSkill();

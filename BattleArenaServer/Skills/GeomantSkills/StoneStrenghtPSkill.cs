@@ -32,6 +32,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
                 Aura = new StoneStrengthAura(true);
                 hero.AuraList.Add(Aura);
                 AttackService.ContinuousAuraAction();
+                title = "Герой наполняется силой природы. Каждый столоктит в радиусе 3-х гексов даёт +1 к броне, +1 к сопротивлению, +10 к урону." + upgString;
                 return true;
             }
             return false;

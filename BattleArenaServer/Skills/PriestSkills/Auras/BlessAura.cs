@@ -17,7 +17,7 @@ namespace BattleArenaServer.Skills.PriestSkills.Auras
 
         public override void ApplyEffect(Hero source, Hero target)
         {
-            if (source.Team == target.Team)
+            if (source.Team == target.Team && target.type != Consts.HeroType.Obstacle)
             {
                 double healPercent = basicHeal;
                 foreach (var effect in target.EffectList)

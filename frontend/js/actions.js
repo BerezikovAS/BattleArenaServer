@@ -54,6 +54,7 @@ function castSpell(_spell, _target = -1)
         
         idCastingSpell = _spell;
         fillSpellAreaHovers(_spell);
+        feelSpells(_hero);
         disableSpells(_spell);
 
         return;

@@ -59,6 +59,8 @@ namespace BattleArenaServer.Skills.GeomantSkills
             {
                 upgraded = true;
                 extraRegen += 8;
+                title = $"Вбирает в себя мощь земли, получая регенерацию здоровья в зависимости от свобоных гексов вокруг себя. Столоктиты считаются свободными и дают двойной бонус.\n" +
+                    $"(+{extraRegen} к восстановлению ХП за гекс, регенерация длится 3 хода)";
                 return true;
             }
             return false;

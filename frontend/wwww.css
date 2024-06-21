@@ -24,6 +24,7 @@
   }
 
   div.hero.red {
+    /* background: rgb(120, 205, 238); */
     background: red;
   }
 
@@ -31,18 +32,30 @@
     background: rgb(0, 99, 248);
   }
 
-button.spell {
-    width: 100px;
-    height: 100px;
-    background-color: rgb(151, 248, 142);
-    border: 3px solid rgb(1, 73, 1);
-    border-radius: 10px;
-    font-weight: 600;
-}
+  button.spell {
+      width: 100px;
+      height: 100px;
+      background-color: rgb(151, 248, 142);
+      border: 3px solid rgb(1, 73, 1);
+      border-radius: 10px;
+      font-weight: 600;
+  }
 
-    button.passive {
-        border-radius: 50px;
-    }
+  button.statusbaritem {
+    border: 3px solid rgb(1, 73, 1);
+    border-radius: 24px;
+    background-color: rgb(126, 207, 118);
+    width: 38px;
+    height: 38px;
+    margin-right: 6px;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 20px;
+  }
+
+  button.passive {
+      border-radius: 50px;
+  }
 
   button.spellActive {
     width: 100px;
@@ -138,7 +151,7 @@ button.cancel {
   } */
 
   td.heroinfo {
-    min-width: 60px;
+    min-width: 50px;
     padding-left: 10px;
     font-size: 24px;
     font-weight: bold;
@@ -147,6 +160,7 @@ button.cancel {
     margin-left: 10px;
     border: 3px solid rgb(1, 73, 1);
     border-radius: 10px;
+    text-align: center;
   }
 
   div.heroinfo_icon {

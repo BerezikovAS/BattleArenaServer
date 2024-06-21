@@ -64,6 +64,7 @@ namespace BattleArenaServer.Skills.Priest
                 stats.requireAP -= 1;
                 range += 1;
                 stats.range += 1;
+                title = "Восстанавливает себе или союзнику 200 ХП и снимает негативные эффекты";
                 return true;
             }
             return false;

@@ -8,22 +8,22 @@
     <link href='https://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
   </head>
   <body style="background-color: rgb(26, 145, 26); display: flex;">
-      <div style="display: inline-block; background-color:darkgreen; padding:10px; padding-bottom: 40px; border: 4px solid rgb(1, 73, 1); border-radius: 50px; margin-right: 20px;">
+      <div style="display: inline-block; background-color:darkgreen; padding:20px; padding-bottom: 40px; border: 4px solid rgb(1, 73, 1); border-radius: 50px; margin-right: 20px;">
           <div class="main">
               <div id="field" class="container">
 
               </div>
           </div>
       </div>
-      <div style="display: inline-block; margin-top: 20px;">
+      <div style="display: inline-block;">
           <div class="heroinfo" style="vertical-align: middle; background-color: rgba(69, 180, 69, 0.863); padding: 12px; border: 4px solid rgb(1, 73, 1); border-radius: 20px;">
 
               <table style="color: rgb(1, 43, 1); font-weight: 800;">
                   <tr style="height: 65px;">
                       <td rowspan="2" style="width: 100px;"><div class="heroinfo_icon" id="heroinfo_icon"><img id="heroinfo_icon_img" class="heroinfo_icon_img"></div></td>
                       <td style="text-align: center;"><div id="heroinfo_name" style="display: inline-block; font-size: 28px; margin-left: 10px;">HERONAME</div></td>
-                      <td class="heroinfo"><img src="icons/meleeattack.png" style="height: 30px;"><div style="width: 60px; padding-left: 8px;" id="heroinfo_damage">100</div></td>
-                      <td class="heroinfo"><img src="icons/armor.png" style="height: 30px;"><div style="width: 100px; padding-left: 8px;" id="heroinfo_armor">3 (27%)</div></td>
+                      <td class="heroinfo"><img src="icons/meleeattack.png" style="height: 30px;"><div style="width: 54px; padding-left: 8px;" id="heroinfo_damage">100</div></td>
+                      <td class="heroinfo"><img src="icons/armor.png" style="height: 30px;"><div style="width: 54px; padding-left: 8px;" id="heroinfo_armor">3 (27%)</div></td>
                   </tr>
                   <tr style="height: 30px;">
                       <td>
@@ -32,12 +32,12 @@
                               <h id="heroinfo_hp" style="z-index: 2; position: relative;">1000</h>
                           </div>
                       </td>
-                      <td class="heroinfo"><img src="icons/rangeattack.png" style="height: 30px;"><div style="width: 60px; padding-left: 8px;" id="heroinfo_range">1</div></td>
-                      <td class="heroinfo"><img src="icons/resist.png" style="height: 30px;"><div style="width: 100px; padding-left: 8px;" id="heroinfo_resist">2  (19%)</div></td>
+                      <td class="heroinfo"><img src="icons/rangeattack.png" style="height: 30px;"><div style="width: 54px; padding-left: 8px;" id="heroinfo_range">1</div></td>
+                      <td class="heroinfo"><img src="icons/resist.png" style="height: 30px;"><div style="width: 54px; padding-left: 8px;" id="heroinfo_resist">2  (19%)</div></td>
                   </tr>
               </table>
 
-              <div style="display: flex; margin-top: 10px;">
+              <div style="display: flex; margin-top: 10px; margin-bottom: 10px;">
                   <div style="display: inline-block; margin-right: 6px;">
                       <div class="cooldawn" id="spInfo0"><p class="cooldawn" id="cdInfo0"></p></div><button id="spellInfo0" class="spell">Spell1</button>
                   </div>
@@ -54,13 +54,17 @@
                       <div class="cooldawn" id="spInfo4"><p class="cooldawn" id="cdInfo4"></p></div><button id="spellInfo4" class="spell">Spell1</button>
                   </div>
               </div>
+
+              <div id="statusbar_info" style="min-height: 50px; width: inherit; text-align: center;">
+
+              </div>
           </div>
 
 
 
           
 
-          <div style="background-color: rgba(69, 180, 69, 0.863); padding: 12px; border: 4px solid rgb(1, 73, 1); border-radius: 20px; margin-top: 50px;">
+          <div style="background-color: rgba(69, 180, 69, 0.863); padding: 12px; border: 4px solid rgb(1, 73, 1); border-radius: 20px; margin-top: 4px;">
 
               <div style="justify-content: space-around; text-align:center; font-size: 26px; font-weight: 800; margin-bottom: 10px;">YOUR TURN</div>
 
@@ -99,6 +103,10 @@
                   </div>
                   <button class="controls" onclick="endTurn()"><img src="EndTurn.png" style="width: 80px;" /></button>
                   <button style="margin-left: 6px;" class="controls" onclick="cancel()"><img src="Cancel.png" style="width: 80px;" /></button>
+              </div>
+
+              <div id="statusbar" style="min-height: 50px; width: inherit; text-align: center; margin-top: 10px;">
+
               </div>
           </div>
       </div>
