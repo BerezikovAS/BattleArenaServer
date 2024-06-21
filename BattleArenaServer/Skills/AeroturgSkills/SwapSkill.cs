@@ -4,6 +4,7 @@ using BattleArenaServer.SkillCastRequests;
 using BattleArenaServer.Effects.Buffs;
 using BattleArenaServer.Interfaces;
 using BattleArenaServer.Services;
+using BattleArenaServer.Models.Obstacles;
 
 namespace BattleArenaServer.Skills.AeroturgSkills
 {
@@ -33,6 +34,13 @@ namespace BattleArenaServer.Skills.AeroturgSkills
                 //Меняем местами героев
                 requestData.CasterHex.SetHero(requestData.Target);
                 requestData.TargetHex.SetHero(requestData.Caster);
+
+                if (requestData.TargetHex.OBSTACLE != null && requestData.TargetHex.OBSTACLE is FillableObstacle)
+                    (requestData.TargetHex.OBSTACLE as FillableObstacle).ApplyEffect(requestData.Caster, requestData.TargetHex);
+
+                if (requestData.CasterHex.OBSTACLE != null && requestData.CasterHex.OBSTACLE is FillableObstacle)
+                    (requestData.CasterHex.OBSTACLE as FillableObstacle).ApplyEffect(requestData.Target, requestData.CasterHex);
+
                 if (requestData.Caster.Team != requestData.Target.Team)
                 {
                     ArmorDebuff armorDebuff = new ArmorDebuff(requestData.Caster.Id, extraArmor, 2);

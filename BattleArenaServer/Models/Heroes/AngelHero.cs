@@ -21,7 +21,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 100;
 
-            SkillList[0] = new SelfHealSkill();
+            SkillList[0] = new SecondBreathSkill();
             SkillList[1] = new SmightSkill();
             SkillList[2] = new CondemnationSkill();
         }

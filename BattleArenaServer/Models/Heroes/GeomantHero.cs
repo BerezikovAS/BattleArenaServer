@@ -12,8 +12,6 @@ namespace BattleArenaServer.Models.Heroes
             Armor = 1;
             Resist = 1;
 
-            UpgradePoints = 1;
-
             AP = 4;
 
             AttackRadius = 3;

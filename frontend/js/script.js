@@ -12,6 +12,7 @@ var mode = "Move";
 var hero;
 var idActiveHero = 0;
 var idCastingSpell = -1;
+var heroInfo;
 
 window.onload = async function() {
     idActiveHero = await getActiveHero();
@@ -19,9 +20,48 @@ window.onload = async function() {
 
     fetch("https://localhost:7241/Field/GetField")
         .then(response => response.json())
-        .then(coord => feelField(coord));
+        .then(coord => feelField(coord))
+        .then(coord => feelHeroInfo(null, heroes[idActiveHero].hexId));
 }
 
+window.addEventListener("keydown", keyPressed);
+window.addEventListener("keyup", keyPressed);
+window.addEventListener("keypress", skillPressed);
+ 
+function keyPressed(e){
+    switch(e.key){
+         
+        case "Control":
+            if (e.type == "keydown")
+                fillPercentResist(true);
+            else
+                fillPercentResist(false);
+            break;
+    }
+}
+
+function skillPressed(e){
+   switch(e.code){
+        case "Digit1":
+            castSpell(1);
+           break;
+        case "Digit2":
+            castSpell(2);
+           break;
+        case "Digit3":
+            castSpell(3);
+           break;
+        case "Digit4":
+            castSpell(4);
+           break;
+        case "KeyR":
+            cancel();
+           break;
+        case "Space":
+            endTurn();
+           break;
+   }
+}
 
 async function feelField(_field) {
     if(_field.length < 1)
@@ -30,8 +70,6 @@ async function feelField(_field) {
     while(field.firstChild) {
         field.removeChild(field.firstChild);
     }
-    
-    
 
     hexes = [];
     heroes = [];
@@ -59,7 +97,7 @@ async function feelField(_field) {
             }
 
             hex.setAttribute("class", "hero " + element.hero.team);
-            hex.setAttribute("onmouseenter", "feelHeroInfo(this)");
+            hex.setAttribute("onmouseenter", "feelHeroInfo(this, -1)");
 
             hex.appendChild(teamImg);
             hex.appendChild(heroImg);
@@ -112,7 +150,9 @@ function hexClick(_hex) {
 
 function cancel() {
     idCastingSpell = -1;
-    clearHovers();
+    for (let index = 0; index < 5; index++) {
+        clearHovers();
+    } 
     clearHoversActions();
     hero = heroes[idActiveHero];
     console.log(hexes[idActiveHero]);

@@ -1,4 +1,4 @@
-// Получить расстояние от клетки до клетки
+// ╨Я╨╛╨╗╤Г╤З╨╕╤В╤М ╤А╨░╤Б╤Б╤В╨╛╤П╨╜╨╕╨╡ ╨╛╤В ╨║╨╗╨╡╤В╨║╨╕ ╨┤╨╛ ╨║╨╗╨╡╤В╨║╨╕
 function getDistance (_hexSource, _hexTarget) {
     var dist = 0;
     for (let i = 0; i < 3; i++) {
@@ -8,19 +8,19 @@ function getDistance (_hexSource, _hexTarget) {
     return dist;
 }
 
-// Получить процент оставшегося ХП
+// ╨Я╨╛╨╗╤Г╤З╨╕╤В╤М ╨┐╤А╨╛╤Ж╨╡╨╜╤В ╨╛╤Б╤В╨░╨▓╤И╨╡╨│╨╛╤Б╤П ╨е╨Я
 function getPercentHP(_hero) {
     return 115.47 - (_hero.hp / _hero.maxHP) * 115.47;     
 }
 
-// Заполнить инфу по активному герою
+// ╨Ч╨░╨┐╨╛╨╗╨╜╨╕╤В╤М ╨╕╨╜╤Д╤Г ╨┐╨╛ ╨░╨║╤В╨╕╨▓╨╜╨╛╨╝╤Г ╨│╨╡╤А╨╛╤О
 function feelActiveHeroInfo(_hero) {
     console.log(_hero);
     feelAP(_hero.ap);
     feelSpells(_hero)
 }
 
-// Заполнить инфу по скилам
+// ╨Ч╨░╨┐╨╛╨╗╨╜╨╕╤В╤М ╨╕╨╜╤Д╤Г ╨┐╨╛ ╤Б╨║╨╕╨╗╨░╨╝
 function feelSpells(_hero) {
     var i = 0;
     _hero.skillList.forEach(skill => {
@@ -53,7 +53,7 @@ function feelSpells(_hero) {
     });
 }
 
-// Заполнить очки действий
+// ╨Ч╨░╨┐╨╛╨╗╨╜╨╕╤В╤М ╨╛╤З╨║╨╕ ╨┤╨╡╨╣╤Б╤В╨▓╨╕╨╣
 function feelAP(_ap) {
     const AProw = document.getElementById("AProw");
     while(AProw.firstChild) {
@@ -90,9 +90,11 @@ function feelAP(_ap) {
 
     const hpbarhp = document.getElementById("hpbarcur");
     hpbarhp.setAttribute("style", "margin-top: 14px; background-color: " + _excolor);
+
+    fillEffectsOnHeroInfo(_hero, "statusbar");
 }
 
-// Получить все клетки попадающие под действие скила
+// ╨Я╨╛╨╗╤Г╤З╨╕╤В╤М ╨▓╤Б╨╡ ╨║╨╗╨╡╤В╨║╨╕ ╨┐╨╛╨┐╨░╨┤╨░╤О╤Й╨╕╨╡ ╨┐╨╛╨┤ ╨┤╨╡╨╣╤Б╤В╨▓╨╕╨╡ ╤Б╨║╨╕╨╗╨░
 // _spell.area == 0 - 
 function getHexesSpellArea(_target, _caster, _spell) {
     var spellArea = [];
@@ -123,10 +125,10 @@ function getHexesSpellArea(_target, _caster, _spell) {
             }
             break;
         case 4:
-            // Тыкать нужно в радиусе досягаемости
+            // ╨в╤Л╨║╨░╤В╤М ╨╜╤Г╨╢╨╜╨╛ ╨▓ ╤А╨░╨┤╨╕╤Г╤Б╨╡ ╨┤╨╛╤Б╤П╨│╨░╨╡╨╝╨╛╤Б╤В╨╕
             if (getDistance(hexes[_target], hexes[_caster]) <= spellRange) {
                 hexes.forEach(hex => {
-                    // Нашли нужный гекс, от 
+                    // ╨Э╨░╤И╨╗╨╕ ╨╜╤Г╨╢╨╜╤Л╨╣ ╨│╨╡╨║╤Б, ╨╛╤В 
                     if (getDistance(hex, hexes[_target]) <= _spell.radius) {
                         spellArea.push(hex.id);
                     }
@@ -169,7 +171,7 @@ function getHexesSpellArea(_target, _caster, _spell) {
     return spellArea;
 }
 
-// Проверить находятся ли клетки на одной линии
+// ╨Я╤А╨╛╨▓╨╡╤А╨╕╤В╤М ╨╜╨░╤Е╨╛╨┤╤П╤В╤Б╤П ╨╗╨╕ ╨║╨╗╨╡╤В╨║╨╕ ╨╜╨░ ╨╛╨┤╨╜╨╛╨╣ ╨╗╨╕╨╜╨╕╨╕
 function isOnLine(_hexCaster, _hexTarget) {
     if (getDistance (_hexCaster, _hexTarget) == 0)
         return false;
@@ -180,7 +182,7 @@ function isOnLine(_hexCaster, _hexTarget) {
     return false;
 }
 
-// Получить направление для клеток на одной линии
+// ╨Я╨╛╨╗╤Г╤З╨╕╤В╤М ╨╜╨░╨┐╤А╨░╨▓╨╗╨╡╨╜╨╕╨╡ ╨┤╨╗╤П ╨║╨╗╨╡╤В╨╛╨║ ╨╜╨░ ╨╛╨┤╨╜╨╛╨╣ ╨╗╨╕╨╜╨╕╨╕
 function getDirection(_hexCaster, _hexTarget)
 {
     var dist = getDistance (_hexCaster, _hexTarget);
@@ -219,16 +221,38 @@ function enableSpells(_hero) {
     feelSpells(_hero);
 }
 
+function fillPercentResist(isShow)
+{
+    const armor = document.getElementById("heroinfo_armor");
+    const resist = document.getElementById("heroinfo_resist");
+    if (isShow)
+    {
+        armor.innerText = getPercentResist(heroInfo.armor + heroInfo.statsEffect.armor);
+        resist.innerText = getPercentResist(heroInfo.resist + heroInfo.statsEffect.resist);
+    }
+    else
+    {
+        armor.innerText = heroInfo.armor + heroInfo.statsEffect.armor;
+        resist.innerText = heroInfo.resist + heroInfo.statsEffect.resist;
+    }
+}
 
-// Получить процент сопротивления/брони
+
+// ╨Я╨╛╨╗╤Г╤З╨╕╤В╤М ╨┐╤А╨╛╤Ж╨╡╨╜╤В ╤Б╨╛╨┐╤А╨╛╤В╨╕╨▓╨╗╨╡╨╜╨╕╤П/╨▒╤А╨╛╨╜╨╕
 function getPercentResist(_value) {
     var percent = Math.round((0.1 * _value) / (1 + 0.1 * _value) * 100, 0) + "%";
     return percent;
 }
 
-// Заполнить инфу о герое
-function feelHeroInfo(_hex) {    
-    var _hero = hexes[_hex.getAttribute("id")].hero;
+// ╨Ч╨░╨┐╨╛╨╗╨╜╨╕╤В╤М ╨╕╨╜╤Д╤Г ╨╛ ╨│╨╡╤А╨╛╨╡
+function feelHeroInfo(_hex, _hexId) {
+    var _hero;
+    if (_hexId > 0)
+        _hero = hexes[_hexId].hero;
+    else
+        _hero = hexes[_hex.getAttribute("id")].hero;
+
+    heroInfo = _hero;
 
     var _color = "red";
     var _excolor = "rgb(238, 150, 150)";
@@ -243,8 +267,11 @@ function feelHeroInfo(_hex) {
     const iconDiv = document.getElementById("heroinfo_icon");
     iconDiv.setAttribute("style", "background-color: " + _color);
 
-    const icon = document.getElementById("heroinfo_icon_img");    
-    icon.setAttribute("src", _hero.name + ".png");
+    const icon = document.getElementById("heroinfo_icon_img");
+    if (_hero.type == 0)
+        icon.setAttribute("src", _hero.name + ".png");
+    else
+        icon.setAttribute("src", "obstacles/" + _hero.name + ".png");
 
     const dmg = document.getElementById("heroinfo_damage");
     dmg.innerText = _hero.dmg + _hero.statsEffect.dmg;
@@ -253,12 +280,10 @@ function feelHeroInfo(_hex) {
     range.innerText = _hero.attackRadius + _hero.statsEffect.attackRadius;
 
     const armor = document.getElementById("heroinfo_armor");
-    var totalArmor = _hero.armor + _hero.statsEffect.armor;
-    armor.innerText = totalArmor + " (" + getPercentResist(totalArmor) + ")";
+    armor.innerText = _hero.armor + _hero.statsEffect.armor;
 
     const resist = document.getElementById("heroinfo_resist");
-    var totalResist = _hero.resist + _hero.statsEffect.resist;
-    resist.innerText = totalResist + " (" + getPercentResist(totalResist) + ")";
+    resist.innerText = _hero.resist + _hero.statsEffect.resist;
 
     const hp = document.getElementById("heroinfo_hp");
     hp.innerText = _hero.hp;
@@ -291,11 +316,22 @@ function feelHeroInfo(_hex) {
         i++;
     });
 
+    fillEffectsOnHeroInfo(_hero, "statusbar_info");
+}
 
+function fillEffectsOnHeroInfo(_hero, _panel)
+{
+    const statusBar = document.getElementById(_panel);
+    while(statusBar.firstChild) {
+        statusBar.removeChild(statusBar.firstChild);
+    }
 
-
-
-
+    _hero.effectList.forEach(effect => {
+        const status = document.createElement("button");
+        status.setAttribute("class", "statusbaritem");
+        status.setAttribute("style", "background-image: url(\"effects/" + effect.name + ".png\");");
+        statusBar.appendChild(status);
+    });
 }
 
 function fillEffectsOnHex(_hex, _hero)
@@ -309,7 +345,7 @@ function fillEffectsOnHex(_hex, _hero)
 
         const effect = document.createElement("img");
         effect.setAttribute("src", "effects/" + ef.name + ".png");
-        effect.setAttribute("style", "position: absolute; padding-left: " + pl + "px; padding-top: " + pt + "px;");
+        effect.setAttribute("style", "position: absolute; padding-left: " + pl + "px; padding-top: " + pt + "px; width: 16px; height: 16px;");
         _hex.appendChild(effect);
         i++;
         if (i > 3 && i <= 7)

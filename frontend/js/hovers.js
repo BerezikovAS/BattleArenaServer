@@ -92,7 +92,7 @@ function mouseSpellHoverIn(_hex, _spell) {
 
 function mouseSpellHoverOut(_hex, _spell) {
     for (let index = 0; index < 5; index++) {
-        clearHovers();        
+        clearHovers();
     }    
 }
 

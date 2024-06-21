@@ -36,7 +36,7 @@ namespace BattleArenaServer.Skills.KnightSkills
             {
                 foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
                 {
-                    if (n.HERO != null && n.HERO.Team == requestData.Caster.Team && n.HERO.Id != requestData.Caster.Id)
+                    if (n.HERO != null && n.HERO.Team == requestData.Caster.Team && n.HERO.Id != requestData.Caster.Id && n.HERO.type != Consts.HeroType.Obstacle)
                         alliesCount++;
                 }
                 requestData.Caster.AP -= requireAP;

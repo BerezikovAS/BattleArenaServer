@@ -14,9 +14,7 @@ namespace BattleArenaServer.Models.Heroes
 
             AP = 4;
 
-            UpgradePoints = 1;
-
-            AttackRadius = 3;
+            AttackRadius = 4;
             Dmg = 80;
 
             SkillList[0] = new LongShotPSkill(this);
