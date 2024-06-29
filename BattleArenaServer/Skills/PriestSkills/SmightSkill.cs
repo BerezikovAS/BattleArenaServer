@@ -7,12 +7,12 @@ namespace BattleArenaServer.Skills.Priest
 {
     public class SmightSkill : Skill
     {
-        int defaultdmg = 100;
         int extraDmg = 25;
         public SmightSkill()
         {
             name = "Smight";
-            title = $"Божественная кара настигает врага, нанося тому чистый урон. Урон увеличивается за каждую способность врага в откате (X). ( {defaultdmg} + {extraDmg} * X )";
+            dmg = 100;
+            title = $"Божественная кара настигает врага, нанося тому чистый урон. Урон увеличивается за каждую способность врага в откате (X). ( {dmg} + {extraDmg} * X )";
             titleUpg = "+20 к доп. урону, +1 к дальности";
             coolDown = 4;
             coolDownNow = 0;
@@ -22,6 +22,7 @@ namespace BattleArenaServer.Skills.Priest
             radius = 0;
             area = Consts.SpellArea.EnemyTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
+            dmgType = Consts.DamageType.Pure;
         }
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
@@ -33,15 +34,15 @@ namespace BattleArenaServer.Skills.Priest
 
             if (requestData.Caster != null && requestData.Target != null)
             {
-                int dmg = defaultdmg;
+                int totalDmg = dmg;
                 foreach (var skill in requestData.Target.SkillList)
                 {
                     if (skill.coolDownNow > 0)
-                        dmg += extraDmg;
+                        totalDmg += extraDmg;
                 }
 
                 requestData.Caster.AP -= requireAP;
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, Consts.DamageType.Pure);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, totalDmg, dmgType);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -57,7 +58,7 @@ namespace BattleArenaServer.Skills.Priest
                 extraDmg += 20;
                 range += 1;
                 stats.range += 1;
-                title = $"Божественная кара настигает врага, нанося тому чистый урон. Урон увеличивается за каждую способность врага в откате (X). ( {defaultdmg} + {extraDmg} * X )";
+                title = $"Божественная кара настигает врага, нанося тому чистый урон. Урон увеличивается за каждую способность врага в откате (X). ( {dmg} + {extraDmg} * X )";
                 return true;
             }
             return false;

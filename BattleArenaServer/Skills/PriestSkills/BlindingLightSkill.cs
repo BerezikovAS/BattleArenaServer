@@ -8,10 +8,10 @@ namespace BattleArenaServer.Skills.Priest
 {
     public class BlindingLightSkill : Skill
     {
-        int dmg = 100;
         public BlindingLightSkill()
         {
             name = "BlindingLight";
+            dmg = 100;
             title = $"Враги в области действия теряют {dmg} ХП и получают ослепление";
             titleUpg = "+40 к урону, +1 к дальности";
             coolDown = 4;
@@ -22,6 +22,7 @@ namespace BattleArenaServer.Skills.Priest
             radius = 1;
             area = Consts.SpellArea.Radius;
             stats = new SkillStats(coolDown, requireAP, range, radius);
+            dmgType = Consts.DamageType.Pure;
         }
 
         public new ISkillCastRequest request => new RangeAoECastRequest();
@@ -40,7 +41,7 @@ namespace BattleArenaServer.Skills.Priest
                         BlindDebuff blindDebuff = new BlindDebuff(requestData.Caster.Id, 0, 2);
                         n.HERO.AddEffect(blindDebuff);
                         blindDebuff.ApplyEffect(n.HERO);
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, Consts.DamageType.Pure);
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
                     }
                 }
                 requestData.Caster.AP -= requireAP;

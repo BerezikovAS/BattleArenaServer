@@ -7,10 +7,10 @@ namespace BattleArenaServer.Skills.AeroturgSkills
 {
     public class ChainLightningSkill : Skill
     {
-        int dmg = 150;
         public ChainLightningSkill()
         {
             name = "Chain Lightning";
+            dmg = 150;
             title = $"Выпускает молнию, которая наносит {dmg} магического урона всем врагам в цепи.";
             titleUpg = "+50 к урону. -1 к перезарядке";
             coolDown = 4;
@@ -20,6 +20,7 @@ namespace BattleArenaServer.Skills.AeroturgSkills
             range = 3;
             area = Consts.SpellArea.HeroTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
+            dmgType = Consts.DamageType.Magic;
         }
 
         public new ISkillCastRequest request => new HeroTargetCastRequest();
@@ -38,7 +39,7 @@ namespace BattleArenaServer.Skills.AeroturgSkills
                 {
                     if (requestData.Caster.Team != hero.Team)
                     {
-                        AttackService.SetDamage(requestData.Caster, hero, dmg, Consts.DamageType.Magic);
+                        AttackService.SetDamage(requestData.Caster, hero, dmg, dmgType);
                     }
                 }
 

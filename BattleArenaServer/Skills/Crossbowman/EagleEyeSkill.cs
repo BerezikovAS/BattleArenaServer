@@ -19,6 +19,7 @@ namespace BattleArenaServer.Skills.Crossbowman
             nonTarget = true;
             area = Consts.SpellArea.NonTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
+            extraDmgStr = "+30";
         }
 
         public new ISkillCastRequest request => new NontargetCastRequest();
@@ -48,6 +49,7 @@ namespace BattleArenaServer.Skills.Crossbowman
             {
                 upgraded = true;
                 extraDamage += 30;
+                extraDmgStr = "+60";
                 title = $"Увеличивает дальность атаки на 1 и урон на {extraDamage}.";
                 return true;
             }

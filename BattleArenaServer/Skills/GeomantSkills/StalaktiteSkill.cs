@@ -8,13 +8,13 @@ namespace BattleArenaServer.Skills.GeomantSkills
 {
     public class StalaktiteSkill : Skill
     {
-        int dmg = 80;
         int stalaktiteHP = 80;
         int lifeTime = 4;
 
         public StalaktiteSkill()
         {
             name = "Stalaktite";
+            dmg = 80;
             title = $"Из-под земли вырывается каменный шпиль, нанося {dmg} магического урона врагам вокруг. Шпиль блокирует перемещение, имеет {stalaktiteHP} ХП и существует {lifeTime - 1} хода.";
             titleUpg = "+40 к урону, +40 к ХП.";
             coolDown = 1;
@@ -24,6 +24,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
             nonTarget = false;
             area = Consts.SpellArea.Radius;
             stats = new SkillStats(coolDown, requireAP, range, radius);
+            dmgType = Consts.DamageType.Magic;
         }
 
         public new ISkillCastRequest request => new HexTargetCastRequest();
@@ -46,7 +47,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
                 foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, 1))
                 {
                     if (hex.HERO != null && hex.HERO.Team != requestData.Caster.Team)
-                        AttackService.SetDamage(requestData.Caster, hex.HERO, dmg, Consts.DamageType.Magic);
+                        AttackService.SetDamage(requestData.Caster, hex.HERO, dmg, dmgType);
                 }
                 
                 //Обновим ауры

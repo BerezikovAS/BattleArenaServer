@@ -7,11 +7,11 @@ namespace BattleArenaServer.Skills.KnightSkills
 {
     public class FormationAttackSkill : Skill
     {
-        int dmg = 100;
         int extraDmg = 40;
         public FormationAttackSkill()
         {
             name = "Formation Attack";
+            dmg = 100;
             title = $"Атакуйте врага единым строем. Урон увеличивается за каждого вашего союзника рядом с целью ({extraDmg} за союзника).";
             titleUpg = "+10 к урону за союзника. Способность не уходит на перезарядку.";
             coolDown = 1;
@@ -22,6 +22,7 @@ namespace BattleArenaServer.Skills.KnightSkills
             radius = 1;
             area = Consts.SpellArea.EnemyTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
+            dmgType = Consts.DamageType.Physical;
         }
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
@@ -41,7 +42,7 @@ namespace BattleArenaServer.Skills.KnightSkills
                 }
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg + alliesCount * extraDmg, Consts.DamageType.Physical);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg + alliesCount * extraDmg, dmgType);
                 return true;
             }
 

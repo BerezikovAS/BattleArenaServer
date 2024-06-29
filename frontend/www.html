@@ -39,19 +39,19 @@
 
               <div style="display: flex; margin-top: 10px; margin-bottom: 10px;">
                   <div style="display: inline-block; margin-right: 6px;">
-                      <div class="cooldawn" id="spInfo0"><p class="cooldawn" id="cdInfo0"></p></div><button id="spellInfo0" class="spell">Spell1</button>
+                      <div class="cooldawn" id="spInfo0" onmouseenter="showSpellInfo(0, this, 1)" onmouseleave="hideSpellInfo()"><p class="cooldawn" id="cdInfo0"></p></div><button id="spellInfo0" class="spell">Spell1</button>
                   </div>
                   <div style="display: inline-block; margin-right: 6px;">
-                      <div class="cooldawn" id="spInfo1"><p class="cooldawn" id="cdInfo1"></p></div><button id="spellInfo1" class="spell">Spell1</button>
+                      <div class="cooldawn" id="spInfo1" onmouseenter="showSpellInfo(1, this, 1)" onmouseleave="hideSpellInfo()"><p class="cooldawn" id="cdInfo1"></p></div><button id="spellInfo1" class="spell">Spell1</button>
                   </div>
                   <div style="display: inline-block; margin-right: 6px;">
-                      <div class="cooldawn" id="spInfo2"><p class="cooldawn" id="cdInfo2"></p></div><button id="spellInfo2" class="spell">Spell1</button>
+                      <div class="cooldawn" id="spInfo2" onmouseenter="showSpellInfo(2, this, 1)" onmouseleave="hideSpellInfo()"><p class="cooldawn" id="cdInfo2"></p></div><button id="spellInfo2" class="spell">Spell1</button>
                   </div>
                   <div style="display: inline-block; margin-right: 6px;">
-                      <div class="cooldawn" id="spInfo3"><p class="cooldawn" id="cdInfo3"></p></div><button id="spellInfo3" class="spell">Spell1</button>
+                      <div class="cooldawn" id="spInfo3" onmouseenter="showSpellInfo(3, this, 1)" onmouseleave="hideSpellInfo()"><p class="cooldawn" id="cdInfo3"></p></div><button id="spellInfo3" class="spell">Spell1</button>
                   </div>
                   <div style="display: inline-block;">
-                      <div class="cooldawn" id="spInfo4"><p class="cooldawn" id="cdInfo4"></p></div><button id="spellInfo4" class="spell">Spell1</button>
+                      <div class="cooldawn" id="spInfo4" onmouseenter="showSpellInfo(4, this, 1)" onmouseleave="hideSpellInfo()"><p class="cooldawn" id="cdInfo4"></p></div><button id="spellInfo4" class="spell">Spell1</button>
                   </div>
               </div>
 
@@ -83,23 +83,23 @@
               <div class="bot" style="display: flex;">
                   <div>
                       <button id="upgrade0" class="upgrade" onclick="upgradeSkill(0)">+</button>
-                      <div id="sp0"><div class="cooldawn"><p class="cooldawn" id="cd0"></p></div><button id="spell0" class="spell">Spell0</button></div>
+                      <div onmouseenter="showSpellInfo(0, this, 0)" onmouseleave="hideSpellInfo()" id="sp0"><div class="cooldawn"><p class="cooldawn" id="cd0"></p></div><button id="spell0" class="spell">Spell0</button></div>
                   </div>
                   <div>
                       <button id="upgrade1" class="upgrade" onclick="upgradeSkill(1)">+</button>
-                      <div onclick="castSpell(1)" id="sp1"><div class="cooldawn"><p class="cooldawn" id="cd1"></p></div><button id="spell1" class="spell">Spell1</button></div>
+                      <div onclick="castSpell(1)" onmouseenter="showSpellInfo(1, this, 0)" onmouseleave="hideSpellInfo()" id="sp1"><div class="cooldawn"><p class="cooldawn" id="cd1"></p></div><button id="spell1" class="spell">Spell1</button></div>
                   </div>
                   <div>
                       <button id="upgrade2" class="upgrade" onclick="upgradeSkill(2)">+</button>
-                      <div onclick="castSpell(2)" id="sp2"><div class="cooldawn"><p class="cooldawn" id="cd2"></p></div><button id="spell2" class="spell">Spell2</button></div>
+                      <div onclick="castSpell(2)" onmouseenter="showSpellInfo(2, this, 0)" onmouseleave="hideSpellInfo()" id="sp2"><div class="cooldawn"><p class="cooldawn" id="cd2"></p></div><button id="spell2" class="spell">Spell2</button></div>
                   </div>
                   <div>
                       <button id="upgrade3" class="upgrade" onclick="upgradeSkill(3)">+</button>
-                      <div onclick="castSpell(3)" id="sp3"><div class="cooldawn"><p class="cooldawn" id="cd3"></p></div><button id="spell3" class="spell">Spell3</button></div>
+                      <div onclick="castSpell(3)" onmouseenter="showSpellInfo(3, this, 0)" onmouseleave="hideSpellInfo()" id="sp3"><div class="cooldawn"><p class="cooldawn" id="cd3"></p></div><button id="spell3" class="spell">Spell3</button></div>
                   </div>
                   <div>
                       <button id="upgrade4" class="upgrade" onclick="upgradeSkill(4)">+</button>
-                      <div onclick="castSpell(4)" id="sp4"><div class="cooldawn"><p class="cooldawn" id="cd4"></p></div><button id="spell4" class="spell">Spell4</button></div>
+                      <div onclick="castSpell(4)" onmouseenter="showSpellInfo(4, this, 0)" onmouseleave="hideSpellInfo()" id="sp4"><div class="cooldawn"><p class="cooldawn" id="cd4"></p></div><button id="spell4" class="spell">Spell4</button></div>
                   </div>
                   <button class="controls" onclick="endTurn()"><img src="EndTurn.png" style="width: 80px;" /></button>
                   <button style="margin-left: 6px;" class="controls" onclick="cancel()"><img src="Cancel.png" style="width: 80px;" /></button>
@@ -113,6 +113,36 @@
       <div>
 
       </div>
+
+      <div id="skillInfo" class="skillInfo skillInfoShow">
+            <div id="skillInfoName" class="skillDiv" style="text-align: center; font-weight: bold;">Name</div>
+            <div style="text-align: center; position: absolute; top: 16px;">__________________</div>
+            <div id="skillInfoDescr" class="skillDiv" style="margin-top: 10px; font-size: 16px;">sdfsddddddd dddddddddddddd dddddddddddd dddd ddddddddddd ddddd dddd</div>
+            <div style="text-align: center;">__________________</div>
+            <div id="skillInfoStats" class="skillDiv" style="font-weight: bold; ">
+              <div style="display: flex; padding-bottom: 10px; height: 24px;">
+                <div style="display: flex;"><img src="icons/rangeattack.png" style="width: 24px; margin-right: 5px;"/>
+                    <div id="skillInfoStatsRange"></div>
+                </div>
+                <div id="skillInfoStatsRadius" style="display: flex; position: absolute; right: 100px;">
+                    <img src="icons/range.png" style="width: 24px; margin-right: 5px;"/><div id="skillInfoStatsRadiusVal"></div>
+                </div>
+                <div style="display: flex; position: absolute; right: 10px;"><img src="ap.png" style="width: 24px; margin-right: 5px;"/>
+                    <div id="skillInfoStatsAP"></div>
+                </div>
+              </div>
+              <div style="display:flex;">
+                <div id="skillInfoStatsDmg" style="display: flex;"><img src="icons/meleeattack.png" style="width: 24px; margin-right: 5px;"/>
+                    <div id="skillInfoStatsDmgVal"></div>
+                </div>
+                <div style="display: flex; position: absolute; right: 10px;"><img src="EndTurn.png" style="width: 24px; margin-right: 5px;"/>
+                    <div id="skillInfoStatsCoolDown"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
       <script src="js/script.js"></script>
       <script src="js/hovers.js"></script>
       <script src="js/actions.js"></script>
