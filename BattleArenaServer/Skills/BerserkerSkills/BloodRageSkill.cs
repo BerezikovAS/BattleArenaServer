@@ -47,6 +47,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             {
                 upgraded = true;
                 extraDmg = 30;
+                extraDmgStr = "+30";
                 titleUpg = $"+{extraDmg} к урону от атак.";
                 title += "\n" + titleUpg;
                 return true;

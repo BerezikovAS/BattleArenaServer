@@ -8,12 +8,12 @@ namespace BattleArenaServer.Skills.Knight
 {
     public class ShieldBashSkill : BodyGuardSkill
     {
-        int dmg = 60;
         int extraDmg = 20;
         int loseAP = 1;
         public ShieldBashSkill()
         {
             name = "Shieldbash";
+            dmg = 60;
             title = $"Оглушает врага и наносит ему физический урон, зависящий от брони владельца.\nОглушенный враг теряет {loseAP} ОД в свой ход. ({extraDmg} доп. урона за ед. брони)";
             titleUpg = "+10 к урону за броню, +1 потере ОД";
             coolDown = 4;
@@ -23,6 +23,7 @@ namespace BattleArenaServer.Skills.Knight
             nonTarget = false;
             area = Consts.SpellArea.EnemyTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
+            dmgType = DamageType.Physical;
         }
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
@@ -36,7 +37,7 @@ namespace BattleArenaServer.Skills.Knight
             {
                 requestData.Caster.AP -= requireAP;
                 requestData.Target.AP -= loseAP;
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg + extraDmg * requestData.Caster.Armor, DamageType.Physical);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg + extraDmg * requestData.Caster.Armor, dmgType);
                 coolDownNow = coolDown;
 
                 return true;

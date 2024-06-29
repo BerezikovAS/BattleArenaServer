@@ -20,6 +20,10 @@ namespace BattleArenaServer.Models
         public SkillStats stats { get; set; } = new SkillStats(0, 0, 0, 0);
         public Consts.SkillType skillType { get; set; } = SkillType.Active;
 
+        public int dmg { get; set; } = 0;
+        public string extraDmgStr { get; set; } = "";
+        public Consts.DamageType dmgType { get; set; } = DamageType.Physical;
+
         public abstract bool Cast(RequestData requestData);
 
         public abstract bool UpgradeSkill();

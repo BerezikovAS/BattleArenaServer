@@ -7,10 +7,10 @@ namespace BattleArenaServer.Skills.Crossbowman
 {
     public class SharpFangSkill : Skill
     {
-        int dmg = 125;
         public SharpFangSkill()
         {
             name = "Sharp Fang";
+            dmg = 125;
             title = $"Острый шип пронзает врагов на линии, нанося {dmg} чистого урона.";
             titleUpg = "+50 к урону. Дальность полета снаряда неограничена.";
             coolDown = 4;
@@ -20,6 +20,7 @@ namespace BattleArenaServer.Skills.Crossbowman
             nonTarget = false;
             area = Consts.SpellArea.Line;
             stats = new SkillStats(coolDown, requireAP, range, radius);
+            dmgType = Consts.DamageType.Pure;
         }
 
         public new ISkillCastRequest request => new LineCastRequest();
@@ -34,7 +35,7 @@ namespace BattleArenaServer.Skills.Crossbowman
                 foreach (var n in UtilityService.GetHexesOneLine(requestData.Caster, requestData.TargetHex, radius))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, Consts.DamageType.Pure);
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
                 }
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;

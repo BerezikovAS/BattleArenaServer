@@ -7,10 +7,10 @@ namespace BattleArenaServer.Skills.BerserkerSkills
 {
     public class WhirlwindAxesSkill : Skill
     {
-        int dmg = 180;
         public WhirlwindAxesSkill()
         {
             name = "Whirlwind Axes";
+            dmg = 180;
             title = $"Вихрь топоров атакует всех врагов вокруг, нанося {dmg} маг. урона";
             titleUpg = "+45 урона, -2 к перезарядке";
             coolDown = 4;
@@ -21,6 +21,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             range = 0;
             area = Consts.SpellArea.Radius;
             stats = new SkillStats(coolDown, requireAP, range, radius);
+            dmgType = Consts.DamageType.Magic;
         }
 
         public new ISkillCastRequest request => new NonTargerAoECastRequest();
@@ -35,7 +36,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
                 foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, Consts.DamageType.Magic);
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
                 }
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;

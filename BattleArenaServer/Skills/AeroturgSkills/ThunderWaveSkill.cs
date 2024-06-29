@@ -8,11 +8,11 @@ namespace BattleArenaServer.Skills.AeroturgSkills
 {
     public class ThunderWaveSkill : Skill
     {
-        int dmg = 100;
         int resistReduction = 2;
         public ThunderWaveSkill()
         {
             name = "Thunder Wave";
+            dmg = 100;
             title = $"Расталкивает врагов вокруг себя, нанося им {dmg} магического урона. Враги получают немоту.";
             titleUpg = $"Также снижает сопротивление врагов на {resistReduction}";
             coolDown = 4;
@@ -23,6 +23,7 @@ namespace BattleArenaServer.Skills.AeroturgSkills
             range = 0;
             area = Consts.SpellArea.Radius;
             stats = new SkillStats(coolDown, requireAP, range, radius);
+            dmgType = Consts.DamageType.Magic;
         }
 
         public new ISkillCastRequest request => new NonTargerAoECastRequest();
@@ -48,7 +49,7 @@ namespace BattleArenaServer.Skills.AeroturgSkills
                             resistDebuff.ApplyEffect(hex.HERO);
                         }
 
-                        AttackService.SetDamage(requestData.Caster, hex.HERO, dmg, Consts.DamageType.Magic);
+                        AttackService.SetDamage(requestData.Caster, hex.HERO, dmg, dmgType);
 
                         Hex? moveHex = UtilityService.GetOneHexOnDirection(requestData.TargetHex, hex, 2);
                         if (hex.HERO != null && moveHex != null && moveHex.IsFree())

@@ -7,11 +7,11 @@ namespace BattleArenaServer.Skills.GeomantSkills
 {
     public class EarthquakeSkill : Skill
     {
-        int dmg = 100;
         int extraDmg = 18;
         public EarthquakeSkill()
         {
             name = "Earthquake";
+            dmg = 100;
             title = $"Землятрясение поражает врагов вокруг, нанося магический урон и сбивая с ног, отчего те теряют 1 ОД.\n" +
                 $"Урон зависит от количества свободных клеток вокруг цели (X). Столоктиты считаются свободными гексами и дают двойной бонус.\n" +
                 $"({dmg} + {extraDmg} * X)";
@@ -23,6 +23,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
             nonTarget = false;
             area = Consts.SpellArea.Radius;
             stats = new SkillStats(coolDown, requireAP, range, radius);
+            dmgType = Consts.DamageType.Magic;
         }
 
         public new ISkillCastRequest request => new NonTargerAoECastRequest();
@@ -49,7 +50,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
                                 freeHexCount += 2;
                         }
                         hex.HERO.AP -= 1;
-                        AttackService.SetDamage(requestData.Caster, hex.HERO, dmg + extraDmg * freeHexCount, Consts.DamageType.Magic);
+                        AttackService.SetDamage(requestData.Caster, hex.HERO, dmg + extraDmg * freeHexCount, dmgType);
                     }
                 }
                 requestData.Caster.AP -= requireAP;

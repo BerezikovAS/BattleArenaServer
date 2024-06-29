@@ -7,10 +7,10 @@ namespace BattleArenaServer.Skills.GeomantSkills
 {
     public class GiantBoulderSkill : Skill
     {
-        int dmg = 160;
         public GiantBoulderSkill()
         {
             name = "Giant Boulder";
+            dmg = 160;
             title = $"Запускает гигантский валун по прямой, который наносит первому врагу на линии {dmg} магического урона и отбрасывает назад." +
                 $"\n Если позади врага нет свободной клетки, то он теряет 1 ОД.";
             titleUpg = "+60 к урону, +1 к радиусу полета валуна";
@@ -21,6 +21,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
             nonTarget = false;
             area = Consts.SpellArea.Line;
             stats = new SkillStats(coolDown, requireAP, range, radius);
+            dmgType = Consts.DamageType.Magic;
         }
 
         public new ISkillCastRequest request => new LineCastRequest();
@@ -52,7 +53,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
                     else
                         target.AP -= 1;
 
-                    AttackService.SetDamage(requestData.Caster, target, dmg, Consts.DamageType.Magic);
+                    AttackService.SetDamage(requestData.Caster, target, dmg, dmgType);
                 }
 
                 //Если не нашли никого, кому влетит камнем, то это вина кастера)

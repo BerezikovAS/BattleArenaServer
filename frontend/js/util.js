@@ -29,7 +29,7 @@ function feelSpells(_hero) {
         const spellDiv = document.getElementById("sp" + i);
         const spellUpg = document.getElementById("upgrade" + i);
         spell.innerText = skill.name;
-        spellDiv.title = skill.title;
+        //spellDiv.title = skill.title;
         spellUpg.title = skill.titleUpg;
 
         if (skill.skillType == 1) {
@@ -301,7 +301,7 @@ function feelHeroInfo(_hex, _hexId) {
         const cdInfo = document.getElementById("cdInfo" + i);
         const spInfo = document.getElementById("spInfo" + i);
         spell.innerText = skill.name;
-        spInfo.title = skill.title;
+        //spInfo.title = skill.title;
         if (skill.skillType == 1) {
             spell.setAttribute("class", "spell passive");
         }
@@ -367,4 +367,77 @@ function enableUpgrades(_hero) {
         }
         i++;
     });
+}
+
+function showSpellInfo(_spell, _spellBox, _heroFlag)
+{
+    var spell = heroInfo.skillList[_spell];
+    if (_heroFlag == 0)
+        spell = heroes[idActiveHero].skillList[_spell];
+
+    var skillInfoName = document.getElementById("skillInfoName");
+    skillInfoName.innerText = spell.name;
+
+    var skillInfoDescr = document.getElementById("skillInfoDescr");
+    skillInfoDescr.innerText = spell.title;
+
+    var skillInfoStatsRange = document.getElementById("skillInfoStatsRange");
+    skillInfoStatsRange.innerText = spell.range;
+
+    var skillInfoStatsRadius = document.getElementById("skillInfoStatsRadius");
+    if (spell.radius > 0) {
+        skillInfoStatsRadius.setAttribute("style", "display: flex; position: absolute; right: 100px;");
+        var skillInfoStatsRadiusVal = document.getElementById("skillInfoStatsRadiusVal");
+        skillInfoStatsRadiusVal.innerText = spell.radius;
+    }
+    else
+        skillInfoStatsRadius.setAttribute("style", "visibility: hidden;");
+    
+    var skillInfoStatsCoolDown = document.getElementById("skillInfoStatsCoolDown");
+    skillInfoStatsCoolDown.innerText = spell.coolDown;
+        
+    var skillInfoStatsAP = document.getElementById("skillInfoStatsAP");
+    skillInfoStatsAP.innerText = spell.requireAP;
+
+    var skillInfoStatsDmg = document.getElementById("skillInfoStatsDmg");
+    if (spell.dmg > 0 || spell.extraDmgStr != "") {
+        var color = "red";
+        skillInfoStatsDmg.setAttribute("style", "display: flex;");
+        var skillInfoStatsDmgVal = document.getElementById("skillInfoStatsDmgVal");
+        
+        if (spell.dmg > 0)
+            skillInfoStatsDmgVal.innerText = spell.dmg;
+        else
+            skillInfoStatsDmgVal.innerText = spell.extraDmgStr;
+
+        switch (spell.dmgType) {
+            case 1:
+                color = "blue";
+                break;
+            case 2:
+                color = "yellow; -webkit-text-stroke: 0.2px white";
+                break;
+            default:
+                break;
+        }
+        skillInfoStatsDmgVal.setAttribute("style", "color: " + color + ";");
+    }
+    else
+        skillInfoStatsDmg.setAttribute("style", "display: flex; visibility: hidden;");
+
+
+
+    
+    var coordBox = _spellBox.getBoundingClientRect();
+    var skillInfo = document.getElementById("skillInfo");
+
+    skillInfo.setAttribute("class", "skillInfo skillInfoShow");
+    skillInfo.setAttribute("style", "top: " + (coordBox.top + globalThis.scrollY) + "px; left: " + (coordBox.left + globalThis.scrollX - 230) + "px;");
+}
+
+function hideSpellInfo()
+{
+    var skillInfo = document.getElementById("skillInfo");
+    skillInfo.setAttribute("class", "skillInfo skillInfoHide");
+    skillInfo.setAttribute("style", "top: -100px; left: -100px;");
 }

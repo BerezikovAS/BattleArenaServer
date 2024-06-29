@@ -15,7 +15,7 @@ namespace BattleArenaServer.Models.Heroes
             AP = 4;
 
             AttackRadius = 4;
-            Dmg = 80;
+            Dmg = 95;
 
             SkillList[0] = new LongShotPSkill(this);
             SkillList[1] = new EagleEyeSkill();

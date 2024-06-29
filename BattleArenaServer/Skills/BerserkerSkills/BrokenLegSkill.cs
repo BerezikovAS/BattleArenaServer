@@ -22,6 +22,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             range = 1;
             area = Consts.SpellArea.EnemyTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
+            extraDmgStr = "x2";
         }
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
@@ -52,6 +53,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
                 upgraded = true;
                 multiply = 3;
                 upgString = "тройной";
+                extraDmgStr = "x3";
                 title = $"Мощная атака, которая обездвиживает противника. Наносит {upgString} урон атаки.";
                 return true;
             }
