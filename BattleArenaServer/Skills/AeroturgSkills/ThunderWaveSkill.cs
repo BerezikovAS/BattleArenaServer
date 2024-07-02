@@ -1,8 +1,8 @@
-﻿using BattleArenaServer.Interfaces;
+﻿using BattleArenaServer.Effects.Debuffs;
+using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
-using BattleArenaServer.Effects.Debuffs;
 
 namespace BattleArenaServer.Skills.AeroturgSkills
 {

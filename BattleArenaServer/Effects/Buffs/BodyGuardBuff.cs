@@ -13,6 +13,7 @@ namespace BattleArenaServer.Effects.Buffs
             idCaster = _idCaster;
             value = _value;
             duration = _duration;
+            description = "Броня и сопротивление увеличены на " + value + ".\n50% полученного урона переносится на владельца способности.";
         }
 
         public override void ApplyEffect(Hero _hero)
@@ -34,7 +35,7 @@ namespace BattleArenaServer.Effects.Buffs
         public bool ApplyDamageDelgate(Hero attacker, Hero defender, int dmg)
         {
             Hero? buffer = GameData._heroes.FirstOrDefault(x => x.Id == idCaster);
-            if (buffer != null)
+            if (buffer != null && buffer.HP > 0)
             {
                 int halfDmg = dmg / 2;
                 AttackService.ApplyDamage(attacker, buffer, halfDmg);

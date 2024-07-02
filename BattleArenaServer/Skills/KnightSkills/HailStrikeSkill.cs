@@ -42,7 +42,7 @@ namespace BattleArenaServer.Skills.Knight
             }
 
             return false;
-        }        
+        }
 
         public override bool UpgradeSkill()
         {

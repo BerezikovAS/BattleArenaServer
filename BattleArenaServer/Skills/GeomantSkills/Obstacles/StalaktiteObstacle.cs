@@ -1,5 +1,4 @@
 ﻿using BattleArenaServer.Effects;
-using BattleArenaServer.Models;
 using BattleArenaServer.Models.Obstacles;
 
 namespace BattleArenaServer.Skills.GeomantSkills.Obstacles

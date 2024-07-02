@@ -5,7 +5,7 @@ function mouseAttackHoverIn(_hex) {
         const attackImg = document.createElement("img");
         attackImg.setAttribute("src", "Attack.png");
         attackImg.setAttribute("id", "attack" + _hex.getAttribute("id"));
-        attackImg.setAttribute("style", "position: absolute; width: 100px;");
+        attackImg.setAttribute("style", "position: absolute; width: 115px; height: 115px; margin-left: -8px");
         _hex.appendChild(attackImg);
     }
 }
@@ -85,7 +85,7 @@ function mouseSpellHoverIn(_hex, _spell) {
         const attackImg = document.createElement("img");
         attackImg.setAttribute("src", "Attack.png");
         attackImg.setAttribute("class", "SpellHover");
-        attackImg.setAttribute("style", "position: absolute; width: 100px;");
+        attackImg.setAttribute("style", "position: absolute; width: 115px; height: 115px; margin-left: -8px");
         _hexHover.appendChild(attackImg);
     });  
 }

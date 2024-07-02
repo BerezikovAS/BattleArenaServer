@@ -12,6 +12,7 @@ namespace BattleArenaServer.Effects.Buffs
             value = _value;
             duration = _duration;
             effectType = Consts.EffectType.EndTurn;
+            description = "Восстанавливает " + value + "ХП в конце своего хода.";
         }
 
         public override void ApplyEffect(Hero hero)

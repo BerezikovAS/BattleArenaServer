@@ -6,10 +6,12 @@ namespace BattleArenaServer.Effects
     {
         public string Name { get; set; }
         public string type { get; set; }
-        public int idCaster {  get; set; }
+        public int idCaster { get; set; }
 
-        public int value {  get; set; }
+        public int value { get; set; }
         public int duration { get; set; }
+
+        public string description { get; set; } = "";
 
         public Consts.EffectType effectType { get; set; } = Consts.EffectType.Instant;
 

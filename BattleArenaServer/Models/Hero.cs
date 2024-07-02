@@ -63,7 +63,7 @@ namespace BattleArenaServer.Models
         public void Heal(int _heal)
         {
             HP += _heal;
-            if(HP > MaxHP)
+            if (HP > MaxHP)
                 HP = MaxHP;
         }
 

@@ -1,6 +1,4 @@
-﻿using static BattleArenaServer.Models.Consts;
-
-namespace BattleArenaServer.Models
+﻿namespace BattleArenaServer.Models
 {
     public class SkillStats
     {

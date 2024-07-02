@@ -27,7 +27,7 @@ namespace BattleArenaServer.Skills.PriestSkills.Auras
                 }
                 double restoreHP = Math.Round((target.MaxHP - target.HP) * healPercent);
                 target.Heal((int)restoreHP);
-            }    
+            }
         }
 
         public override void CancelEffect(Hero source)

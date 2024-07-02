@@ -11,6 +11,7 @@ namespace BattleArenaServer.Effects.Buffs
             idCaster = _idCaster;
             value = _value;
             duration = _duration;
+            description = "Дальность атаки увеличена на 1.\nУрон увеличен на " + value;
         }
 
         public override void ApplyEffect(Hero _hero)

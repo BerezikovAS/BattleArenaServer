@@ -1,7 +1,7 @@
-﻿using BattleArenaServer.Interfaces;
+﻿using BattleArenaServer.Effects.Buffs;
+using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.SkillCastRequests;
-using BattleArenaServer.Effects.Buffs;
 
 namespace BattleArenaServer.Skills.Crossbowman
 {

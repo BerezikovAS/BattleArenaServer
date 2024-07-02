@@ -49,7 +49,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
                     if (hex.HERO != null && hex.HERO.Team != requestData.Caster.Team)
                         AttackService.SetDamage(requestData.Caster, hex.HERO, dmg, dmgType);
                 }
-                
+
                 //Обновим ауры
                 AttackService.ContinuousAuraAction();
 

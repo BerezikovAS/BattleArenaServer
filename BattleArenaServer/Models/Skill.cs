@@ -16,7 +16,7 @@ namespace BattleArenaServer.Models
         public int range { get; set; } = 0;
         public int radius { get; set; } = 0;
         public bool upgraded { get; set; } = false;
-        public SpellArea area {  get; set; } = 0;
+        public SpellArea area { get; set; } = 0;
         public SkillStats stats { get; set; } = new SkillStats(0, 0, 0, 0);
         public Consts.SkillType skillType { get; set; } = SkillType.Active;
 

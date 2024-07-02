@@ -9,13 +9,13 @@ namespace BattleArenaServer.Models.Heroes
             Name = "Geomant";
 
             MaxHP = HP = 850;
-            Armor = 1;
-            Resist = 1;
+            Armor = 2;
+            Resist = 2;
 
             AP = 4;
 
             AttackRadius = 3;
-            Dmg = 90;
+            Dmg = 100;
 
             SkillList[0] = new StoneStrenghtPSkill(this);
             SkillList[1] = new StalaktiteSkill();

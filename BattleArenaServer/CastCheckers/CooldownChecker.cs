@@ -1,6 +1,5 @@
 ﻿using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
-using System.Collections.Generic;
 
 namespace BattleArenaServer.CastCheckers
 {

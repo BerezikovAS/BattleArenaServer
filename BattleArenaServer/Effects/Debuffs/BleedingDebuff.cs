@@ -13,6 +13,7 @@ namespace BattleArenaServer.Effects.Debuffs
             value = _value;
             duration = _duration;
             effectType = Consts.EffectType.EndTurn;
+            description = "Теряет " + value + "ХП в конце своего хода.";
         }
 
         public override void ApplyEffect(Hero defender)

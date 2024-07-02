@@ -1,5 +1,4 @@
 ﻿using BattleArenaServer.Skills.AeroturgSkills;
-using BattleArenaServer.Services;
 
 namespace BattleArenaServer.Models.Heroes
 {
@@ -10,13 +9,13 @@ namespace BattleArenaServer.Models.Heroes
             Name = "Aeroturg";
 
             MaxHP = HP = 850;
-            Armor = 1;
-            Resist = 4;
+            Armor = 2;
+            Resist = 5;
 
             AP = 4;
 
             AttackRadius = 3;
-            Dmg = 95;
+            Dmg = 105;
 
             SkillList[0] = new OverChargePSkill(this);
             SkillList[1] = new SwapSkill();

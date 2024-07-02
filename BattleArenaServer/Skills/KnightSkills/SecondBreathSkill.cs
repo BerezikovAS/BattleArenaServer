@@ -9,13 +9,13 @@ namespace BattleArenaServer.Skills.Knight
     {
         int heal = 200;
         int armor = 3;
-        public SecondBreathSkill() 
+        public SecondBreathSkill()
         {
             name = "Second Breath";
             title = $"Восстанавливает владельцу {heal} ХП и дает {armor} доп. брони";
             titleUpg = "-2 к перезарядке, +1 к доп. броне";
             coolDown = 6;
-            coolDownNow = 0; 
+            coolDownNow = 0;
             requireAP = 1;
             nonTarget = true;
             area = Consts.SpellArea.NonTarget;

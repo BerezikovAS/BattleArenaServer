@@ -1,7 +1,7 @@
 ﻿using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
-using BattleArenaServer.SkillCastRequests;
 using BattleArenaServer.Services;
+using BattleArenaServer.SkillCastRequests;
 
 namespace BattleArenaServer.Skills.Crossbowman
 {

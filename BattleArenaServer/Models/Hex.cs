@@ -18,20 +18,20 @@ namespace BattleArenaServer.Models
 
         public Hex(int coordX, int coordY, int coordZ, int id)
         {
-            _coord = new int[3] {coordX, coordY, coordZ};
+            _coord = new int[3] { coordX, coordY, coordZ };
             Hero = null;
             _id = id;
         }
 
         public int[] COORD { get { return _coord; } }
 
-        public Hero? HERO {  get { return Hero; } }
+        public Hero? HERO { get { return Hero; } }
 
-        public Obstacle? OBSTACLE {  get { return Obstacle; } }
+        public Obstacle? OBSTACLE { get { return Obstacle; } }
 
         public int ID { get { return _id; } }
 
-        public void SetHero( Hero hero )
+        public void SetHero(Hero hero)
         {
             Hero = hero;
             Hero.HexId = _id;

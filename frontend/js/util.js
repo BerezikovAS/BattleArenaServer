@@ -330,6 +330,7 @@ function fillEffectsOnHeroInfo(_hero, _panel)
         const status = document.createElement("button");
         status.setAttribute("class", "statusbaritem");
         status.setAttribute("style", "background-image: url(\"effects/" + effect.name + ".png\");");
+        status.title = effect.description;
         statusBar.appendChild(status);
     });
 }
