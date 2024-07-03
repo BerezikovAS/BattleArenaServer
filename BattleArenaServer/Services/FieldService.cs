@@ -13,29 +13,6 @@ namespace BattleArenaServer.Services
 
         private static void CreateHeroList()
         {
-            // Создание и размещение героев на поле. (Для тестов)
-            /*Hero hero1 = new KnightHero(0, "red");
-            Hero hero2 = new CrossbowmanHero(1, "blue");
-            Hero hero3 = new BerserkerHero(2, "red");
-            Hero hero4 = new PriestHero(3, "red");
-            Hero hero5 = new AeroturgHero(4, "blue");
-            Hero hero6 = new GeomantHero(5, "blue");
-
-            GameData._hexes[7].SetHero(hero1);
-            GameData._hexes[22].SetHero(hero3);
-            GameData._hexes[37].SetHero(hero4);
-
-            GameData._hexes[29].SetHero(hero5);
-            GameData._hexes[14].SetHero(hero2);
-            GameData._hexes[44].SetHero(hero6);
-
-            GameData._heroes.Add(hero1);
-            GameData._heroes.Add(hero2);
-            GameData._heroes.Add(hero3);
-            GameData._heroes.Add(hero4);
-            GameData._heroes.Add(hero5);
-            GameData._heroes.Add(hero6);*/
-
             SetRandomCommands();
             // Применяем эффекты постоянных аур сразу
             AttackService.ContinuousAuraAction();
@@ -47,19 +24,13 @@ namespace BattleArenaServer.Services
             List<int> redCoords = [7, 22, 37];
             List<int> blueCoords = [14, 29, 44];
 
-            Hero hero1 = new KnightHero(0, "");
-            Hero hero2 = new CrossbowmanHero(0, "");
-            Hero hero3 = new BerserkerHero(0, "");
-            Hero hero4 = new PriestHero(0, "");
-            Hero hero5 = new AeroturgHero(0, "");
-            Hero hero6 = new GeomantHero(0, "");
-
-            heroes.Add(hero1);
-            heroes.Add(hero2);
-            heroes.Add(hero3);
-            heroes.Add(hero4);
-            heroes.Add(hero5);
-            heroes.Add(hero6);
+            heroes.Add(new KnightHero(0, ""));
+            heroes.Add(new CrossbowmanHero(0, ""));
+            heroes.Add(new BerserkerHero(0, ""));
+            heroes.Add(new PriestHero(0, ""));
+            heroes.Add(new AeroturgHero(0, ""));
+            heroes.Add(new GeomantHero(0, ""));
+            heroes.Add(new AbominationHero(0, ""));
 
             string team = "red";
             Random rnd = new Random();

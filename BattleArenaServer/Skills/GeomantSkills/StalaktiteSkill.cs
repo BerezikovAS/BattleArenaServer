@@ -20,7 +20,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
             coolDown = 1;
             coolDownNow = 0;
             requireAP = 2;
-            range = 3;
+            range = 2;
             nonTarget = false;
             area = Consts.SpellArea.Radius;
             stats = new SkillStats(coolDown, requireAP, range, radius);

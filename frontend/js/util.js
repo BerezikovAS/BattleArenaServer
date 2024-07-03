@@ -105,18 +105,21 @@ function getHexesSpellArea(_target, _caster, _spell) {
         spellRange = 1;
 
     switch (_spell.area) {
+        // Ally target
         case 1:
             if (getDistance(hexes[_target], hexes[_caster]) <= spellRange) {
                 if (hexes[_target].hero != null && hexes[_target].hero.team == hexes[_caster].hero.team)
                     spellArea.push(_target);
             }
             break;
+        // Enemy target
         case 2:
             if (getDistance(hexes[_target], hexes[_caster]) <= spellRange) {
                 if (hexes[_target].hero != null && hexes[_target].hero.team != hexes[_caster].hero.team)
                     spellArea.push(_target);
             }
             break;
+        // Friend target (not himself)
         case 3:
             let _dist = getDistance(hexes[_target], hexes[_caster]);
             if (_dist <= spellRange && _dist > 0) {
@@ -124,6 +127,7 @@ function getHexesSpellArea(_target, _caster, _spell) {
                     spellArea.push(_target);
             }
             break;
+        // Radius area
         case 4:
             // Тыкать нужно в радиусе досягаемости
             if (getDistance(hexes[_target], hexes[_caster]) <= spellRange) {
@@ -135,6 +139,7 @@ function getHexesSpellArea(_target, _caster, _spell) {
                 });
             }
             break;
+        // Line area
         case 5:
             if (isOnLine(hexes[_target], hexes[_caster]))
             {
@@ -152,11 +157,13 @@ function getHexesSpellArea(_target, _caster, _spell) {
                 }
             }
             break;
+        // Hero target
         case 7:
             if (getDistance(hexes[_target], hexes[_caster]) <= spellRange) {
                 if (hexes[_target].hero != null)
                     spellArea.push(_target);
             }
+        // Hero not self target
         case 8:
             if (getDistance(hexes[_target], hexes[_caster]) <= spellRange) {
                 if (hexes[_target].hero != null && hexes[_target].hero.id != hexes[_caster].hero.id)

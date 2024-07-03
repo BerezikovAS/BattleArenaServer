@@ -8,13 +8,13 @@ namespace BattleArenaServer.Skills.GeomantSkills
 {
     public class StoneBloodSkill : Skill
     {
-        int extraRegen = 10;
+        int extraRegen = 8;
         public StoneBloodSkill()
         {
             name = "Stone Blood";
             title = $"Вбирает в себя мощь земли, получая регенерацию здоровья в зависимости от свобоных гексов вокруг себя. Столоктиты считаются свободными и дают двойной бонус.\n" +
                 $"(+{extraRegen} к восстановлению ХП за гекс, регенерация длится 3 хода)";
-            titleUpg = "+8 к восстановлению ХП за гекс";
+            titleUpg = "+6 к восстановлению ХП за гекс";
             coolDown = 4;
             coolDownNow = 0;
             requireAP = 1;
@@ -58,7 +58,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
             if (!upgraded)
             {
                 upgraded = true;
-                extraRegen += 8;
+                extraRegen += 6;
                 title = $"Вбирает в себя мощь земли, получая регенерацию здоровья в зависимости от свобоных гексов вокруг себя. Столоктиты считаются свободными и дают двойной бонус.\n" +
                     $"(+{extraRegen} к восстановлению ХП за гекс, регенерация длится 3 хода)";
                 return true;
