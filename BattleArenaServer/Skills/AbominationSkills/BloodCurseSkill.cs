@@ -1,27 +1,25 @@
 ﻿using BattleArenaServer.Effects.Debuffs;
 using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
-using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
 
-namespace BattleArenaServer.Skills.Crossbowman
+namespace BattleArenaServer.Skills.AbominationSkills
 {
-    public class PinDownSkill : Skill
+    public class BloodCurseSkill : Skill
     {
-        public PinDownSkill()
+        int percent = 20;
+        public BloodCurseSkill()
         {
-            name = "Pin Down";
-            dmg = 150;
-            title = $"Массивный болт прибивает врага к земле, отчего тот не может передвигаться. {dmg} физического урона.";
-            titleUpg = "+100 к урону.";
+            name = "Blood Curse";
+            title = $"Проклинает врага. Когда он получает урон, то {percent}% от потерянного процента ХП восстанавливается Вам.";
+            titleUpg = "+10% к восстановлению. -1 к перезарядке";
             coolDown = 4;
             coolDownNow = 0;
-            requireAP = 2;
+            requireAP = 1;
             range = 2;
             nonTarget = false;
             area = Consts.SpellArea.EnemyTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
-            dmgType = Consts.DamageType.Physical;
         }
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
@@ -33,15 +31,14 @@ namespace BattleArenaServer.Skills.Crossbowman
 
             if (requestData.Caster != null && requestData.Target != null)
             {
-                RootDebuff rootDebuff = new RootDebuff(requestData.Caster.Id, 0, 2);
-                requestData.Target.AddEffect(rootDebuff);
-                rootDebuff.ApplyEffect(requestData.Target);
+                BloodCurseDebuff bloodCurseDebuff = new BloodCurseDebuff(requestData.Caster.Id, percent, 2);
+                requestData.Target.AddEffect(bloodCurseDebuff);
+                bloodCurseDebuff.ApplyEffect(requestData.Target);
+
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
                 return true;
             }
-
             return false;
         }
 
@@ -50,8 +47,8 @@ namespace BattleArenaServer.Skills.Crossbowman
             if (!upgraded)
             {
                 upgraded = true;
-                dmg += 100;
-                title = $"Массивный болт прибивает врага к земле, отчего тот не может передвигаться. {dmg} физического урона.";
+                percent += 10;
+                title = $"Проклинает врага. Когда он получает урон, то {percent}% от потерянного процента ХП восстанавливается Вам.";
                 return true;
             }
             return false;

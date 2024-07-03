@@ -75,7 +75,7 @@ namespace BattleArenaServer.Services
                         if (hexSource != null)
                             aura.SetEffect(hero, hexSource);
                     }
-                }                
+                }
             }
         }
 

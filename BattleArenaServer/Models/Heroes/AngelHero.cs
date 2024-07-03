@@ -17,7 +17,7 @@ namespace BattleArenaServer.Models.Heroes
             Resist = 3;
 
             AP = 4;
-            
+
             AttackRadius = 1;
             Dmg = 100;
 

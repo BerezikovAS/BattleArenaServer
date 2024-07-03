@@ -1,7 +1,7 @@
-﻿using BattleArenaServer.Interfaces;
+﻿using BattleArenaServer.Effects;
+using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.SkillCastRequests;
-using BattleArenaServer.Effects;
 
 namespace BattleArenaServer.Skills.Priest
 {

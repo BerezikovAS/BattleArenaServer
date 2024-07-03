@@ -1,7 +1,7 @@
 ﻿using BattleArenaServer.Effects.Debuffs;
+using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.Services;
-using BattleArenaServer.Interfaces;
 using BattleArenaServer.SkillCastRequests;
 
 namespace BattleArenaServer.Skills.BerserkerSkills

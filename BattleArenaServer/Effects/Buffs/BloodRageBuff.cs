@@ -13,6 +13,9 @@ namespace BattleArenaServer.Effects.Buffs
             idCaster = _idCaster;
             value = _value;
             duration = _duration;
+            description = "Атаки стоят 1 ОД, но каждая отнимает 35 ХП у атакующего.";
+            if (value > 0)
+                description += "\nУрон увеличен на " + value;
         }
 
         public override void ApplyEffect(Hero _hero)
@@ -31,7 +34,7 @@ namespace BattleArenaServer.Effects.Buffs
 
         private bool AfterAttackDelegate(Hero attacker, Hero defender, int dmg)
         {
-            return AttackService.ApplyDamage(attacker, attacker, 40);
+            return AttackService.ApplyDamage(attacker, attacker, 35);
         }
     }
 }

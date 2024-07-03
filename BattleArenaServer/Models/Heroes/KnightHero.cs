@@ -5,18 +5,18 @@ namespace BattleArenaServer.Models.Heroes
 {
     public class KnightHero : Hero
     {
-        public KnightHero(int Id, string Team) : base( Id, Team)
+        public KnightHero(int Id, string Team) : base(Id, Team)
         {
             Name = "Knight";
 
             MaxHP = HP = 1000;
-            Armor = 4;
-            Resist = 2;
+            Armor = 6;
+            Resist = 3;
 
             AP = 4;
 
             AttackRadius = 1;
-            Dmg = 100;
+            Dmg = 110;
 
             SkillList[0] = new HighShieldPSkill(this);
             SkillList[1] = new SecondBreathSkill();

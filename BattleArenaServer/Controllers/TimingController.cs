@@ -1,5 +1,4 @@
 ﻿using BattleArenaServer.Interfaces;
-using BattleArenaServer.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BattleArenaServer.Controllers

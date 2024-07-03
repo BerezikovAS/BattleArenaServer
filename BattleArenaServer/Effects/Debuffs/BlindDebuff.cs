@@ -11,6 +11,7 @@ namespace BattleArenaServer.Effects.Debuffs
             idCaster = _idCaster;
             value = _value;
             duration = _duration;
+            description = "Дальность атаки и применения способностей снижена до 1.";
         }
 
         public override void ApplyEffect(Hero hero)

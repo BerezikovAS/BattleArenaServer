@@ -9,7 +9,7 @@ namespace BattleArenaServer.CastCheckers
 
         public bool Check(RequestData requestData, Skill skill)
         {
-            if(requestData.Caster?.AP >= skill.requireAP)
+            if (requestData.Caster?.AP >= skill.requireAP)
                 return nextChecker.Check(requestData, skill);
             return false;
         }

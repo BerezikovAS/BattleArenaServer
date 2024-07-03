@@ -11,7 +11,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
         public BloodRageSkill()
         {
             name = "Blood Rage";
-            title = "Ваши атаки стоят всего 1 очко действия, но каждая из них отнимает у Вас 40 ХП.";
+            title = "Ваши атаки стоят всего 1 очко действия, но каждая из них отнимает у Вас 35 ХП.";
             titleUpg = $"+{extraDmg} к урону от атак.";
             coolDown = 3;
             coolDownNow = 0;

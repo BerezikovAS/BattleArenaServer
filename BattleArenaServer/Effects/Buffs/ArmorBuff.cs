@@ -11,6 +11,7 @@ namespace BattleArenaServer.Effects.Buffs
             idCaster = _idCaster;
             value = _value;
             duration = _duration;
+            description = "Броня увеличена на " + value;
         }
 
         public override void ApplyEffect(Hero _hero)

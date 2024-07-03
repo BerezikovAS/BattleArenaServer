@@ -11,6 +11,7 @@ namespace BattleArenaServer.Effects.Debuffs
             idCaster = _idCaster;
             value = _value;
             duration = _duration;
+            description = "Входящий урон увеличен на " + value + "%";
         }
 
         public override void ApplyEffect(Hero hero)

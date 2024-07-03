@@ -1,7 +1,7 @@
 ﻿using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
-using BattleArenaServer.SkillCastRequests;
 using BattleArenaServer.Services;
+using BattleArenaServer.SkillCastRequests;
 
 namespace BattleArenaServer.Skills.Crossbowman
 {
@@ -10,7 +10,7 @@ namespace BattleArenaServer.Skills.Crossbowman
         public SharpFangSkill()
         {
             name = "Sharp Fang";
-            dmg = 125;
+            dmg = 135;
             title = $"Острый шип пронзает врагов на линии, нанося {dmg} чистого урона.";
             titleUpg = "+50 к урону. Дальность полета снаряда неограничена.";
             coolDown = 4;

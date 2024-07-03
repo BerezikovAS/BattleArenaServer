@@ -1,23 +1,26 @@
-﻿using BattleArenaServer.Interfaces;
+﻿using BattleArenaServer.Effects.Debuffs;
+using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
-using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
+using BattleArenaServer.Services;
 
-namespace BattleArenaServer.Skills.Knight
+namespace BattleArenaServer.Skills.AbominationSkills
 {
-    public class HailStrikeSkill : BodyGuardSkill
+    public class BloodRainSkill : Skill
     {
-        public HailStrikeSkill()
+        double percent = 0.15;
+        public BloodRainSkill()
         {
-            name = "Hail Strike";
-            title = "Обрушивает мощный град на врагов в области, нанося 200 маг. урона каждому";
-            titleUpg = "+1 к радиусу, +1 к дальности";
-            coolDown = 5; //5;
+            name = "Blood Rain";
+            title = $"Вызывает кровавый дождь, который накладывает кровотечение на 2 хода на врагов в области.\n" +
+                $"Эффект отнимает {Math.Round(percent * 100)}% от разницы максимального ХП врага и заклинателя в конце хода противника.";
+            titleUpg = "+1 к радиусу";
+            coolDown = 4;
             coolDownNow = 0;
-            requireAP = 2; //2;
-            nonTarget = false;
+            requireAP = 2;
             range = 2;
             radius = 1;
+            nonTarget = false;
             area = Consts.SpellArea.Radius;
             stats = new SkillStats(coolDown, requireAP, range, radius);
         }
@@ -34,13 +37,17 @@ namespace BattleArenaServer.Skills.Knight
                 foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
-                        AttackService.SetDamage(requestData.Caster, n.HERO, 200, Consts.DamageType.Magic);
+                    {
+                        int bleedingDmg = Convert.ToInt32((double)(requestData.Caster.MaxHP - n.HERO.MaxHP) * percent);
+                        BleedingDebuff bleedingDebuff = new BleedingDebuff(requestData.Caster.Id, bleedingDmg, 3);
+                        n.HERO.AddEffect(bleedingDebuff);
+                    }
                 }
+
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;
                 return true;
             }
-
             return false;
         }
 
@@ -49,9 +56,7 @@ namespace BattleArenaServer.Skills.Knight
             if (!upgraded)
             {
                 upgraded = true;
-                range += 1;
                 radius += 1;
-                stats.range += 1;
                 stats.radius += 1;
                 return true;
             }

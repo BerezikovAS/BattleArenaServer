@@ -1,5 +1,4 @@
 ﻿using BattleArenaServer.Models;
-using System.Diagnostics.Metrics;
 
 namespace BattleArenaServer.Services
 {
@@ -8,11 +7,11 @@ namespace BattleArenaServer.Services
         public static List<Hex> GetHexesRadius(Hex targetHex, int radius)
         {
             List<Hex> hexesRadius = new List<Hex>();
-            if(targetHex != null)
+            if (targetHex != null)
             {
                 foreach (var n in GameData._hexes)
                 {
-                    if(n.Distance(targetHex) <= radius)
+                    if (n.Distance(targetHex) <= radius)
                         hexesRadius.Add(n);
                 }
             }
@@ -46,7 +45,7 @@ namespace BattleArenaServer.Services
                     bool endOfField = false;
                     int counter = 1;
 
-                    while(hexesLines.Count < radius && !endOfField)
+                    while (hexesLines.Count < radius && !endOfField)
                     {
                         Hex? findHex = GameData._hexes.FirstOrDefault(x => x.COORD[0] == hex.COORD[0] + direction.COORD[0] * counter
                             & x.COORD[1] == hex.COORD[1] + direction.COORD[1] * counter
@@ -68,7 +67,7 @@ namespace BattleArenaServer.Services
             if (h1.Equals(h2))
                 return false;
 
-            for (int i = 0; i < 3; i++) 
+            for (int i = 0; i < 3; i++)
             {
                 if (h1.COORD[i] == h2.COORD[i])
                     return true;
@@ -95,7 +94,7 @@ namespace BattleArenaServer.Services
             {
                 findHex = GameData._hexes.FirstOrDefault(x => x.COORD[0] == hex.COORD[0] + direction.COORD[0] * i
                                 & x.COORD[1] == hex.COORD[1] + direction.COORD[1] * i
-                                & x.COORD[2] == hex.COORD[2] + direction.COORD[2] * i);                
+                                & x.COORD[2] == hex.COORD[2] + direction.COORD[2] * i);
             }
             if (findHex != null)
                 return findHex;

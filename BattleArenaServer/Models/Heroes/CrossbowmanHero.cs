@@ -9,13 +9,13 @@ namespace BattleArenaServer.Models.Heroes
             Name = "Crossbowman";
 
             MaxHP = HP = 875;
-            Armor = 2;
-            Resist = 2;
+            Armor = 3;
+            Resist = 3;
 
             AP = 4;
 
             AttackRadius = 4;
-            Dmg = 95;
+            Dmg = 102;
 
             SkillList[0] = new LongShotPSkill(this);
             SkillList[1] = new EagleEyeSkill();

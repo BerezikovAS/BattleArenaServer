@@ -8,13 +8,13 @@ namespace BattleArenaServer.Interfaces
 
         public void Cancel();
 
-        public ISkillCastRequest request {  get; }
+        public ISkillCastRequest request { get; }
 
         public int GetCoolDownNow { get; }
 
         public int GetCoolDown { get; }
 
-        public int GetRequireAP {  get; }
+        public int GetRequireAP { get; }
 
         public void SetCoolDown(int _coolDownNow);
     }

@@ -12,6 +12,7 @@ namespace BattleArenaServer.Effects.Buffs
             idCaster = _idCaster;
             value = _value;
             duration = _duration;
+            description = "Входящий урон уменьшается на " + value + "%";
         }
 
         public override void ApplyEffect(Hero _hero)

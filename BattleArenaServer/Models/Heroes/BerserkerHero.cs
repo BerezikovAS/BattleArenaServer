@@ -1,5 +1,4 @@
-﻿using BattleArenaServer.Services;
-using BattleArenaServer.Skills.BerserkerSkills;
+﻿using BattleArenaServer.Skills.BerserkerSkills;
 
 namespace BattleArenaServer.Models.Heroes
 {
@@ -10,13 +9,13 @@ namespace BattleArenaServer.Models.Heroes
             Name = "Berserker";
 
             MaxHP = HP = 1000;
-            Armor = 4;
-            Resist = 2;
+            Armor = 5;
+            Resist = 3;
 
             AP = 4;
 
             AttackRadius = 1;
-            Dmg = 105;
+            Dmg = 112;
 
             SkillList[0] = new BattleTrancePSkill(this);
             SkillList[1] = new WhirlwindAxesSkill();

@@ -1,6 +1,6 @@
 ﻿using BattleArenaServer.Models;
-using BattleArenaServer.SkillCastRequests;
 using BattleArenaServer.Services;
+using BattleArenaServer.SkillCastRequests;
 using BattleArenaServer.Skills.Crossbowman.Obstacles;
 
 namespace BattleArenaServer.Skills.Crossbowman

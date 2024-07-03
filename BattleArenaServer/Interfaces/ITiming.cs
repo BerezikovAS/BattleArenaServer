@@ -1,6 +1,4 @@
-﻿using BattleArenaServer.Models;
-
-namespace BattleArenaServer.Interfaces
+﻿namespace BattleArenaServer.Interfaces
 {
     public interface ITiming
     {
