@@ -22,7 +22,7 @@ namespace BattleArenaServer.Models.Heroes
             SkillList[1] = new SecondBreathSkill();
             SkillList[2] = new ShieldBashSkill();
             SkillList[3] = new BodyGuardSkill();
-            SkillList[4] = new FormationAttackSkill();
+            SkillList[4] = new RetributionSkill();
         }
     }
 }

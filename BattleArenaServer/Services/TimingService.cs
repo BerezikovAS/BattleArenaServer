@@ -43,7 +43,14 @@ namespace BattleArenaServer.Services
                         idActiveHero = -1;
                     }
                 }
-            }            
+                RefreshStartTurnAbilities(hero);
+            }
+        }
+
+        public void RefreshStartTurnAbilities(Hero hero)
+        {
+            if (hero.SkillList[0] is PassiveSkill)
+                (hero.SkillList[0] as PassiveSkill).refreshEffect();
         }
 
         public void DecreaseStatusDuration(int heroId)
@@ -119,9 +126,23 @@ namespace BattleArenaServer.Services
         {
             if (hero.HP > 0)
             {
+                hero.EffectList = hero.EffectList.OrderBy(x => x.type).ToList();
                 foreach (var effect in hero.EffectList)
                 {
                     if (effect.effectType == Consts.EffectType.EndTurn)
+                        effect.ApplyEffect(hero);
+                }
+            }
+        }
+
+        public void StartTurnStatusApplyEffect(Hero hero)
+        {
+            if (hero.HP > 0)
+            {
+                hero.EffectList = hero.EffectList.OrderBy(x => x.type).ToList();
+                foreach (var effect in hero.EffectList)
+                {
+                    if (effect.effectType == Consts.EffectType.StartTurn)
                         effect.ApplyEffect(hero);
                 }
             }

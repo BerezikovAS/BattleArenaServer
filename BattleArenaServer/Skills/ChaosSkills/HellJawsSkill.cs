@@ -3,22 +3,22 @@ using BattleArenaServer.Models;
 using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
 
-namespace BattleArenaServer.Skills.KnightSkills
+namespace BattleArenaServer.Skills.ChaosSkills
 {
-    public class FormationAttackSkill : Skill
+    public class HellJawsSkill : Skill
     {
         int extraDmg = 40;
-        public FormationAttackSkill()
+        public HellJawsSkill()
         {
-            name = "Formation Attack";
-            dmg = 100;
-            title = $"Атакуйте врага единым строем. Урон увеличивается за каждого вашего союзника рядом с целью ({extraDmg} за союзника).";
-            titleUpg = "+10 к урону за союзника. Способность не уходит на перезарядку.";
-            coolDown = 1;
+            name = "Hell Jaws";
+            dmg = 120;
+            title = $"Враг получает {dmg} физичского урона. Урон увеличивается на {extraDmg} за каждого героя или объект вокруг цели.";
+            titleUpg = $"-1 к ОД, +1 к дальности.";
+            coolDown = 3;
             coolDownNow = 0;
             requireAP = 2;
             nonTarget = false;
-            range = 1;
+            range = 2;
             radius = 1;
             area = Consts.SpellArea.EnemyTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
@@ -29,20 +29,22 @@ namespace BattleArenaServer.Skills.KnightSkills
 
         public override bool Cast(RequestData requestData)
         {
-            int alliesCount = 0;
             if (!request.startRequest(requestData, this))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null && requestData.TargetHex != null)
             {
+                int heroesCnt = 0;
+
                 foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
                 {
-                    if (n.HERO != null && n.HERO.Team == requestData.Caster.Team && n.HERO.Id != requestData.Caster.Id && n.HERO.type != Consts.HeroType.Obstacle)
-                        alliesCount++;
+                    if ((n.HERO != null && n.HERO.Id != requestData.Target.Id) || n.OBSTACLE != null)
+                        heroesCnt++;
                 }
+
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg + extraDmg * heroesCnt, dmgType);
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg + alliesCount * extraDmg, dmgType);
                 return true;
             }
 
@@ -54,10 +56,9 @@ namespace BattleArenaServer.Skills.KnightSkills
             if (!upgraded)
             {
                 upgraded = true;
-                extraDmg += 10;
-                coolDown = 0;
-                stats.coolDown = 0;
-                title = $"Атакуйте врага единым строем. Урон увеличивается за каждого вашего союзника рядом с целью ({extraDmg} за союзника).";
+                range += 1;
+                stats.range += 1;
+                requireAP -= 1;
                 return true;
             }
             return false;

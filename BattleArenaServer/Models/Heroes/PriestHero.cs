@@ -9,8 +9,8 @@ namespace BattleArenaServer.Models.Heroes
         {
             Name = "Priest";
 
-            MaxHP = HP = 925;
-            Armor = 4;
+            MaxHP = HP = 875;
+            Armor = 3;
             Resist = 4;
 
             AP = 4;

@@ -102,10 +102,11 @@ namespace BattleArenaServer.Services
         /// <param name="hero"></param>
         /// <param name="currentHex"></param>
         /// <param name="targetHex"></param>
-        public static void MoveHero(Hero hero, Hex currentHex, Hex targetHex)
+        public static void MoveHero(Hero hero, Hex? currentHex, Hex targetHex)
         {
             targetHex.SetHero(hero);
-            currentHex.RemoveHero();
+            if (currentHex != null)
+                currentHex.RemoveHero();
             ContinuousAuraAction();
 
             if (targetHex.OBSTACLE != null && targetHex.OBSTACLE is FillableObstacle)

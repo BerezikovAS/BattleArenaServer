@@ -30,9 +30,9 @@ namespace BattleArenaServer.Skills.Knight
             if (!request.startRequest(requestData, this))
                 return false;
 
-            if (requestData.Caster != null && requestData.TargetHex != null)
+            if (requestData.Caster != null && requestData.TargetHex != null && requestData.CasterHex != null)
             {
-                foreach (var n in UtilityService.GetHexesOneLine(requestData.Caster, requestData.TargetHex, radius))
+                foreach (var n in UtilityService.GetHexesOneLine(requestData.CasterHex, requestData.TargetHex, radius))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                         AttackService.SetDamage(requestData.Caster, n.HERO, dmg, Consts.DamageType.Magic);

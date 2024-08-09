@@ -82,7 +82,7 @@ function feelAP(_ap) {
     icon.setAttribute("src", _hero.name + ".png");
 
     const hp = document.getElementById("heroinfo_hpcur");
-    hp.innerText = _hero.hp;
+    hp.innerText = _hero.hp + " / " + _hero.maxHP;
 
     var hpPercent = 300 * _hero.hp / _hero.maxHP;
     const hpbar = document.getElementById("heroinfo_hpbarcur");
@@ -293,7 +293,7 @@ function feelHeroInfo(_hex, _hexId) {
     resist.innerText = _hero.resist + _hero.statsEffect.resist;
 
     const hp = document.getElementById("heroinfo_hp");
-    hp.innerText = _hero.hp;
+    hp.innerText = _hero.hp + " / " + _hero.maxHP;
 
     var hpPercent = 300 * _hero.hp / _hero.maxHP;
     const hpbar = document.getElementById("heroinfo_hpbar");
