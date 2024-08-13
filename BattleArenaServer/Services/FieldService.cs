@@ -31,6 +31,7 @@ namespace BattleArenaServer.Services
             heroes.Add(new AeroturgHero(0, ""));
             heroes.Add(new GeomantHero(0, ""));
             heroes.Add(new AbominationHero(0, ""));
+            heroes.Add(new ChaosHero(0, ""));
 
             string team = "red";
             Random rnd = new Random();

@@ -39,7 +39,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
                 {
                     if (hex.IsFree())
                         freeHexCount += 1;
-                    else if (hex.HERO == null && hex.OBSTACLE != null && hex.OBSTACLE.Name == "Stalaktite")
+                    else if (hex.HERO?.Name == "Stalaktite")
                         freeHexCount += 2;
                 }
 

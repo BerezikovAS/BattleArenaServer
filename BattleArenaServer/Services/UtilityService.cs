@@ -33,23 +33,32 @@ namespace BattleArenaServer.Services
             return hexesLines;
         }
 
-        public static List<Hex> GetHexesOneLine(Hero caster, Hex target, int radius = 100)
+        public static List<Hex> GetHexesCone(Hex caster, Hex target, int radius)
         {
             List<Hex> hexesLines = new List<Hex>();
-            Hex? hex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == caster.Id);
-            if (hex != null && target != null)
+
+            //Найдем три направления
+
+            
+            return hexesLines;
+        }
+
+        public static List<Hex> GetHexesOneLine(Hex caster, Hex target, int radius = 100)
+        {
+            List<Hex> hexesLines = new List<Hex>();
+            if (caster != null && target != null)
             {
-                if (IsOnLine(hex, target))
+                if (IsOnLine(caster, target))
                 {
-                    Hex direction = GetDirection(hex, target);
+                    Hex direction = GetDirection(caster, target);
                     bool endOfField = false;
                     int counter = 1;
 
                     while (hexesLines.Count < radius && !endOfField)
                     {
-                        Hex? findHex = GameData._hexes.FirstOrDefault(x => x.COORD[0] == hex.COORD[0] + direction.COORD[0] * counter
-                            & x.COORD[1] == hex.COORD[1] + direction.COORD[1] * counter
-                            & x.COORD[2] == hex.COORD[2] + direction.COORD[2] * counter);
+                        Hex? findHex = GameData._hexes.FirstOrDefault(x => x.COORD[0] == caster.COORD[0] + direction.COORD[0] * counter
+                            & x.COORD[1] == caster.COORD[1] + direction.COORD[1] * counter
+                            & x.COORD[2] == caster.COORD[2] + direction.COORD[2] * counter);
                         if (findHex != null)
                             hexesLines.Add(findHex);
                         else

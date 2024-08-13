@@ -5,7 +5,7 @@ namespace BattleArenaServer.Skills.PriestSkills
 {
     public class BlessAuraPSkill : PassiveSkill
     {
-        double basicHeal = 0.08;
+        double basicHeal = 0.07;
         double extraHeal = 0.02;
         Aura Aura;
         public BlessAuraPSkill(Hero hero) : base(hero)
@@ -21,6 +21,10 @@ namespace BattleArenaServer.Skills.PriestSkills
         public override bool Cast(RequestData requestData)
         {
             return false;
+        }
+
+        public override void refreshEffect()
+        {
         }
 
         public override bool UpgradeSkill()

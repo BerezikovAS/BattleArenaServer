@@ -18,6 +18,10 @@ namespace BattleArenaServer.Skills.AbominationSkills
             return false;
         }
 
+        public override void refreshEffect()
+        {
+        }
+
         public override bool UpgradeSkill()
         {
             if (!upgraded)

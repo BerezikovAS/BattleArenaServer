@@ -21,6 +21,10 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             return false;
         }
 
+        public override void refreshEffect()
+        {
+        }
+
         public override bool UpgradeSkill()
         {
             if (!upgraded)

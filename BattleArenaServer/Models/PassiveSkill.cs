@@ -9,5 +9,7 @@
         }
 
         public Hero hero { get; set; }
+
+        public abstract void refreshEffect();
     }
 }
