@@ -1,0 +1,218 @@
+.main {
+    width: 825px;
+    display: flex;
+    --s: 100px; /* size  */
+    --m: 1px; /* margin */
+    --f: calc(1.732 * var(--s) + 4 * var(--m) - 1px);
+}
+  
+  
+
+  .container {
+    font-size: 0; /*disable white space between inline block element */
+  }
+  
+  .container div {
+    width: var(--s);
+    margin: var(--m);
+    height: calc(var(--s)*1.1547); 
+    display: inline-block;
+    font-size:initial;
+    clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+    background: rgba(69, 180, 69, 0.863);
+    margin-bottom: calc(var(--m) - var(--s)*0.2885);
+  }
+
+  div.hero.red {
+    /* background: rgb(120, 205, 238); */
+    background: red;
+  }
+
+  div.hero.blue {
+    background: rgb(0, 99, 248);
+  }
+
+  button.spell {
+      width: 100px;
+      height: 100px;
+      background-color: rgb(151, 248, 142);
+      border: 3px solid rgb(1, 73, 1);
+      border-radius: 10px;
+      font-weight: 600;
+  }
+
+  button.statusbaritem {
+    border: 3px solid rgb(1, 73, 1);
+    border-radius: 24px;
+    background-color: rgb(126, 207, 118);
+    width: 38px;
+    height: 38px;
+    margin-right: 6px;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 20px;
+  }
+
+  button.passive {
+      border-radius: 50px;
+  }
+
+  button.spellActive {
+    width: 100px;
+    height: 100px;
+    background-color: rgb(220, 226, 161);
+    border: 3px solid rgb(165, 184, 1);
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+  button.spell.cooldawn {
+    width: 100px;
+    height: 100px;
+    background-color: lightgray;
+    border: 3px solid rgb(1, 73, 1);
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+button.upgrade {
+    width: 100px;
+    height: 25px;
+    background-color: yellow;
+    border: 3px solid rgb(1, 73, 1);
+    border-radius: 10px;
+    font-weight: 600;
+    margin-right: 6px;
+}
+
+button.controls {
+    width: 100px;
+    background-color: rgb(151, 248, 142);
+    border: 3px solid rgb(1, 73, 1);
+    border-radius: 10px;
+}
+
+button.cancel {
+    background-image: url("Cancel.png");
+    background-size: unset ;
+}
+
+  div.cooldawn {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  p.cooldawn {
+    line-height: 0px;
+    font-size: 48px;
+    font-weight: bolder;
+    text-shadow: 0px 0px 10px black;
+    color: black;
+  }
+
+  
+ 
+  .container::before {
+    content: "";
+    width: calc(var(--s)/2 + var(--m));
+    float: left;
+    height: 120%;
+    shape-outside: repeating-linear-gradient(     
+        #000  0 calc(3px),      
+        #0000 0 calc(var(--f) + 3px));
+  }
+
+  div.hpbar {
+    width: 300px;
+    height: 30px;
+    /* background-color: rgb(238, 150, 150); */
+    font-size: 26px;
+    text-align: center;
+    border: 3px solid rgb(1, 73, 1);
+    border-radius: 10px;
+    margin-left: 10px;
+  }
+
+  div.hpbarCurrent {
+    height: 30px;
+    /* background-color: red; */
+    position: absolute; z-index: 1;
+    border: 0px solid;
+    border-radius: 6px;
+  }
+
+  div.skillInfo {
+    width: 200px;
+    height: auto;
+    padding: 8px;
+    border: 5px solid rgb(1, 73, 1);
+    border-radius: 10px;
+    position: absolute;
+    box-shadow: 0px 0px 8px 8px white;
+    background-color: rgb(151, 248, 142);
+    font-size: 22px;
+    z-index: 1000;
+  }
+
+  div.skillInfoShow {
+    transition-delay: 0.4s;
+    /* transition-duration: 0.5s; */
+    opacity: 1;    
+  }
+
+  div.skillInfoHide {
+    position: absolute;
+    opacity: 0;
+  }
+
+  /* div.hpbarCurrent {
+    height: 30px;
+    background-color: blue;
+    position: absolute; z-index: 1;
+  } */
+
+  td.heroinfo {
+    min-width: 50px;
+    padding-left: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    display: inline-flex;
+    padding: 4px;
+    margin-left: 10px;
+    border: 3px solid rgb(1, 73, 1);
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  div.heroinfo_icon {
+    width: 100px;
+    height: 100px;
+    background-color: red;
+    background-size: cover;
+    border: 3px solid rgb(1, 73, 1);
+    border-radius: 10px;
+  }
+
+  .heroinfo_icon_img {
+    width: 90px;
+    height: 90px;
+    position: absolute;
+    padding-left: 5px;
+    padding-top: 5px;
+  }
+
+div.AP_container {
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 50px;
+    width: 186px;
+    background-color: rgb(151, 248, 142);
+    border: 3px solid rgb(1, 73, 1);
+    border-radius: 40px;
+    margin-left: 20px;
+}
+
+  

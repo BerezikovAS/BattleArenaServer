@@ -62,7 +62,7 @@
 
 
 
-          
+
 
           <div style="background-color: rgba(69, 180, 69, 0.863); padding: 12px; border: 4px solid rgb(1, 73, 1); border-radius: 20px; margin-top: 4px;">
 
@@ -115,34 +115,38 @@
       </div>
 
       <div id="skillInfo" class="skillInfo skillInfoShow">
-            <div id="skillInfoName" class="skillDiv" style="text-align: center; font-weight: bold;">Name</div>
-            <div style="text-align: center; position: absolute; top: 16px;">__________________</div>
-            <div id="skillInfoDescr" class="skillDiv" style="margin-top: 10px; font-size: 16px;">sdfsddddddd dddddddddddddd dddddddddddd dddd ddddddddddd ddddd dddd</div>
-            <div style="text-align: center;">__________________</div>
-            <div id="skillInfoStats" class="skillDiv" style="font-weight: bold; ">
+          <div id="skillInfoName" class="skillDiv" style="text-align: center; font-weight: bold;">Name</div>
+          <div style="text-align: center; position: absolute; top: 16px;">__________________</div>
+          <div id="skillInfoDescr" class="skillDiv" style="margin-top: 10px; font-size: 16px;">sdfsddddddd dddddddddddddd dddddddddddd dddd ddddddddddd ddddd dddd</div>
+          <div style="text-align: center;">__________________</div>
+          <div id="skillInfoStats" class="skillDiv" style="font-weight: bold; ">
               <div style="display: flex; padding-bottom: 10px; height: 24px;">
-                <div style="display: flex;"><img src="icons/rangeattack.png" style="width: 24px; margin-right: 5px;"/>
-                    <div id="skillInfoStatsRange"></div>
-                </div>
-                <div id="skillInfoStatsRadius" style="display: flex; position: absolute; right: 100px;">
-                    <img src="icons/range.png" style="width: 24px; margin-right: 5px;"/><div id="skillInfoStatsRadiusVal"></div>
-                </div>
-                <div style="display: flex; position: absolute; right: 10px;"><img src="ap.png" style="width: 24px; margin-right: 5px;"/>
-                    <div id="skillInfoStatsAP"></div>
-                </div>
+                  <div style="display: flex;">
+                      <img src="icons/rangeattack.png" style="width: 24px; margin-right: 5px;" />
+                      <div id="skillInfoStatsRange"></div>
+                  </div>
+                  <div id="skillInfoStatsRadius" style="display: flex; position: absolute; right: 100px;">
+                      <img src="icons/range.png" style="width: 24px; margin-right: 5px;" /><div id="skillInfoStatsRadiusVal"></div>
+                  </div>
+                  <div style="display: flex; position: absolute; right: 10px;">
+                      <img src="ap.png" style="width: 24px; margin-right: 5px;" />
+                      <div id="skillInfoStatsAP"></div>
+                  </div>
               </div>
               <div style="display:flex;">
-                <div id="skillInfoStatsDmg" style="display: flex;"><img src="icons/meleeattack.png" style="width: 24px; margin-right: 5px;"/>
-                    <div id="skillInfoStatsDmgVal"></div>
-                </div>
-                <div style="display: flex; position: absolute; right: 10px;"><img src="EndTurn.png" style="width: 24px; margin-right: 5px;"/>
-                    <div id="skillInfoStatsCoolDown"></div>
-                </div>
+                  <div id="skillInfoStatsDmg" style="display: flex;">
+                      <img src="icons/meleeattack.png" style="width: 24px; margin-right: 5px;" />
+                      <div id="skillInfoStatsDmgVal"></div>
+                  </div>
+                  <div style="display: flex; position: absolute; right: 10px;">
+                      <img src="EndTurn.png" style="width: 24px; margin-right: 5px;" />
+                      <div id="skillInfoStatsCoolDown"></div>
+                  </div>
               </div>
-            </div>
           </div>
+      </div>
 
-
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
       <script src="js/script.js"></script>
       <script src="js/hovers.js"></script>
       <script src="js/actions.js"></script>

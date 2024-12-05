@@ -5,7 +5,7 @@ using BattleArenaServer.SkillCastRequests;
 
 namespace BattleArenaServer.Skills.Knight
 {
-    public class SecondBreathSkill : BodyGuardSkill
+    public class SecondBreathSkill : Skill
     {
         int heal = 200;
         int armor = 3;

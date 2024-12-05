@@ -7,44 +7,44 @@ namespace BattleArenaServer.Services
 {
     public class TimingService : ITiming
     {
-        private int idActiveHero = 0;
         private int turn = 1;
 
         public TimingService()
         {
+            GameData.activeTeam = "red";
+            GameData.idActiveHero = 0;
         }
 
         public int GetActiveHero()
         {
-            return idActiveHero;
+            return GameData.idActiveHero;
         }
 
-        public void EndTurn()
+        public int EndTurn()
         {
-            Hero? activeHero = GameData._heroes.FirstOrDefault(x => x.Id == idActiveHero);
-            if (activeHero != null)
+            foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam))
             {
-                AttackService.EndTurnAuraAction(activeHero);
-                DecreaseSkillCooldawn(activeHero);
-                EndTurnStatusApplyEffect(activeHero);
-                DecreaseLifeTimeObstacle(activeHero);
+                //Effect? modifyAP = hero.EffectList.FirstOrDefault(x => x.Name == "Adrenalin");
+                //hero.AP = modifyAP == null ? 4 : 4 + modifyAP.value;
+                hero.AP = 4;
 
-                activeHero.AP = 4;
-                Hero? hero = null;
+                AttackService.EndTurnAuraAction(hero);
+                DecreaseSkillCooldawn(hero);
+                EndTurnStatusApplyEffect(hero);
+                DecreaseLifeTimeObstacle(hero);
 
-                while (hero == null)
-                {
-                    DecreaseStatusDuration(idActiveHero);
-                    idActiveHero++;
-                    hero = GameData._heroes.FirstOrDefault(x => x.Id == idActiveHero && x.HP > 0);
-                    if (idActiveHero >= GameData._heroes.Count)
-                    {
-                        AddUpgradePoints(++turn);
-                        idActiveHero = -1;
-                    }
-                }
-                RefreshStartTurnAbilities(hero);
+                DecreaseStatusDuration(hero.Id);
             }
+
+            AddUpgradePoints(++turn);
+            GameData.activeTeam = GameData.activeTeam == "blue" ? "red" : "blue";
+
+            foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam && x.HP > 0))
+            {
+                RefreshStartTurnAbilities(hero);
+                GameData.idActiveHero = hero.Id;
+            }
+            return GameData.idActiveHero;
         }
 
         public void RefreshStartTurnAbilities(Hero hero)
@@ -101,6 +101,26 @@ namespace BattleArenaServer.Services
                 }
             }
 
+            // Также по поверхностям
+            List<FillableObstacle> removeSurf = new List<FillableObstacle>();
+            foreach (var surface in GameData._surfaces)
+            {
+                if (surface.CasterId == hero.Id)
+                {
+                    if (--surface.LifeTime <= 0)
+                    {
+                        Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == surface.HexId);
+                        if (hex != null)
+                            hex.RemoveSurface(surface);
+                        AttackService.ContinuousAuraAction();
+                        removeSurf.Add(surface);
+                    }
+                }
+            }
+            // Удалем то что уже протухло
+            foreach (var surface in removeSurf)
+                GameData._surfaces.Remove(surface);
+
             // Теперь по блокирующим перемещение
             List<SolidObstacle> removeObst = new List<SolidObstacle>();
             foreach (var obst in GameData._solidObstacles)
@@ -150,7 +170,7 @@ namespace BattleArenaServer.Services
 
         public void AddUpgradePoints(int turn)
         {
-            if (turn % 2 == 0)
+            if (turn % 4 == 1)
                 foreach (var hero in GameData._heroes)
                     hero.UpgradePoints++;
         }

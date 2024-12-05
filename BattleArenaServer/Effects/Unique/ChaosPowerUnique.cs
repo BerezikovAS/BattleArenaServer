@@ -8,7 +8,7 @@ namespace BattleArenaServer.Effects.Unique
         public ChaosPowerUnique(int _idCaster, int _value, int _duration)
         {
             Name = "ChaosPower";
-            type = "unique";
+            type = Consts.StatusEffect.Unique;
             idCaster = _idCaster;
             value = _value;
             duration = _duration;

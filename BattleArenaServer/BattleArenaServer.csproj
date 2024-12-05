@@ -14,7 +14,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="wwwroot\js\actions.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <None Include="wwwroot\js\hovers.js" />
+    <None Include="wwwroot\js\script.js" />
+    <None Include="wwwroot\js\util.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\effects\Decay.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

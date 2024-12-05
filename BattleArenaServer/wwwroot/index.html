@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="wwww.css">
+    <link href='https://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
+  </head>
+  <body style="background-color: rgb(26, 145, 26); display: flex;">
+      <div style="display: inline-block; background-color:darkgreen; padding:20px; padding-bottom: 40px; border: 4px solid rgb(1, 73, 1); border-radius: 50px; margin-right: 20px;">
+          <div class="main">
+              <div id="field" class="container">
+
+              </div>
+          </div>
+      </div>
+      <div style="display: inline-block;">
+          <div class="heroinfo" style="vertical-align: middle; background-color: rgba(69, 180, 69, 0.863); padding: 12px; border: 4px solid rgb(1, 73, 1); border-radius: 20px;">
+
+              <table style="color: rgb(1, 43, 1); font-weight: 800;">
+                  <tr style="height: 65px;">
+                      <td rowspan="2" style="width: 100px;"><div class="heroinfo_icon" id="heroinfo_icon"><img id="heroinfo_icon_img" class="heroinfo_icon_img"></div></td>
+                      <td style="text-align: center;"><div id="heroinfo_name" style="display: inline-block; font-size: 28px; margin-left: 10px;">HERONAME</div></td>
+                      <td class="heroinfo"><img src="icons/meleeattack.png" style="height: 30px;"><div style="width: 54px; padding-left: 8px;" id="heroinfo_damage">100</div></td>
+                      <td class="heroinfo"><img src="icons/armor.png" style="height: 30px;"><div style="width: 54px; padding-left: 8px;" id="heroinfo_armor">3 (27%)</div></td>
+                  </tr>
+                  <tr style="height: 30px;">
+                      <td>
+                          <div id="hpbar" class="hpbar">
+                              <div id="heroinfo_hpbar" class="hpbarCurrent" style="width: 300px;"></div>
+                              <h id="heroinfo_hp" style="z-index: 2; position: relative;">1000</h>
+                          </div>
+                      </td>
+                      <td class="heroinfo"><img src="icons/rangeattack.png" style="height: 30px;"><div style="width: 54px; padding-left: 8px;" id="heroinfo_range">1</div></td>
+                      <td class="heroinfo"><img src="icons/resist.png" style="height: 30px;"><div style="width: 54px; padding-left: 8px;" id="heroinfo_resist">2  (19%)</div></td>
+                  </tr>
+              </table>
+
+              <div style="display: flex; margin-top: 10px; margin-bottom: 10px;">
+                  <div style="display: inline-block; margin-right: 6px;">
+                      <div class="cooldawn" id="spInfo0" onmouseenter="showSpellInfo(0, this, 1)" onmouseleave="hideSpellInfo()"><p class="cooldawn" id="cdInfo0"></p></div><button id="spellInfo0" class="spell">Spell1</button>
+                  </div>
+                  <div style="display: inline-block; margin-right: 6px;">
+                      <div class="cooldawn" id="spInfo1" onmouseenter="showSpellInfo(1, this, 1)" onmouseleave="hideSpellInfo()"><p class="cooldawn" id="cdInfo1"></p></div><button id="spellInfo1" class="spell">Spell1</button>
+                  </div>
+                  <div style="display: inline-block; margin-right: 6px;">
+                      <div class="cooldawn" id="spInfo2" onmouseenter="showSpellInfo(2, this, 1)" onmouseleave="hideSpellInfo()"><p class="cooldawn" id="cdInfo2"></p></div><button id="spellInfo2" class="spell">Spell1</button>
+                  </div>
+                  <div style="display: inline-block; margin-right: 6px;">
+                      <div class="cooldawn" id="spInfo3" onmouseenter="showSpellInfo(3, this, 1)" onmouseleave="hideSpellInfo()"><p class="cooldawn" id="cdInfo3"></p></div><button id="spellInfo3" class="spell">Spell1</button>
+                  </div>
+                  <div style="display: inline-block;">
+                      <div class="cooldawn" id="spInfo4" onmouseenter="showSpellInfo(4, this, 1)" onmouseleave="hideSpellInfo()"><p class="cooldawn" id="cdInfo4"></p></div><button id="spellInfo4" class="spell">Spell1</button>
+                  </div>
+              </div>
+
+              <div id="statusbar_info" style="min-height: 50px; width: inherit; text-align: center;">
+
+              </div>
+          </div>
+
+
+
+
+
+          <div style="background-color: rgba(69, 180, 69, 0.863); padding: 12px; border: 4px solid rgb(1, 73, 1); border-radius: 20px; margin-top: 4px;">
+
+              <div style="justify-content: space-around; text-align:center; font-size: 26px; font-weight: 800; margin-bottom: 10px;">YOUR TURN</div>
+
+              <div style="display: flex;">
+                  <div class="heroinfo_icon" id="hero_icon" style=" margin-bottom: 20px;"><img id="hero_icon_img" class="heroinfo_icon_img"></div>
+
+                  <div>
+                      <div id="AProw" class="AP_container"></div>
+                      <div id="hpbarcur" class="hpbar">
+                          <div id="heroinfo_hpbarcur" class="hpbarCurrent" style="width: 300px;"></div>
+                          <h id="heroinfo_hpcur" style="z-index: 2; position: relative;">1000</h>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="bot" style="display: flex;">
+                  <div>
+                      <button id="upgrade0" class="upgrade" onclick="upgradeSkill(0)">+</button>
+                      <div onmouseenter="showSpellInfo(0, this, 0)" onmouseleave="hideSpellInfo()" id="sp0"><div class="cooldawn"><p class="cooldawn" id="cd0"></p></div><button id="spell0" class="spell">Spell0</button></div>
+                  </div>
+                  <div>
+                      <button id="upgrade1" class="upgrade" onclick="upgradeSkill(1)">+</button>
+                      <div onclick="castSpell(1)" onmouseenter="showSpellInfo(1, this, 0)" onmouseleave="hideSpellInfo()" id="sp1"><div class="cooldawn"><p class="cooldawn" id="cd1"></p></div><button id="spell1" class="spell">Spell1</button></div>
+                  </div>
+                  <div>
+                      <button id="upgrade2" class="upgrade" onclick="upgradeSkill(2)">+</button>
+                      <div onclick="castSpell(2)" onmouseenter="showSpellInfo(2, this, 0)" onmouseleave="hideSpellInfo()" id="sp2"><div class="cooldawn"><p class="cooldawn" id="cd2"></p></div><button id="spell2" class="spell">Spell2</button></div>
+                  </div>
+                  <div>
+                      <button id="upgrade3" class="upgrade" onclick="upgradeSkill(3)">+</button>
+                      <div onclick="castSpell(3)" onmouseenter="showSpellInfo(3, this, 0)" onmouseleave="hideSpellInfo()" id="sp3"><div class="cooldawn"><p class="cooldawn" id="cd3"></p></div><button id="spell3" class="spell">Spell3</button></div>
+                  </div>
+                  <div>
+                      <button id="upgrade4" class="upgrade" onclick="upgradeSkill(4)">+</button>
+                      <div onclick="castSpell(4)" onmouseenter="showSpellInfo(4, this, 0)" onmouseleave="hideSpellInfo()" id="sp4"><div class="cooldawn"><p class="cooldawn" id="cd4"></p></div><button id="spell4" class="spell">Spell4</button></div>
+                  </div>
+                  <button class="controls" onclick="endTurn()"><img src="EndTurn.png" style="width: 80px;" /></button>
+                  <button style="margin-left: 6px;" class="controls" onclick="cancel()"><img src="Cancel.png" style="width: 80px;" /></button>
+              </div>
+
+              <div id="statusbar" style="min-height: 50px; width: inherit; text-align: center; margin-top: 10px;">
+
+              </div>
+          </div>
+      </div>
+      <div>
+
+      </div>
+
+      <div id="skillInfo" class="skillInfo skillInfoShow" style="top: -200px; left: -200px;">
+          <div id="skillInfoName" class="skillDiv" style="text-align: center; font-weight: bold;">Name</div>
+          <div style="text-align: center; position: absolute; top: 16px;">__________________</div>
+          <div id="skillInfoDescr" class="skillDiv" style="margin-top: 10px; font-size: 16px;">sdfsddddddd dddddddddddddd dddddddddddd dddd ddddddddddd ddddd dddd</div>
+          <div style="text-align: center;">__________________</div>
+          <div id="skillInfoStats" class="skillDiv" style="font-weight: bold; ">
+              <div style="display: flex; padding-bottom: 10px; height: 24px;">
+                  <div style="display: flex;">
+                      <img src="icons/rangeattack.png" style="width: 24px; margin-right: 5px;" />
+                      <div id="skillInfoStatsRange"></div>
+                  </div>
+                  <div id="skillInfoStatsRadius" style="display: flex; position: absolute; right: 100px;">
+                      <img src="icons/range.png" style="width: 24px; margin-right: 5px;" /><div id="skillInfoStatsRadiusVal"></div>
+                  </div>
+                  <div style="display: flex; position: absolute; right: 10px;">
+                      <img src="ap.png" style="width: 24px; margin-right: 5px;" />
+                      <div id="skillInfoStatsAP"></div>
+                  </div>
+              </div>
+              <div style="display:flex;">
+                  <div id="skillInfoStatsDmg" style="display: flex;">
+                      <img src="icons/meleeattack.png" style="width: 24px; margin-right: 5px;" />
+                      <div id="skillInfoStatsDmgVal"></div>
+                  </div>
+                  <div style="display: flex; position: absolute; right: 10px;">
+                      <img src="EndTurn.png" style="width: 24px; margin-right: 5px;" />
+                      <div id="skillInfoStatsCoolDown"></div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+      <script src="/js/script.js"></script>
+      <script src="/js/hovers.js"></script>
+      <script src="/js/actions.js"></script>
+      <script src="/js/util.js"></script>
+  </body>
+</html>

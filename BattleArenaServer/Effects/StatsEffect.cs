@@ -7,5 +7,7 @@
         public int AP { get; set; } = 0;
         public int AttackRadius { get; set; } = 0;
         public int Dmg { get; set; } = 0;
+
+        public double DmgMultiplier { get; set; } = 1;
     }
 }

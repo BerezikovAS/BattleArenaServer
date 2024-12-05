@@ -2,7 +2,7 @@
 {
     public interface ITiming
     {
-        public void EndTurn();
+        public int EndTurn();
 
         public int GetActiveHero();
     }

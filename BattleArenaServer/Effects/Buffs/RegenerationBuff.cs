@@ -7,7 +7,7 @@ namespace BattleArenaServer.Effects.Buffs
         public RegenerationBuff(int _idCaster, int _value, int _duration)
         {
             Name = "Regeneration";
-            type = "buff";
+            type = Consts.StatusEffect.Buff;
             idCaster = _idCaster;
             value = _value;
             duration = _duration;

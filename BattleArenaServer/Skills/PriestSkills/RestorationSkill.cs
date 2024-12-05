@@ -7,11 +7,12 @@ namespace BattleArenaServer.Skills.Priest
 {
     public class RestorationSkill : Skill
     {
+        int heal = 200;
         public RestorationSkill()
         {
             name = "Restoration";
-            title = "Восстанавливает себе или союзнику 200 ХП и снимает негативные эффекты";
-            titleUpg = "-1 к стоимости в ОД, +1 к дальности";
+            title = $"Восстанавливает себе или союзнику {heal} ХП.";
+            titleUpg = "+1 к дальности, также снимает негативные эффекты с цели.";
             coolDown = 5;
             coolDownNow = 0;
             requireAP = 2;
@@ -32,17 +33,20 @@ namespace BattleArenaServer.Skills.Priest
             {
                 List<Effect> effects = new List<Effect>();
 
-                foreach (var effect in requestData.Target.EffectList)
+                if (upgraded)
                 {
-                    if (effect.type == "debuff")
+                    foreach (var effect in requestData.Target.EffectList)
                     {
-                        effect.RemoveEffect(requestData.Target);
-                        effects.Add(effect);
+                        if (effect.type == Consts.StatusEffect.Debuff)
+                        {
+                            effect.RemoveEffect(requestData.Target);
+                            effects.Add(effect);
+                        }
                     }
-                }
-                foreach (var effect in effects)
-                {
-                    requestData.Target.EffectList.Remove(effect);
+                    foreach (var effect in effects)
+                    {
+                        requestData.Target.EffectList.Remove(effect);
+                    }
                 }
 
                 requestData.Target.Heal(200);
@@ -64,7 +68,7 @@ namespace BattleArenaServer.Skills.Priest
                 stats.requireAP -= 1;
                 range += 1;
                 stats.range += 1;
-                title = "Восстанавливает себе или союзнику 200 ХП и снимает негативные эффекты";
+                title = $"Восстанавливает себе или союзнику {heal} ХП и снимает негативные эффекты.";
                 return true;
             }
             return false;

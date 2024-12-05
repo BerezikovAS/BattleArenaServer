@@ -7,7 +7,7 @@ namespace BattleArenaServer.Effects.Debuffs
         public BloodCurseDebuff(int _idCaster, int _value, int _duration)
         {
             Name = "BloodCurse";
-            type = "debuff";
+            type = Consts.StatusEffect.Debuff;
             idCaster = _idCaster;
             value = _value;
             duration = _duration;

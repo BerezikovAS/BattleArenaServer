@@ -10,13 +10,13 @@ namespace BattleArenaServer.Models.Heroes
             Name = "Priest";
 
             MaxHP = HP = 875;
-            Armor = 3;
-            Resist = 4;
+            Armor = 2;
+            Resist = 3;
 
             AP = 4;
 
             AttackRadius = 1;
-            Dmg = 100;
+            Dmg = 95;
 
             SkillList[0] = new BlessAuraPSkill(this);
             SkillList[1] = new BlindingLightSkill();

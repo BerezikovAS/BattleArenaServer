@@ -7,42 +7,41 @@ namespace BattleArenaServer.Skills.KnightSkills
 {
     public class RetributionSkill : Skill
     {
-        int dmgPercent = 1;
+        int extraDmg = 1;
         public RetributionSkill()
         {
             name = "Retribution";
             dmg = 100;
-            title = $"Мощная размашистая атака, сила которой зависит от процента Вашего недостающего здоровья. ({dmg} + {dmgPercent}% за каждый 1% потерянного здоровья)";
-            titleUpg = "+1% к урону за недостающее здоровье.";
+            title = $"Мощная размашистая атака, сила которой зависит от процента Вашего недостающего здоровья. ({dmg} + {extraDmg} за каждый 1% потерянного здоровья)";
+            titleUpg = "+1 к урону за 1% недостающего здоровья.";
             coolDown = 2;
             coolDownNow = 0;
             requireAP = 2;
             nonTarget = false;
             range = 1;
             radius = 1;
-            area = Consts.SpellArea.Radius;
+            area = Consts.SpellArea.Conus;
             stats = new SkillStats(coolDown, requireAP, range, radius);
             dmgType = Consts.DamageType.Physical;
         }
 
-        public new ISkillCastRequest request => new EnemyTargetCastRequest();
+        public new ISkillCastRequest request => new LineCastRequest();
 
         public override bool Cast(RequestData requestData)
         {
-            int alliesCount = 0;
             if (!request.startRequest(requestData, this))
                 return false;
 
-            if (requestData.Caster != null && requestData.Target != null && requestData.TargetHex != null)
+            if (requestData.Caster != null && requestData.TargetHex != null && requestData.CasterHex != null)
             {
-                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
+                double lostHealthPercent = (requestData.Caster.HP / requestData.Caster.MaxHP);
+                foreach (var n in UtilityService.GetHexesCone(requestData.CasterHex, requestData.TargetHex, radius))
                 {
-                    if (n.HERO != null && n.HERO.Team == requestData.Caster.Team && n.HERO.Id != requestData.Caster.Id && n.HERO.type != Consts.HeroType.Obstacle)
-                        alliesCount++;
+                    if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg + Convert.ToInt32(lostHealthPercent) * extraDmg, dmgType);
                 }
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg + alliesCount * extraDmg, dmgType);
                 return true;
             }
 
@@ -54,8 +53,8 @@ namespace BattleArenaServer.Skills.KnightSkills
             if (!upgraded)
             {
                 upgraded = true;
-                dmgPercent += 1;
-                title = $"Мощная размашистая атака, сила которой зависит от процента Вашего недостающего здоровья. ({dmg} + {dmgPercent}% за каждый 1% потерянного здоровья)";
+                extraDmg += 1;
+                title = $"Мощная размашистая атака, сила которой зависит от процента Вашего недостающего здоровья. ({dmg} + {extraDmg} за каждый 1% потерянного здоровья)";
                 return true;
             }
             return false;

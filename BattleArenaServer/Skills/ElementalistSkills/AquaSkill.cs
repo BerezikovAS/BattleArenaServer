@@ -1,24 +1,28 @@
-﻿using BattleArenaServer.Interfaces;
+﻿using BattleArenaServer.Effects.Debuffs;
+using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
 
-namespace BattleArenaServer.Skills.Knight
+namespace BattleArenaServer.Skills.ElementalistSkills
 {
-    public class HailStrikeSkill : BodyGuardSkill
+    public class AquaSkill : Skill
     {
-        public HailStrikeSkill()
+        private int reduceResist = 2;
+        public AquaSkill()
         {
-            name = "Hail Strike";
-            title = "Обрушивает мощный град на врагов в области, нанося 200 маг. урона каждому";
-            titleUpg = "+1 к радиусу, +1 к дальности";
-            coolDown = 5; //5;
+            name = "Aqua";
+            dmg = 140;
+            title = $"Обрушивает мощный град на врагов в области, нанося {dmg} магического урона и снижает сопротивление магии на {reduceResist}";
+            titleUpg = "+1 к дальности, +2 к снижению сопротивления";
+            coolDown = 4;
             coolDownNow = 0;
-            requireAP = 2; //2;
+            requireAP = 2;
             nonTarget = false;
             range = 2;
             radius = 1;
             area = Consts.SpellArea.Radius;
+            dmgType = Consts.DamageType.Magic;
             stats = new SkillStats(coolDown, requireAP, range, radius);
         }
 
@@ -34,7 +38,16 @@ namespace BattleArenaServer.Skills.Knight
                 foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
-                        AttackService.SetDamage(requestData.Caster, n.HERO, 200, Consts.DamageType.Magic);
+                    {
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, Consts.DamageType.Magic);
+
+                        if (n.HERO != null)
+                        {
+                            ResistDebuff resistDebuff = new ResistDebuff(requestData.Caster.Id, reduceResist, 2);
+                            n.HERO.AddEffect(resistDebuff);
+                            resistDebuff.ApplyEffect(n.HERO);
+                        }
+                    }
                 }
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;
@@ -51,8 +64,7 @@ namespace BattleArenaServer.Skills.Knight
                 upgraded = true;
                 range += 1;
                 radius += 1;
-                stats.range += 1;
-                stats.radius += 1;
+                reduceResist += 2;
                 return true;
             }
             return false;

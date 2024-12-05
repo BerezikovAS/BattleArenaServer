@@ -5,7 +5,7 @@ namespace BattleArenaServer.Effects
     public abstract class Effect
     {
         public string Name { get; set; }
-        public string type { get; set; }
+        public Consts.StatusEffect type { get; set; }
         public int idCaster { get; set; }
 
         public int value { get; set; }

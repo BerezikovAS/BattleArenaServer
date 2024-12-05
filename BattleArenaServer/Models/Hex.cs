@@ -8,6 +8,7 @@ namespace BattleArenaServer.Models
         int[] _coord = new int[3];
         Hero? Hero { get; set; }
         Obstacle? Obstacle { get; set; }
+        List<FillableObstacle> Surfaces { get; set; } = new List<FillableObstacle>();
 
         public Hex(int[] coord)
         {
@@ -28,6 +29,8 @@ namespace BattleArenaServer.Models
         public Hero? HERO { get { return Hero; } }
 
         public Obstacle? OBSTACLE { get { return Obstacle; } }
+
+        public List<FillableObstacle> SURFACES { get { return Surfaces; } }
 
         public int ID { get { return _id; } }
 
@@ -53,6 +56,17 @@ namespace BattleArenaServer.Models
         {
             Obstacle = null;
             GameData._obstacles.Remove(Obstacle);
+        }
+
+        public void AddSurface(FillableObstacle surface)
+        {
+            Surfaces.Add(surface);
+            GameData._surfaces.Add(surface);
+        }
+
+        public void RemoveSurface(FillableObstacle surface)
+        {
+            Surfaces.Remove(surface);
         }
 
         public bool IsFree()
@@ -83,6 +97,13 @@ namespace BattleArenaServer.Models
                     d = Math.Abs(x[i]);
             }
             return d;
+        }
+
+        public bool IsThisCoord(int[] coord)
+        {
+            if (_coord[0] == coord[0] && _coord[1] == coord[1] && _coord[2] == coord[2])
+                return true;
+            return false;
         }
     }
 }

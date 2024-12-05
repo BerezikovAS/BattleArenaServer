@@ -8,7 +8,7 @@ namespace BattleArenaServer.Effects.Debuffs
         public BleedingDebuff(int _idCaster, int _value, int _duration)
         {
             Name = "Bleeding";
-            type = "debuff";
+            type = Consts.StatusEffect.Debuff;
             idCaster = _idCaster;
             value = _value;
             duration = _duration;

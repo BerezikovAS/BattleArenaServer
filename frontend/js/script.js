@@ -1,3 +1,20 @@
+const hubConnection = new signalR.HubConnectionBuilder()
+    .withUrl("https://corsproxy.io/?https://localhost:7241/fieldhub")
+    .build();
+
+hubConnection.on("GetField", function (_field) {
+    console.log("Receive field");
+    feelField(_field)
+});
+
+hubConnection.start()
+    .then(function () {
+        console.log("Start SignalR");
+    })
+    .catch(function (err) {
+        return console.error(err.toString());
+    });
+
 function httpGet(theUrl)
 {
     var xmlHttp = new XMLHttpRequest();
@@ -57,7 +74,7 @@ function skillPressed(e){
         case "KeyR":
             cancel();
            break;
-        case "Space":
+        case "KeyT":
             endTurn();
            break;
    }
@@ -120,7 +137,7 @@ async function feelField(_field) {
         hexes.push(element);
     });
     //heroes = heroes.toSorted((a, b) => a.id - b.id);
-    idActiveHero = await getActiveHero();
+    //idActiveHero = await getActiveHero();
 
     hero = heroes[idActiveHero];
 
@@ -139,7 +156,16 @@ function hexClick(_hex) {
     }
     
     var _target = hexes[_hex.getAttribute("id")].hero;
-    if (_target == null) {
+
+    if (_target != null && _target.team == hero.team) {
+        idActiveHero = _target.id;
+        hero = _target;
+        enableUpgrades(_target);
+        feelActiveHeroInfo(_target);
+        enableSpells(_target);
+        fillFootHovers(hexes[_target.coordid], hexes);
+
+    } else if (_target == null) {
         stepHero(hero, _hex);
     } else if (_target.team !== hero.team) {
         attackHero(hero, _hex);
