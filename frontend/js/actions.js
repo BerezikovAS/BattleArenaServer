@@ -28,19 +28,29 @@ function attackHero(_hero, _hex) {
 
 function endTurn() {
     fetch("https://localhost:7241/Timing/EndTurn")
-    .then(init => getField()) ;
+    .then(response => response.json())
+    .then(init => idActiveHero = init)
+    .then(init => getField());
 }
 
 function getField() {
-    fetch("https://localhost:7241/Field/GetField")
-    .then(response => response.json())
-    .then(coord => feelField(coord));    
+    //fetch("https://localhost:7241/Field/GetField")
+    //.then(response => response.json())
+    //.then(coord => feelField(coord));    
 }
 
 function upgradeSkill(_skill) {
     fetch("https://localhost:7241/Field/UpgradeSkill?_caster=" + heroes[idActiveHero].coordid + "&_skill=" + _skill)
     .then(response => response.json())
     .then(succses => getField());
+}
+
+async function getSpellArea(_target, _caster, _spell) {
+    var spellArea = await fetch("https://localhost:7241/Field/GetSpellArea?target=" + _target + "&caster=" + _caster + "&spell=" + _spell)
+        .then(response => response.json())
+        .then(arr => { return arr; });
+
+    return spellArea;
 }
 
 function castSpell(_spell, _target = -1)

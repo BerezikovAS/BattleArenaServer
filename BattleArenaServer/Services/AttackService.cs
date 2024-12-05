@@ -1,4 +1,6 @@
-﻿using BattleArenaServer.Models;
+﻿using BattleArenaServer.Effects;
+using BattleArenaServer.Effects.Buffs;
+using BattleArenaServer.Models;
 using BattleArenaServer.Models.Obstacles;
 using static BattleArenaServer.Models.Consts;
 
@@ -17,6 +19,22 @@ namespace BattleArenaServer.Services
                         {
                             int armor = defender.Armor + defender.StatsEffect.Armor + defender.passiveArmor(attacker, defender);
                             totalDmg = dmg * (1 - (0.1 * armor) / (1 + 0.1 * armor));
+
+                            List<Effect> shields = defender.EffectList.FindAll(x => x.Name == "PhysShield");
+                            foreach (var shield in shields)
+                            {
+                                shield.value -= (int)Math.Round(totalDmg);
+                                if (shield.value <= 0)
+                                {
+                                    defender.EffectList.Remove(shield);
+                                    totalDmg = shield.value * -1;
+                                }
+                                else
+                                {
+                                    totalDmg = 0;
+                                    (shield as PhysShieldBuff).RefreshDescr();
+                                }
+                            }
                         }
                         break;
                     case DamageType.Magic:
@@ -113,6 +131,14 @@ namespace BattleArenaServer.Services
             {
                 (targetHex.OBSTACLE as FillableObstacle).ApplyEffect(hero, targetHex);
             }
+
+            foreach (var surface in targetHex.SURFACES)
+            {
+                surface.ApplyEffect(hero, targetHex);
+            }
+
+            // Применяем эффекты после движения (если есть)
+            hero.afterMove(hero, currentHex, targetHex);
         }
     }
 }

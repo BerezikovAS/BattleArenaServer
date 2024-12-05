@@ -1,4 +1,5 @@
-﻿using BattleArenaServer.Interfaces;
+﻿using BattleArenaServer.Effects;
+using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
@@ -25,6 +26,16 @@ namespace BattleArenaServer.Skills._CommonSkills
 
         public override bool Cast(RequestData requestData)
         {
+            Effect haste = requestData.Caster.EffectList.FirstOrDefault(x => x.Name == "Haste");
+            if (haste != null)
+            {
+                stats.requireAP = requireAP;
+                requestData.Caster.EffectList.Remove(haste);
+                requireAP = 0;
+            }
+            else
+                requireAP = stats.requireAP;
+
             if (!request.startRequest(requestData, this))
                 return false;
 

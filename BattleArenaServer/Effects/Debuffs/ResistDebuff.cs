@@ -7,7 +7,7 @@ namespace BattleArenaServer.Effects.Debuffs
         public ResistDebuff(int _idCaster, int _value, int _duration)
         {
             Name = "RemoveResist";
-            type = "debuff";
+            type = Consts.StatusEffect.Debuff;
             idCaster = _idCaster;
             value = _value;
             duration = _duration;

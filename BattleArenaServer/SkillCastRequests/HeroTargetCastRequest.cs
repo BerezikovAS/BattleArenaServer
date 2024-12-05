@@ -12,11 +12,13 @@ namespace BattleArenaServer.SkillCastRequests
             ICastChecker actionPointsChecker = new ActionPointsChecker();
             ICastChecker rangeChecker = new RangeChecker();
             ICastChecker heroChecker = new HeroChecker();
+            ICastChecker enemyTargetSpellChecker = new EnemyTargetSpellChecker();
 
             coolDownChecker.nextChecker = actionPointsChecker;
             actionPointsChecker.nextChecker = rangeChecker;
             rangeChecker.nextChecker = heroChecker;
-            heroChecker.nextChecker = new TerminalChecker();
+            heroChecker.nextChecker = enemyTargetSpellChecker;
+            enemyTargetSpellChecker.nextChecker = new TerminalChecker();
             return coolDownChecker.Check(requestData, skill);
         }
     }

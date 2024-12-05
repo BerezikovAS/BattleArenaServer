@@ -56,5 +56,12 @@
             Active,
             Passive
         }
+
+        public enum StatusEffect
+        {
+            Buff,
+            Debuff,
+            Unique
+        }
     }
 }

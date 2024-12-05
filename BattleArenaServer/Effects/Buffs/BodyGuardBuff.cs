@@ -9,7 +9,7 @@ namespace BattleArenaServer.Effects.Buffs
         public BodyGuardBuff(int _idCaster, int _value, int _duration)
         {
             Name = "BodyGuard";
-            type = "buff";
+            type = Consts.StatusEffect.Buff;
             idCaster = _idCaster;
             value = _value;
             duration = _duration;

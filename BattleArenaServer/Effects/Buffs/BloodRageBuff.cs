@@ -5,11 +5,10 @@ namespace BattleArenaServer.Effects.Buffs
 {
     public class BloodRageBuff : Effect
     {
-        // Тот кого забафали и ему срезаем входящий дамаг
         public BloodRageBuff(int _idCaster, int _value, int _duration)
         {
             Name = "BloodRage";
-            type = "buff";
+            type = Consts.StatusEffect.Buff;
             idCaster = _idCaster;
             value = _value;
             duration = _duration;

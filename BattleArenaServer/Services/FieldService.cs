@@ -1,4 +1,5 @@
-﻿using BattleArenaServer.Models;
+﻿using BattleArenaServer.Hubs;
+using BattleArenaServer.Models;
 using BattleArenaServer.Models.Heroes;
 
 namespace BattleArenaServer.Services
@@ -32,6 +33,8 @@ namespace BattleArenaServer.Services
             heroes.Add(new GeomantHero(0, ""));
             heroes.Add(new AbominationHero(0, ""));
             heroes.Add(new ChaosHero(0, ""));
+            heroes.Add(new ElementalistHero(0, ""));
+            heroes.Add(new CultistHero(0, ""));
 
             string team = "red";
             Random rnd = new Random();
@@ -101,6 +104,7 @@ namespace BattleArenaServer.Services
 
         public List<Hex> GetField()
         {
+            //fieldHub.SendField();
             return GameData._hexes;
         }
 
@@ -129,6 +133,8 @@ namespace BattleArenaServer.Services
             RequestData requestData = new RequestData(cur_pos, targer_pos);
             if (requestData.Caster != null)
                 requestData.Caster.MoveSkill.Cast(requestData);
+
+            //fieldHub.SendField();
             return GameData._hexes;
         }
 
@@ -166,10 +172,13 @@ namespace BattleArenaServer.Services
             RequestData requestData = new RequestData(cur_pos, targer_pos);
             if (requestData.Caster != null && requestData.Caster.EffectList.FirstOrDefault(x => x.Name == "Silence") == null)
             {
+                requestData.Caster.beforeSpellCast(requestData.Caster, requestData.Target, requestData.Caster.SkillList[skill]);
                 // Кастуем))
                 return requestData.Caster.SkillList[skill].Cast(requestData);
             }
             return false;
         }
+
+       
     }
 }

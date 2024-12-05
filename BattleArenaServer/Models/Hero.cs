@@ -11,6 +11,7 @@ namespace BattleArenaServer.Models
         {
             this.Id = Id;
             this.Team = Team;
+            this.Heal += BaseHeal;
         }
 
         public int Id { get; set; }
@@ -60,9 +61,18 @@ namespace BattleArenaServer.Models
         public delegate int ModifierAppliedDamage(Hero? attacker, Hero defender, int dmg);
         public ModifierAppliedDamage modifierAppliedDamage = delegate { return 0; };
 
-        public void Heal(int _heal)
+        public delegate void BeforeSpellCast(Hero attacker, Hero? defender, Skill skill);
+        public BeforeSpellCast beforeSpellCast = delegate { };
+
+        public delegate void AfterMove(Hero hero, Hex? currentHex, Hex targetHex);
+        public AfterMove afterMove = delegate { };
+
+        public delegate void HealDelegate(int heal);
+        public HealDelegate Heal = delegate { };
+
+        public void BaseHeal(int heal)
         {
-            HP += _heal;
+            HP += heal;
             if (HP > MaxHP)
                 HP = MaxHP;
         }

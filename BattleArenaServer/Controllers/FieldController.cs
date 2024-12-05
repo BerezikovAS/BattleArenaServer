@@ -47,5 +47,12 @@ namespace BattleArenaServer.Controllers
         {
             return _fieldService.UpgradeSkill(_caster, _skill);
         }
+
+        // GET: FieldController/GetSpellArea
+        //[HttpGet]
+        //public ActionResult<int[]> GetSpellArea(int target, int caster, int spell)
+        //{
+        //    return _fieldService.GetSpellArea(target, caster, spell);
+        //}
     }
 }

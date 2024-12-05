@@ -54,6 +54,12 @@ function fillFootHovers(_hex, _hexes) {
                 _hexHover.setAttribute("onmouseleave", "mouseAttackHoverOut(this)");
             }
         }
+        else
+        {
+            const _hexHover = document.getElementById(el.id);
+            _hexHover.setAttribute("onmouseenter", "feelHeroInfo(this, -1)");
+            _hexHover.removeAttribute("onmouseleave");
+        }
     });
 }
 
@@ -76,9 +82,8 @@ function clearSpellAreaHovers() {
     });
 }
 
-function mouseSpellHoverIn(_hex, _spell) {
-    var spell = heroes[idActiveHero].skillList[_spell];
-    var spellArea = getHexesSpellArea(_hex.getAttribute("id"), heroes[idActiveHero].coordid, spell)
+async function mouseSpellHoverIn(_hex, _spell) {
+    var spellArea = await getSpellArea(_hex.getAttribute("id"), heroes[idActiveHero].coordid, _spell);
 
     spellArea.forEach(el => {
         const _hexHover = document.getElementById(el);

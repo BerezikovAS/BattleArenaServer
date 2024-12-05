@@ -22,7 +22,7 @@ namespace BattleArenaServer.Skills.PriestSkills.Auras
                 double healPercent = basicHeal;
                 foreach (var effect in target.EffectList)
                 {
-                    if (effect.type == "debuff")
+                    if (effect.type == Consts.StatusEffect.Debuff)
                         healPercent += extraHeal;
                 }
                 double restoreHP = Math.Round((target.MaxHP - target.HP) * healPercent);

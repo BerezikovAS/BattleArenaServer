@@ -7,7 +7,7 @@ namespace BattleArenaServer.Effects.Debuffs
         public SlowDebuff(int _idCaster, int _value, int _duration)
         {
             Name = "Slow";
-            type = "debuff";
+            type = Consts.StatusEffect.Debuff;
             idCaster = _idCaster;
             value = _value;
             duration = _duration;
@@ -17,11 +17,13 @@ namespace BattleArenaServer.Effects.Debuffs
         public override void ApplyEffect(Hero _hero)
         {
             _hero.MoveSkill.requireAP += 1;
+            _hero.MoveSkill.stats.requireAP += 1;
         }
 
         public override void RemoveEffect(Hero _hero)
         {
             _hero.MoveSkill.requireAP -= 1;
+            _hero.MoveSkill.stats.requireAP -= 1;
         }
     }
 }
