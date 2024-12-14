@@ -6,13 +6,13 @@ namespace BattleArenaServer.Skills.AssassinSkills
 {
     public class LiquidationPSkill : PassiveSkill
     {
-        int extraDmg = 5;
+        int extraDmg = 6;
         public LiquidationPSkill(Hero hero) : base(hero)
         {
             name = "Liquidation";
             title = $"Концентрируясь на одной цели, Вы наносите ей больше урона от атак. Ваши атаки накладывают эффект на врага." +
                 $"Цель теряет {extraDmg} ХП, за каждый стак эффекта. Атакуя другого врага, все остальные герои теряют накопленные стаки.";
-            titleUpg = "Цель теряет по 8 ХП за стак.";
+            titleUpg = "Цель теряет по 9 ХП за стак.";
             skillType = Consts.SkillType.Passive;
             hero.beforeAttack += Liquidation;
         }

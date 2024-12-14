@@ -11,5 +11,8 @@
             this.casterId = casterId;
             this.lifeTime = lifeTime;
         }
+
+        public delegate void EndLifeEffect(Hex currentHex);
+        public EndLifeEffect endLifeEffect = delegate { };
     }
 }

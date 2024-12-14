@@ -7,12 +7,12 @@ namespace BattleArenaServer.Skills.CultistSkills
 {
     public class DevourSkill : Skill
     {
-        int percentHP = 20;
+        double percentHP = 20;
         public DevourSkill()
         {
             name = "Devour";
             dmg = 0;
-            title = $"Пожирает врага менее чем с {percentHP}% ХП, не оставляя ему никаких шансов.";
+            title = $"Пожирает врага менее чем с {(int)percentHP}% ХП, не оставляя ему никаких шансов.";
             upgraded = true;
             coolDown = 5;
             coolDownNow = 0;

@@ -1,6 +1,7 @@
 ﻿using BattleArenaServer.Models;
 using BattleArenaServer.Models.Heroes;
 using BattleArenaServer.Services;
+using BattleArenaServer.Skills.WitchDoctorSkills;
 using Microsoft.AspNetCore.SignalR;
 
 namespace BattleArenaServer.Hubs
@@ -19,6 +20,9 @@ namespace BattleArenaServer.Hubs
             SetRandomCommands();
             // Применяем эффекты постоянных аур сразу
             AttackService.ContinuousAuraAction();
+
+            // Применим уникальные эффекты после сбора команд и до начала боя
+            ApplyUniqueEffectsBeforeFight();
         }
 
         private static void SetRandomCommands()
@@ -27,6 +31,7 @@ namespace BattleArenaServer.Hubs
             List<int> redCoords = [7, 22, 37];
             List<int> blueCoords = [14, 29, 44];
 
+            heroes.Add(new WitchDoctorHero(0, ""));
             heroes.Add(new AssassinHero(0, ""));
             heroes.Add(new KnightHero(0, ""));
             heroes.Add(new CrossbowmanHero(0, ""));
@@ -76,6 +81,14 @@ namespace BattleArenaServer.Hubs
             heroes.Remove(hero);
 
             return hero;
+        }
+
+        private static void ApplyUniqueEffectsBeforeFight()
+        {
+            // Witch Doctor
+            WitchDoctorHero? wdh = (WitchDoctorHero)GameData._heroes.FirstOrDefault(x => x is WitchDoctorHero);
+            if (wdh != null)
+                (wdh.SkillList[0] as PerfectHealthPSkill).ApplyModifier();
         }
 
         private void CreateGameField()
@@ -231,7 +244,7 @@ namespace BattleArenaServer.Hubs
             List<int> spellArea = new List<int>();
 
             int spellRange = skill.range;
-            if (casterHero.EffectList.FirstOrDefault(x => x.Name == "Blind") != null)
+            if (casterHero.EffectList.FirstOrDefault(x => x.Name == "Blind") != null && spellRange > 1)
                 spellRange = 1;
 
             int dist = GameData._hexes[target].Distance(GameData._hexes[caster]);
