@@ -68,7 +68,11 @@ namespace BattleArenaServer.Services
                 if (hex != null && hex.HERO != null)
                 {
                     if (hex.HERO is SolidObstacle)
-                        GameData._solidObstacles.Remove((SolidObstacle)hex.HERO);
+                    {
+                        SolidObstacle obstacle = (SolidObstacle)hex.HERO;
+                        obstacle.endLifeEffect(hex);
+                        GameData._solidObstacles.Remove(obstacle);
+                    }
                     hex.RemoveHero();
                     ContinuousAuraAction();
                 }

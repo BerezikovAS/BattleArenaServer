@@ -141,10 +141,13 @@ namespace BattleArenaServer.Services
             return direction;
         }
 
-        public static Hex? GetOneHexOnDirection(Hex hex, Hex dir, int order)
+        public static Hex? GetOneHexOnDirection(Hex hex, Hex dirHex, int order, int mode = 0)
         {
-            Hex direction = GetDirection(hex, dir);
-            Hex? findHex = null;
+            Hex direction = GetDirection(hex, dirHex);
+            if (mode == 1)
+                direction = dirHex;
+
+            Hex ? findHex = null;
 
             for (int i = 1; i <= order; i++)
             {

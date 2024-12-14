@@ -1,5 +1,4 @@
-﻿using BattleArenaServer.Skills.AeroturgSkills;
-using BattleArenaServer.Skills.AssassinSkills;
+﻿using BattleArenaServer.Skills.AssassinSkills;
 
 namespace BattleArenaServer.Models.Heroes
 {
@@ -16,7 +15,7 @@ namespace BattleArenaServer.Models.Heroes
             AP = 4;
 
             AttackRadius = 1;
-            Dmg = 100;
+            Dmg = 105;
 
             SkillList[0] = new LiquidationPSkill(this);
             SkillList[1] = new BlitzAttackSkill();

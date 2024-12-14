@@ -22,15 +22,24 @@ namespace BattleArenaServer.Services
 
         public int EndTurn()
         {
+            // Сначала применим все эффекты в конце хода каждого героя команды
             foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam))
             {
-                //Effect? modifyAP = hero.EffectList.FirstOrDefault(x => x.Name == "Adrenalin");
-                //hero.AP = modifyAP == null ? 4 : 4 + modifyAP.value;
-                hero.AP = 4;
-
                 AttackService.EndTurnAuraAction(hero);
-                DecreaseSkillCooldawn(hero);
                 EndTurnStatusApplyEffect(hero);
+            }
+            // Также пробегаемся по объектам, которые тоже могут иметь ауры
+            foreach (var hero in GameData._solidObstacles.Where(x => x.Team == GameData.activeTeam))
+            {
+                AttackService.EndTurnAuraAction(hero);
+                EndTurnStatusApplyEffect(hero);
+            }
+
+            // Затем начнем уменьшать кд, срок действия эффекта и время жизни созданных объектов
+            foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam))
+            {
+                hero.AP = 4;
+                DecreaseSkillCooldawn(hero);
                 DecreaseLifeTimeObstacle(hero);
 
                 DecreaseStatusDuration(hero.Id);
@@ -131,9 +140,14 @@ namespace BattleArenaServer.Services
                     {
                         Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == obst.HexId);
                         if (hex != null)
+                        {
+                            obst.endLifeEffect(hex);
                             hex.RemoveHero();
+                        }
+
                         AttackService.ContinuousAuraAction();
                         removeObst.Add(obst);
+
                     }
                 }
             }

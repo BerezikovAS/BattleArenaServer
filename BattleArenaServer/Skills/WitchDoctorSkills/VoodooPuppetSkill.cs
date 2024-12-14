@@ -1,29 +1,24 @@
 ﻿using BattleArenaServer.Effects.Debuffs;
 using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
-using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
 
-namespace BattleArenaServer.Skills.AssassinSkills
+namespace BattleArenaServer.Skills.WitchDoctorSkills
 {
-    public class RuptureSkill : Skill
+    public class VoodooPuppetSkill : Skill
     {
-        int ruptureDmg = 45;
-        int ruptureDuration = 2;
-        public RuptureSkill()
+        public VoodooPuppetSkill()
         {
-            dmg = 150;
-            name = "Rupture";
-            title = $"Наносит {dmg} физического урона и подрезает сухожилие жертвы. Передвигаясь, цель будет терять {ruptureDmg} ХП за пройденный гекс.";
-            titleUpg = "Негативный эффект длится 2 хода.";
+            name = "Voodoo Puppet";
+            title = $"Завораживает врага, отчего тот будет повторять Ваши движения.";
+            titleUpg = "+1 к дальности. Способность не тратит ОД.";
             coolDown = 4;
             coolDownNow = 0;
-            requireAP = 2;
+            requireAP = 1;
+            range = 2;
             nonTarget = false;
-            range = 1;
             area = Consts.SpellArea.EnemyTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
-            dmgType = Consts.DamageType.Physical;
         }
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
@@ -35,12 +30,10 @@ namespace BattleArenaServer.Skills.AssassinSkills
 
             if (requestData.Caster != null && requestData.Target != null)
             {
-                RuptureDebuff ruptureDebuff = new RuptureDebuff(requestData.Caster.Id, ruptureDmg, ruptureDuration);
-                requestData.Target.AddEffect(ruptureDebuff);
-                ruptureDebuff.ApplyEffect(requestData.Target);
+                VoodooPuppetDebuff voodooPuppetDebuff = new VoodooPuppetDebuff(requestData.Caster.Id, 0, 1);
+                requestData.Target.AddEffect(voodooPuppetDebuff);
+                voodooPuppetDebuff.ApplyEffect(requestData.Target);
 
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
-                
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;
                 return true;
@@ -54,7 +47,10 @@ namespace BattleArenaServer.Skills.AssassinSkills
             if (!upgraded)
             {
                 upgraded = true;
-                ruptureDuration += 1;
+                range += 1;
+                stats.range += 1;
+                requireAP = 0;
+                stats.requireAP = 0;
                 return true;
             }
             return false;

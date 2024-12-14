@@ -27,9 +27,12 @@ namespace BattleArenaServer.Effects.Debuffs
 
         private void Rupture(Hero hero, Hex? currentHex, Hex targetHex)
         {
-            Hero? attacker = GameData._heroes.FirstOrDefault(x => x.Id == idCaster);
-            int distance = currentHex.Distance(targetHex);
-            AttackService.SetDamage(attacker, hero, distance * value, Consts.DamageType.Pure);
+            if (currentHex != null)
+            {
+                Hero? attacker = GameData._heroes.FirstOrDefault(x => x.Id == idCaster);
+                int distance = currentHex.Distance(targetHex);
+                AttackService.SetDamage(attacker, hero, distance * value, Consts.DamageType.Pure);
+            }
         }
     }
 }

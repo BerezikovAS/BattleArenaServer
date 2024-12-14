@@ -12,8 +12,8 @@ namespace BattleArenaServer.Skills.AssassinSkills
         public AdrenalinSkill()
         {
             name = "Adrenalin";
-            title = $"Мгновенно даёт +{extraAP} дополнительных очков действия. Однако в следующий ход у Вас будет на {extraAP} ОД меньше.";
-            titleUpg = $"Также восстанавливает {heal} ХП.";
+            title = $"Мгновенно даёт +{extraAP} дополнительных очков действия и восстанавливает {heal} ХП. Однако в следующий ход у Вас будет на {extraAP} ОД меньше.";
+            titleUpg = $"+40 к восстановлению ХП. -1 к перезарядке.";
             coolDown = 4;
             coolDownNow = 0;
             requireAP = 0;
@@ -51,7 +51,10 @@ namespace BattleArenaServer.Skills.AssassinSkills
             if (!upgraded)
             {
                 upgraded = true;
-                title = title + " " + titleUpg;
+                heal += 40;
+                coolDown -= 1;
+                stats.coolDown -= 1;
+                title = $"Мгновенно даёт +{extraAP} дополнительных очков действия и восстанавливает {heal} ХП. Однако в следующий ход у Вас будет на {extraAP} ОД меньше.";
                 return true;
             }
             return false;

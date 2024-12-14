@@ -9,7 +9,8 @@ namespace BattleArenaServer.CastCheckers
 
         public bool Check(RequestData requestData, Skill skill)
         {
-            if (requestData.Caster?.Team != requestData.Target?.Team && requestData.Target?.EffectList.FirstOrDefault(x => x.Name == "Smoke") == null)
+            // Если кастуем в союзника или у цели не в смоке, пропускаем дальше
+            if (requestData.Caster?.Team == requestData.Target?.Team || requestData.Target?.EffectList.FirstOrDefault(x => x.Name == "Smoke") == null)
                 return nextChecker.Check(requestData, skill);
             return false;
         }

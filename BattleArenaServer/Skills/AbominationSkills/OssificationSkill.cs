@@ -6,12 +6,12 @@ namespace BattleArenaServer.Skills.AbominationSkills
 {
     public class OssificationSkill : Skill
     {
-        int maxHPreduction = 100;
+        int maxHPreduction = 60;
         public OssificationSkill()
         {
             name = "Ossification";
             title = $"Уменьшает максимальный запас ХП на {maxHPreduction}, чтобы навсегда получить +1 к броне и сопротивлению и +7 к урону.";
-            titleUpg = "ХП уменьшается на 50 и способность не тратит ОД.";
+            titleUpg = "ХП уменьшается на 30 и способность не тратит ОД.";
             coolDown = 1;
             coolDownNow = 0;
             requireAP = 1;
@@ -50,7 +50,7 @@ namespace BattleArenaServer.Skills.AbominationSkills
             {
                 upgraded = true;
                 requireAP = 0;
-                maxHPreduction -= 50;
+                maxHPreduction = 30;
                 title = $"Уменьшает максимальный запас ХП на {maxHPreduction}, чтобы навсегда получить +1 к броне и сопротивлению и +7 к урону.";
                 return true;
             }
