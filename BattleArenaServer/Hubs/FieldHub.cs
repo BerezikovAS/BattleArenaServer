@@ -1,5 +1,6 @@
 ﻿using BattleArenaServer.Models;
 using BattleArenaServer.Models.Heroes;
+using BattleArenaServer.Models.Obstacles;
 using BattleArenaServer.Services;
 using BattleArenaServer.Skills.WitchDoctorSkills;
 using Microsoft.AspNetCore.SignalR;
@@ -216,7 +217,10 @@ namespace BattleArenaServer.Hubs
 
         public async Task SetActiveHero(int idActiveHero)
         {
-            GameData.idActiveHero = idActiveHero;
+            Hero? hero = GameData._heroes.FirstOrDefault(x => x.Id == idActiveHero);
+            if (hero != null && hero is not SolidObstacle)
+                GameData.idActiveHero = idActiveHero;
+
             try { await this.Clients.All.SendAsync("GetActiveHero", GameData.idActiveHero); }
             catch { }
         }
