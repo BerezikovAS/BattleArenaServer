@@ -1,5 +1,6 @@
 const hubConnection = new signalR.HubConnectionBuilder()
-    .withUrl("/fieldhub")
+    .withUrl("http://localhost:8080/fieldhub", { withCredentials: false, mode: 'no-cors' })
+    //.withUrl("http://51.250.44.177:8080/fieldhub", { withCredentials: false, mode: 'no-cors' }) //ip виртуалки
     .build();
 
 hubConnection.on("GetField", function (_field) {
@@ -112,7 +113,7 @@ async function feelField(_field) {
             teamImg.setAttribute("style", "position: absolute; height: " + getPercentHP(element.hero) + "px; width: 100px;");
 
             const heroImg = document.createElement("img");
-            heroImg.setAttribute("src", element.hero.name + ".png");
+            heroImg.setAttribute("src", "heroes/" + element.hero.name + ".png");
             heroImg.setAttribute("style", "position: absolute; width: 80px; padding-left: 10px; padding-top: 16px;");
             if(element.hero.type == 1) {
                 heroImg.setAttribute("src", "obstacles/" + element.hero.name + ".png");
@@ -156,6 +157,7 @@ async function feelField(_field) {
 
     hero = heroes[idActiveHero];
 
+    console.log(heroes);
 
     enableUpgrades(hero);
     //btnEndTurn.innerText = hero.ap;

@@ -17,6 +17,15 @@ namespace BattleArenaServer.Services
 
         public int GetActiveHero()
         {
+            Hero? activeHero = GameData._heroes.FirstOrDefault(x => x.Id == GameData.idActiveHero && x.HP > 0);
+            if (activeHero == null)
+            {
+                activeHero = GameData._heroes.FirstOrDefault(x => x.Team == GameData.activeTeam && x.HP > 0);
+                if(activeHero != null)
+                    GameData.idActiveHero = activeHero.Id;
+                else
+                    GameData.idActiveHero = GameData._heroes.FirstOrDefault(x => x.HP > 0).Id;
+            }
             return GameData.idActiveHero;
         }
 

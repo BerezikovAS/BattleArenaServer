@@ -13,6 +13,13 @@ namespace BattleArenaServer.Controllers
             _timingService = timingService;
         }
 
+        // GET: TimingController/HealthCheck
+        [HttpGet]
+        public ActionResult<string> HealthCheck()
+        {
+            return "Everything is good!";
+        }
+
         // GET: TimingController/EndTurn
         [HttpGet]
         public int EndTurn()

@@ -8,6 +8,8 @@ namespace BattleArenaServer.Services
 {
     public static class AttackService
     {
+        public static int dealedDmg = 0;
+
         public static bool SetDamage(Hero? attacker, Hero defender, int dmg, DamageType damageType)
         {
             if (defender != null)
@@ -61,6 +63,9 @@ namespace BattleArenaServer.Services
             dmg += defender.modifierAppliedDamage(attacker, defender, dmg);
 
             defender.HP -= dmg;
+            dealedDmg += dmg;
+
+            defender.afterReceiveDmg(defender, attacker, dmg);
 
             if (defender.HP <= 0)
             {

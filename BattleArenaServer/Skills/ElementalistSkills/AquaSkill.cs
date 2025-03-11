@@ -63,7 +63,7 @@ namespace BattleArenaServer.Skills.ElementalistSkills
             {
                 upgraded = true;
                 range += 1;
-                radius += 1;
+                stats.range += 1;
                 reduceResist += 2;
                 return true;
             }
