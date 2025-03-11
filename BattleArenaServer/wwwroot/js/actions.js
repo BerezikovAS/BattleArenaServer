@@ -42,6 +42,13 @@ function endTurn() {
         });
 }
 
+function recreateGame() {
+    hubConnection.invoke("RecreateGame")
+        .catch(function (err) {
+            return console.error(err.toString());
+        });
+}
+
 function getField() {
     hubConnection.invoke("GetField")
         .catch(function (err) {

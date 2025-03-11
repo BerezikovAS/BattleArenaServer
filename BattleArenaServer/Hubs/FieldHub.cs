@@ -10,6 +10,7 @@ namespace BattleArenaServer.Hubs
     public class FieldHub : Hub
     {
         TimingService timingService = new TimingService();
+        HttpContext httpContext;
         public FieldHub()
         {
             CreateGameField();
@@ -44,6 +45,7 @@ namespace BattleArenaServer.Hubs
             heroes.Add(new ChaosHero(0, ""));
             heroes.Add(new ElementalistHero(0, ""));
             heroes.Add(new CultistHero(0, ""));
+            heroes.Add(new NecromancerHero(0, ""));
 
             string team = "red";
             Random rnd = new Random();
@@ -119,13 +121,6 @@ namespace BattleArenaServer.Hubs
             }
         }
 
-        
-
-        
-
-        
-
-        
 
 
 
@@ -133,6 +128,24 @@ namespace BattleArenaServer.Hubs
 
 
 
+
+
+
+
+
+
+        public async Task RecreateGame()
+        {
+            try
+            {
+                GameData.ClearAllObjects();
+
+                CreateGameField();
+                CreateHeroList();
+                await this.Clients.All.SendAsync("GetField", GameData._hexes);
+            }
+            catch { }
+        }
 
         public async Task GetField()
         {
@@ -311,11 +324,16 @@ namespace BattleArenaServer.Hubs
                             spellArea.Add(hex.ID);
                     }
                     break;
+                case Consts.SpellArea.SmallConus:
+                    if (dist <= spellRange)
+                    {
+                        foreach (var hex in UtilityService.GetHexesSmallCone(GameData._hexes[caster], GameData._hexes[target], skill.radius))
+                            spellArea.Add(hex.ID);
+                    }
+                    break;
             }
 
             return spellArea.ToArray();
         }
-
-
     }
 }

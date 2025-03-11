@@ -1,0 +1,10 @@
+﻿version: '3.4'
+
+services:
+  web:
+    image: baserver_container
+    build:
+        context: .
+        dockerfile: Dockerfile
+    ports:
+        - "8080:80"

@@ -14,9 +14,9 @@ namespace BattleArenaServer.Skills.GeomantSkills
         public StalaktiteSkill()
         {
             name = "Stalaktite";
-            dmg = 80;
+            dmg = 60;
             title = $"Из-под земли вырывается каменный шпиль, нанося {dmg} магического урона врагам вокруг. Шпиль блокирует перемещение, имеет {stalaktiteHP} ХП и существует {lifeTime - 1} хода.";
-            titleUpg = "+40 к урону, +40 к ХП.";
+            titleUpg = "+20 к урону, +40 к ХП.";
             coolDown = 1;
             coolDownNow = 0;
             requireAP = 2;
@@ -41,7 +41,6 @@ namespace BattleArenaServer.Skills.GeomantSkills
                 StalaktiteObstacle stalaktiteObstacle = new StalaktiteObstacle(Id, requestData.Caster.Id, requestData.TargetHex.ID, stalaktiteHP, requestData.Caster.Team, lifeTime);
                 requestData.TargetHex.SetHero(stalaktiteObstacle);
                 GameData._solidObstacles.Add(stalaktiteObstacle);
-                //GameData._heroes.Add(stalaktiteObstacle);
 
                 //Наносим урон врагам вокруг него
                 foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, 1))
@@ -65,7 +64,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
             if (!upgraded)
             {
                 upgraded = true;
-                dmg += 40;
+                dmg += 20;
                 stalaktiteHP += 40;
                 title = $"Из-под земли вырывается каменный шпиль, нанося {dmg} магического урона врагам вокруг. Шпиль блокирует перемещение, имеет {stalaktiteHP} ХП и существует {lifeTime - 1} хода.";
                 return true;

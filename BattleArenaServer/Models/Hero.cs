@@ -67,6 +67,9 @@ namespace BattleArenaServer.Models
         public delegate void AfterMove(Hero hero, Hex? currentHex, Hex targetHex);
         public AfterMove afterMove = delegate { };
 
+        public delegate void AfterReceiveDmg(Hero hero, Hero? attacker, int dmg);
+        public AfterReceiveDmg afterReceiveDmg = delegate { };
+
         public delegate void HealDelegate(int heal);
         public HealDelegate Heal = delegate { };
 

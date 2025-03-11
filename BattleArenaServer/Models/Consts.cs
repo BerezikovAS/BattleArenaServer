@@ -21,7 +21,8 @@
             Line,
             Conus,
             HeroTarget,
-            HeroNotSelfTarget
+            HeroNotSelfTarget,
+            SmallConus
         }
 
         public enum DamageType

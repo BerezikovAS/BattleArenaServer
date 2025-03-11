@@ -90,6 +90,49 @@ namespace BattleArenaServer.Services
             return hexesCone;
         }
 
+        public static List<Hex> GetHexesSmallCone(Hex caster, Hex target, int radius)
+        {
+            List<Hex> hexesCone = new List<Hex>();
+
+            //Найдем два направления
+            if (caster.Distance(target) <= radius && IsOnLine(caster, target))
+            {
+                //Находим направление ветки по прямой от нас
+                Hex dirFront = GetDirection(caster, target);
+
+                //Находим куда двигаться по правой ветке.
+                Hex dirRight = Consts.directions.FirstOrDefault(x => x.IsThisCoord(dirFront.COORD));
+                int indDirRight = Consts.directions.IndexOf(dirRight) + 1 > 5 ? 0 : Consts.directions.IndexOf(dirRight) + 1;
+                dirRight = Consts.directions[indDirRight];
+
+                Hex dirClockwise2 = GetDirection(dirFront, dirRight);
+
+                for (int i = 1; i <= radius; i++)
+                {
+                    int[] helper = AddDirection(caster.COORD, dirRight.COORD, i);
+                    Hex? hexHelper = GameData._hexes.FirstOrDefault(x => x.IsThisCoord(helper));
+                    if (hexHelper != null)
+                        hexesCone.Add(hexHelper);
+
+                    //клоквайсы могут не попадать в поле, из-за чего становятся нуллами!!!!
+
+                    int[] helper2 = AddDirection(caster.COORD, dirFront.COORD, i);
+                    Hex? clocwise2 = GameData._hexes.FirstOrDefault(x => x.IsThisCoord(helper2));
+                    if (clocwise2 != null)
+                        hexesCone.Add(clocwise2);
+
+                    for (int j = 1; j < i; j++)
+                    {
+                        Hex? h2 = GameData._hexes.FirstOrDefault(x => x.IsThisCoord(AddDirection(helper2, dirClockwise2.COORD, j)));
+                        if (h2 != null)
+                            hexesCone.Add(h2);
+                    }
+                }
+            }
+
+            return hexesCone;
+        }
+
         public static List<Hex> GetHexesOneLine(Hex caster, Hex target, int radius = 100)
         {
             List<Hex> hexesLines = new List<Hex>();

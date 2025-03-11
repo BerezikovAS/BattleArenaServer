@@ -79,7 +79,7 @@ function feelAP(_ap) {
     iconDiv.setAttribute("style", "margin-bottom: 20px; background-color: " + _color);
 
     const icon = document.getElementById("hero_icon_img");
-    icon.setAttribute("src", _hero.name + ".png");
+    icon.setAttribute("src", "heroes/" + _hero.name + ".png");
 
     const hp = document.getElementById("heroinfo_hpcur");
     hp.innerText = _hero.hp + " / " + _hero.maxHP;
@@ -208,7 +208,7 @@ function feelHeroInfo(_hex, _hexId) {
 
         const icon = document.getElementById("heroinfo_icon_img");
         if (_hero.type == 0)
-            icon.setAttribute("src", _hero.name + ".png");
+            icon.setAttribute("src", "heroes/" + _hero.name + ".png");
         else
             icon.setAttribute("src", "obstacles/" + _hero.name + ".png");
 

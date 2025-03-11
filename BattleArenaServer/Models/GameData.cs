@@ -18,5 +18,15 @@ namespace BattleArenaServer.Models
 
         public static List<FillableObstacle> _surfaces = new List<FillableObstacle>();
 
+        public static void ClearAllObjects()
+        {
+            activeTeam = "red";
+            _heroes.Clear();
+            _hexes.Clear();
+            _obstacles.Clear();
+            _surfaces.Clear();
+            _solidObstacles.Clear();
+        }
+
     }
 }

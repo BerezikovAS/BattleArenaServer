@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  battlearenaserver:
+    image: ${DOCKER_REGISTRY-}battlearenaserver
+    build:
+      context: .
+      dockerfile: BattleArenaServer/Dockerfile
