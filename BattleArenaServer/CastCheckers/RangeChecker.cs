@@ -9,7 +9,7 @@ namespace BattleArenaServer.CastCheckers
 
         public bool Check(RequestData requestData, Skill skill)
         {
-            int range = requestData.Caster?.EffectList.FirstOrDefault(x => x.Name == "Blind") == null ? skill.range : 1;
+            int range = requestData.Caster?.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Blind)) == null ? skill.range : 1;
 
             if (requestData.CasterHex != null && requestData.TargetHex != null && range < requestData.CasterHex.Distance(requestData.TargetHex))
                 return false;

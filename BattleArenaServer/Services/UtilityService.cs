@@ -48,7 +48,6 @@ namespace BattleArenaServer.Services
                 int indDirLeft = Consts.directions.IndexOf(dirLeft) - 1 < 0 ? 5 : Consts.directions.IndexOf(dirLeft) - 1;
                 dirLeft = Consts.directions[indDirLeft];
 
-
                 //Находим куда двигаться по правой ветке.
                 Hex dirRight = Consts.directions.FirstOrDefault(x => x.IsThisCoord(dirFront.COORD));
                 int indDirRight= Consts.directions.IndexOf(dirRight) + 1 > 5 ? 0 : Consts.directions.IndexOf(dirRight) + 1;
@@ -133,6 +132,61 @@ namespace BattleArenaServer.Services
             return hexesCone;
         }
 
+        public static List<Hex> GetHexesWideLine(Hex caster, Hex target, int radius)
+        {
+            List<Hex> hexesLines = new List<Hex>();
+            if (caster != null && target != null)
+            {
+                if (IsOnLine(caster, target))
+                {
+                    Hex direction = GetDirection(caster, target);
+
+                    //Находим рядомстоящий гекс по прямой и соседние от нас и него. Это будут начала боковых линий
+                    Hex? frontHex = GetOneHexOnDirection(caster, target, 1);
+                    if (frontHex == null)
+                        return hexesLines;
+
+                    List<Hex> adjustHexes = GameData._hexes.FindAll(x => x.Distance(frontHex) == 1 && x.Distance(caster) == 1);
+                    adjustHexes.Add(frontHex);
+
+                    foreach (Hex hex in adjustHexes)
+                    {
+                        bool endOfField = false;
+                        int counter = 0;
+
+                        while (counter < radius && !endOfField)
+                        {
+                            Hex? findHex = GameData._hexes.FirstOrDefault(x => x.COORD[0] == hex.COORD[0] + direction.COORD[0] * counter
+                                & x.COORD[1] == hex.COORD[1] + direction.COORD[1] * counter
+                                & x.COORD[2] == hex.COORD[2] + direction.COORD[2] * counter);
+                            if (findHex != null)
+                                hexesLines.Add(findHex);
+                            else
+                                endOfField = true;
+                            counter++;
+                        }
+                    }
+                }
+            }
+            return hexesLines;
+        }
+
+        public static Hex? GetRandomAdjacentHex(Hex targetHex)
+        {
+            List<Hex> freeHexes = new List<Hex>();
+
+            foreach (Hex hex in GetHexesRadius(targetHex, 1))
+            {
+                if (hex.IsFree())
+                    freeHexes.Add(hex);
+            }
+
+            if (freeHexes.Count == 0)
+                return null;
+            Random rnd = new Random();
+            return freeHexes[rnd.Next(0, freeHexes.Count)];
+        }
+
         public static List<Hex> GetHexesOneLine(Hex caster, Hex target, int radius = 100)
         {
             List<Hex> hexesLines = new List<Hex>();
@@ -157,7 +211,6 @@ namespace BattleArenaServer.Services
                     }
                 }
             }
-            //TODO починить
             return hexesLines;
         }
 

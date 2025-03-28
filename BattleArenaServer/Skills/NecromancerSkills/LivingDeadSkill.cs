@@ -41,7 +41,7 @@ namespace BattleArenaServer.Skills.NecromancerSkills
             {
                 //Вызываем скелета
                 int Id = GameData._hexes.Max(x => x.HERO != null ? x.HERO.Id : 0) + 1;
-                SkeletonSummon skeleton = new SkeletonSummon(Id, requestData.Caster.Team, skeletonHP, armor, resist, attackRadius, dmg);
+                SkeletonSummon skeleton = new SkeletonSummon(Id, requestData.Caster.Team, skeletonHP, armor, resist, attackRadius, dmg, requestData.Caster.Id, lifeTime);
                 requestData.TargetHex.SetHero(skeleton);
                 GameData._heroes.Add(skeleton);
 

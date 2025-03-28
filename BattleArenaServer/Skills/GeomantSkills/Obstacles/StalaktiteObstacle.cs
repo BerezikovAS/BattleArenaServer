@@ -10,11 +10,8 @@ namespace BattleArenaServer.Skills.GeomantSkills.Obstacles
             Name = "Stalaktite";
             HexId = hexId;
             MaxHP = HP = hp;
-        }
 
-        public override void AddEffect(Effect effect)
-        {
-
+            this.AddEffect -= this.BaseAddEffect;
         }
     }
 }

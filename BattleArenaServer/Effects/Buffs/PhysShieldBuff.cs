@@ -12,6 +12,8 @@ namespace BattleArenaServer.Effects.Buffs
             value = _value;
             duration = _duration;
             description = $"Щит поглощает {value} физического урона";
+
+            effectTags.Add(Consts.EffectTag.PhysShield);
         }
 
         public override void ApplyEffect(Hero _hero)
@@ -24,7 +26,7 @@ namespace BattleArenaServer.Effects.Buffs
 
         }
 
-        public void RefreshDescr()
+        public override void RefreshDescr()
         {
             description = $"Щит поглощает {value} физического урона";
         }

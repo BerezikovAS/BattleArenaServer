@@ -12,6 +12,8 @@ namespace BattleArenaServer.Effects.Buffs
             value = _value;
             duration = _duration;
             description = $"Броня увеличена на {value}. Невозможно выбрать целью атаки или заклинания.";
+
+            effectTags.Add(Consts.EffectTag.NonTargetable);
         }
 
         public override void ApplyEffect(Hero _hero)

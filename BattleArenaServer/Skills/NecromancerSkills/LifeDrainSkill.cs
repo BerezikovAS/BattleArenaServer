@@ -36,7 +36,7 @@ namespace BattleArenaServer.Skills.NecromancerSkills
             if (requestData.Caster != null && requestData.TargetHex != null && requestData.CasterHex != null)
             {
                 AttackService.dealedDmg = 0;
-                foreach (var n in UtilityService.GetHexesCone(requestData.CasterHex, requestData.TargetHex, radius))
+                foreach (var n in UtilityService.GetHexesSmallCone(requestData.CasterHex, requestData.TargetHex, radius))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                     {

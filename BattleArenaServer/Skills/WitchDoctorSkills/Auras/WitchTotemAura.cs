@@ -20,7 +20,7 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills.Auras
         {
             if (source.Team != target.Team && target.type != Consts.HeroType.Obstacle)
             {
-                Effect? totemCharges = source.EffectList.FirstOrDefault(x => x.Name == "TotemCharge");
+                Effect? totemCharges = source.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.TotemCharge));
                 if (totemCharges != null)
                 {
                     totemCharges.ApplyEffect(target);

@@ -49,11 +49,9 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
                         {
                             ArmorBuff armorBuff = new ArmorBuff(requestData.Caster.Id, debuffCount, 2);
                             hex.HERO.AddEffect(armorBuff);
-                            armorBuff.ApplyEffect(hex.HERO);
 
                             ResistBuff resistBuff = new ResistBuff(requestData.Caster.Id, debuffCount, 2);
                             hex.HERO.AddEffect(resistBuff);
-                            resistBuff.ApplyEffect(hex.HERO);
                         }
 
                         foreach (var effect in debuffs)

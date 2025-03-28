@@ -215,4 +215,21 @@ div.AP_container {
     margin-left: 20px;
 }
 
+button.TeamPick {
+    background-color: rgb(151, 248, 142);
+    border-radius: 10px;
+    width: 360px;
+    height: 100px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    button.TeamPick.Red {
+        background-color: red;
+    }
+
+    button.TeamPick.Blue {
+        background-color: rgb(0, 99, 248);
+    }
+
   

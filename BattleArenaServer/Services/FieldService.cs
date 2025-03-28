@@ -26,7 +26,7 @@ namespace BattleArenaServer.Services
             List<int> blueCoords = [14, 29, 44];
 
             heroes.Add(new KnightHero(0, ""));
-            heroes.Add(new CrossbowmanHero(0, ""));
+            heroes.Add(new ArcherHero(0, ""));
             heroes.Add(new BerserkerHero(0, ""));
             heroes.Add(new PriestHero(0, ""));
             heroes.Add(new AeroturgHero(0, ""));
@@ -147,14 +147,14 @@ namespace BattleArenaServer.Services
                 Hero attacker = requestData.Caster;
                 Hero defender = requestData.Target;
 
-                int range = attacker.EffectList.FirstOrDefault(x => x.Name == "Blind") == null ? attacker.AttackRadius + attacker.StatsEffect.AttackRadius : 1;
+                int range = attacker.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Blind)) == null ? attacker.AttackRadius + attacker.StatsEffect.AttackRadius : 1;
 
                 if (requestData.CasterHex.Distance(requestData.TargetHex) > range || attacker.AP < attacker.APtoAttack)
                     return new List<Hex>();
 
                 attacker.AP -= attacker.APtoAttack;
                 // К урону добавляем дополнительный от пассивок и эффектов
-                int dmg = attacker.Dmg + attacker.passiveAttackDamage(attacker, defender) + attacker.StatsEffect.Dmg;
+                int dmg = attacker.Dmg + attacker.GetPassiveAttackDamage(attacker, defender) + attacker.StatsEffect.Dmg;
 
                 // Эффекты перед атакой
                 attacker.beforeAttack(attacker, defender, dmg);
@@ -170,7 +170,7 @@ namespace BattleArenaServer.Services
         public bool SpellCast(int targer_pos, int cur_pos, int skill)
         {
             RequestData requestData = new RequestData(cur_pos, targer_pos);
-            if (requestData.Caster != null && requestData.Caster.EffectList.FirstOrDefault(x => x.Name == "Silence") == null)
+            if (requestData.Caster != null && requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Silence)) == null)
             {
                 requestData.Caster.beforeSpellCast(requestData.Caster, requestData.Target, requestData.Caster.SkillList[skill]);
                 // Кастуем))

@@ -37,7 +37,6 @@ namespace BattleArenaServer.Skills.NecromancerSkills
                 AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
                 ChainOfPainDebuff chainOfPainDebuff = new ChainOfPainDebuff(requestData.Caster.Id, percentTransfer, 2);
                 requestData.Target.AddEffect(chainOfPainDebuff);
-                chainOfPainDebuff.ApplyEffect(requestData.Target);
 
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;

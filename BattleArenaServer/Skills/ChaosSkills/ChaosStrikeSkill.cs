@@ -13,7 +13,7 @@ namespace BattleArenaServer.Skills.ChaosSkills
             name = "Chaos Strike";
             dmg = 165;
             title = $"Атакуйте врага, нанеся {dmg} урона случайного типа.";
-            titleUpg = $"Дополнительный урон от 0 до {extraDmg}.";
+            titleUpg = $"Дополнительный урон от 0 до 80.";
             coolDown = 2;
             coolDownNow = 0;
             requireAP = 2;

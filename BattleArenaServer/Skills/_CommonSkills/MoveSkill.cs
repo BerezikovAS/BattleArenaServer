@@ -26,7 +26,7 @@ namespace BattleArenaServer.Skills._CommonSkills
 
         public override bool Cast(RequestData requestData)
         {
-            Effect haste = requestData.Caster.EffectList.FirstOrDefault(x => x.Name == "Haste");
+            Effect? haste = requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Haste));
             if (haste != null)
             {
                 stats.requireAP = requireAP;

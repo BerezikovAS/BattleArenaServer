@@ -45,13 +45,11 @@ namespace BattleArenaServer.Skills.AeroturgSkills
                 {
                     ArmorDebuff armorDebuff = new ArmorDebuff(requestData.Caster.Id, extraArmor, 2);
                     requestData.Target.AddEffect(armorDebuff);
-                    armorDebuff.ApplyEffect(requestData.Target);
                 }
                 else
                 {
                     ArmorBuff armorBuff = new ArmorBuff(requestData.Caster.Id, extraArmor, 2);
                     requestData.Target.AddEffect(armorBuff);
-                    armorBuff.ApplyEffect(requestData.Target);
                 }
                 AttackService.ContinuousAuraAction();
                 requestData.Caster.AP -= requireAP;

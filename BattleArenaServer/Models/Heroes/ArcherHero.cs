@@ -2,11 +2,11 @@
 
 namespace BattleArenaServer.Models.Heroes
 {
-    public class CrossbowmanHero : Hero
+    public class ArcherHero : Hero
     {
-        public CrossbowmanHero(int Id, string Team) : base(Id, Team)
+        public ArcherHero(int Id, string Team) : base(Id, Team)
         {
-            Name = "Crossbowman";
+            Name = "Archer";
 
             MaxHP = HP = 875;
             Armor = 3;

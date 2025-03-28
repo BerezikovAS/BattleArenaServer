@@ -60,7 +60,6 @@ namespace BattleArenaServer.Skills.ChaosSkills
                     {
                         SlowDebuff slowDebuff = new SlowDebuff(requestData.Caster.Id, 0, 2);
                         hero.AddEffect(slowDebuff);
-                        slowDebuff.ApplyEffect(hero);
 
                         if (upgraded)
                             AttackService.SetDamage(requestData.Caster, hero, dmg, dmgType);

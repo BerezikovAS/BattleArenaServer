@@ -22,7 +22,8 @@
             Conus,
             HeroTarget,
             HeroNotSelfTarget,
-            SmallConus
+            SmallConus,
+            WideLine
         }
 
         public enum DamageType
@@ -49,7 +50,8 @@
         public enum HeroType
         {
             Hero,
-            Obstacle
+            Obstacle,
+            Summon
         }
 
         public enum SkillType
@@ -63,6 +65,22 @@
             Buff,
             Debuff,
             Unique
+        }
+
+        public enum EffectTag
+        {
+            Root,
+            Silence,
+            PhysShield,
+            MagicShield,
+            DmgShield,
+            Haste,
+            NonTargetable,
+            Blind,
+            Liquidation,
+            Ritual,
+            TotemCharge,
+            Disarm
         }
     }
 }

@@ -91,6 +91,18 @@ function feelAP(_ap) {
     const hpbarhp = document.getElementById("hpbarcur");
     hpbarhp.setAttribute("style", "margin-top: 14px; background-color: " + _excolor);
 
+    const dmg = document.getElementById("active_heroinfo_damage");
+    dmg.innerText = _hero.dmg + _hero.statsEffect.dmg;
+
+    const range = document.getElementById("active_heroinfo_range");
+    range.innerText = _hero.attackRadius + _hero.statsEffect.attackRadius;
+
+    const armor = document.getElementById("active_heroinfo_armor");
+    armor.innerText = _hero.armor + _hero.statsEffect.armor;
+
+    const resist = document.getElementById("active_heroinfo_resist");
+    resist.innerText = _hero.resist + _hero.statsEffect.resist;
+
     fillEffectsOnHeroInfo(_hero, "statusbar");
 }
 
@@ -160,17 +172,28 @@ function enableSpells(_hero) {
 
 function fillPercentResist(isShow)
 {
+    var _hero = heroes[idActiveHero];
     const armor = document.getElementById("heroinfo_armor");
     const resist = document.getElementById("heroinfo_resist");
+
+    const active_armor = document.getElementById("active_heroinfo_armor");
+    const active_resist = document.getElementById("active_heroinfo_resist");
+
     if (isShow)
     {
         armor.innerText = getPercentResist(heroInfo.armor + heroInfo.statsEffect.armor);
         resist.innerText = getPercentResist(heroInfo.resist + heroInfo.statsEffect.resist);
+
+        active_armor.innerText = getPercentResist(_hero.armor + _hero.statsEffect.armor);
+        active_resist.innerText = getPercentResist(_hero.resist + _hero.statsEffect.resist);
     }
     else
     {
         armor.innerText = heroInfo.armor + heroInfo.statsEffect.armor;
         resist.innerText = heroInfo.resist + heroInfo.statsEffect.resist;
+
+        active_armor.innerText = _hero.armor + _hero.statsEffect.armor;
+        active_resist.innerText = _hero.resist + _hero.statsEffect.resist;
     }
 }
 
@@ -207,10 +230,10 @@ function feelHeroInfo(_hex, _hexId) {
         iconDiv.setAttribute("style", "background-color: " + _color);
 
         const icon = document.getElementById("heroinfo_icon_img");
-        if (_hero.type == 0)
-            icon.setAttribute("src", "heroes/" + _hero.name + ".png");
-        else
+        if (_hero.type == 1)
             icon.setAttribute("src", "obstacles/" + _hero.name + ".png");
+        else
+            icon.setAttribute("src", "heroes/" + _hero.name + ".png");
 
         const dmg = document.getElementById("heroinfo_damage");
         dmg.innerText = _hero.dmg + _hero.statsEffect.dmg;
@@ -240,13 +263,16 @@ function feelHeroInfo(_hex, _hexId) {
             const cdInfo = document.getElementById("cdInfo" + i);
             const spInfo = document.getElementById("spInfo" + i);
             spell.innerText = skill.name;
-            //spInfo.title = skill.title;
             if (skill.skillType == 1) {
                 spell.setAttribute("class", "spell passive");
             }
             else if (skill.coolDownNow > 0) {
                 spell.setAttribute("class", "spell cooldawn");
                 cdInfo.innerText = skill.coolDownNow;
+            }
+            else if (skill.name === "X") {
+                spell.setAttribute("class", "spell cooldawn");
+                cdInfo.innerText = "";
             }
             else {
                 spell.setAttribute("class", "spell");

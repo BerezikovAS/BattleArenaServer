@@ -12,6 +12,8 @@ namespace BattleArenaServer.Effects.Debuffs
             value = _value;
             duration = _duration;
             description = "Персонаж не может использовать способности";
+
+            effectTags.Add(Consts.EffectTag.Silence);
         }
 
         public override void ApplyEffect(Hero _hero)

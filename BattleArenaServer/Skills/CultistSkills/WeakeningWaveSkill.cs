@@ -45,7 +45,6 @@ namespace BattleArenaServer.Skills.CultistSkills
                         {
                             WeaknessDebuff weaknessDebuff = new WeaknessDebuff(requestData.Caster.Id, percentDmgReduction, 2);
                             n.HERO.AddEffect(weaknessDebuff);
-                            weaknessDebuff.ApplyEffect(n.HERO);
                         }
                     }
                 }

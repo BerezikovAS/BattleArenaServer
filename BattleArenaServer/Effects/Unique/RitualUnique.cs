@@ -12,6 +12,8 @@ namespace BattleArenaServer.Effects.Buffs
             value = _value;
             duration = _duration;
             description = $"{value} очков ритуала.";
+
+            effectTags.Add(Consts.EffectTag.Ritual);
         }
 
         public override void ApplyEffect(Hero _hero)

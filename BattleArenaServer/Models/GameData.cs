@@ -8,6 +8,8 @@ namespace BattleArenaServer.Models
 
         public static string activeTeam;
 
+        public static UserTeamBindings userTeamBindings = new UserTeamBindings();
+
         public static List<Hex> _hexes = new List<Hex>();
 
         public static List<Hero> _heroes = new List<Hero>();

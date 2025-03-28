@@ -12,6 +12,7 @@ namespace BattleArenaServer.Models
             this.Id = Id;
             this.Team = Team;
             this.Heal += BaseHeal;
+            this.AddEffect += BaseAddEffect;
         }
 
         public int Id { get; set; }
@@ -35,31 +36,85 @@ namespace BattleArenaServer.Models
 
         public Consts.HeroType type { get; set; } = Consts.HeroType.Hero;
 
-        public Skill MoveSkill { get; } = new MoveSkill();
-        //public Skill MoveSkill { get; } = new MoveSkill();
+        public Skill MoveSkill { get; set; } = new MoveSkill();
 
         public StatsEffect StatsEffect { get; set; } = new StatsEffect();
 
+        #region Delegates
         public delegate bool ApplyDamage(Hero? attacker, Hero defender, int dmg);
         public ApplyDamage applyDamage = AttackService.ApplyDamage;
 
         public delegate int PassiveArmor(Hero? attacker, Hero defender);
         public PassiveArmor passiveArmor = delegate { return 0; };
 
+        public int GetPassiveArmor(Hero? attacker, Hero defender)
+        {
+            int value = 0;
+            var invocationList = passiveArmor.GetInvocationList();
+            foreach (var invocation in invocationList)
+                value += ((PassiveArmor)invocation)(attacker, defender);
+            return value;
+        }
+
         public delegate int PassiveResistance(Hero attacker, Hero defender);
         public PassiveResistance passiveResistance = delegate { return 0; };
+
+        public int GetPassiveResistance(Hero attacker, Hero defender)
+        {
+            int value = 0;
+            var invocationList = passiveResistance.GetInvocationList();
+            foreach (var invocation in invocationList)
+                value += ((PassiveResistance)invocation)(attacker, defender);
+            return value;
+        }
 
         public delegate int PassiveAttackDamage(Hero attacker, Hero? defender);
         public PassiveAttackDamage passiveAttackDamage = delegate { return 0; };
 
+        public int GetPassiveAttackDamage(Hero attacker, Hero? defender)
+        {
+            int value = 0;
+            var invocationList = passiveAttackDamage.GetInvocationList();
+            foreach (var invocation in invocationList)
+                value += ((PassiveAttackDamage)invocation)(attacker, defender);
+            return value;
+        }
+
+        public delegate int ArmorPiercing(Hero attacker, Hero defender);
+        public ArmorPiercing armorPiercing = delegate { return 0; };
+
+        public int GetArmorPiercing(Hero attacker, Hero defender)
+        {
+            int value = 0;
+            var invocationList = armorPiercing.GetInvocationList();
+            foreach (var invocation in invocationList)
+                value += ((ArmorPiercing)invocation)(attacker, defender);
+            return value;
+        }
+
         public delegate bool BeforeAttack(Hero attacker, Hero defender, int dmg);
         public BeforeAttack beforeAttack = delegate { return false; };
+
+        public delegate bool BeforeReceivedAttack(Hero attacker, Hero defender, int dmg);
+        public BeforeReceivedAttack beforeReceivedAttack = delegate { return false; };
 
         public delegate bool AfterAttack(Hero attacker, Hero defender, int dmg);
         public AfterAttack afterAttack = delegate { return false; };
 
+        public delegate bool AfterReceivedAttack(Hero attacker, Hero defender, int dmg);
+        public AfterReceivedAttack afterReceivedAttack = delegate { return false; };
+
         public delegate int ModifierAppliedDamage(Hero? attacker, Hero defender, int dmg);
         public ModifierAppliedDamage modifierAppliedDamage = delegate { return 0; };
+
+        public int GetModifierAppliedDamage(Hero? attacker, Hero defender, int dmg)
+        {
+            int value = 0;
+            var invocationList = modifierAppliedDamage.GetInvocationList();
+            foreach (var invocation in invocationList)
+                value += ((ModifierAppliedDamage)invocation)(attacker, defender, dmg);
+            return value;
+        }
 
         public delegate void BeforeSpellCast(Hero attacker, Hero? defender, Skill skill);
         public BeforeSpellCast beforeSpellCast = delegate { };
@@ -73,6 +128,10 @@ namespace BattleArenaServer.Models
         public delegate void HealDelegate(int heal);
         public HealDelegate Heal = delegate { };
 
+        public delegate void AddEffectDelegate(Effect effect);
+        public AddEffectDelegate AddEffect = delegate { };
+        #endregion
+
         public void BaseHeal(int heal)
         {
             HP += heal;
@@ -80,9 +139,21 @@ namespace BattleArenaServer.Models
                 HP = MaxHP;
         }
 
-        public virtual void AddEffect(Effect effect)
+        public void BaseAddEffect(Effect effect)
         {
             EffectList.Add(effect);
+            if (effect.effectType == Consts.EffectType.Instant)
+                effect.ApplyEffect(this);
+        }
+
+        public void ImmunAddEffect(Effect effect)
+        {
+            if (effect.type == Consts.StatusEffect.Debuff)
+                return;
+
+            EffectList.Add(effect);
+            if (effect.effectType == Consts.EffectType.Instant)
+                effect.ApplyEffect(this);
         }
 
         public List<Skill> SkillList { get; set; } = new List<Skill> { new EmptySkill(), new EmptySkill(), new EmptySkill(), new EmptySkill(), new EmptySkill() };

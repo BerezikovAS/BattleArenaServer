@@ -38,7 +38,6 @@ namespace BattleArenaServer.Skills.ElementalistSkills
                         {
                             HasteBuff hasteBuff = new HasteBuff(requestData.Caster.Id, 0, 2);
                             n.HERO.AddEffect(hasteBuff);
-                            hasteBuff.ApplyEffect(n.HERO);
                         }
                     }
                     requestData.Caster.AP -= requireAP;

@@ -36,7 +36,6 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             {
                 RootDebuff rootDebuff = new RootDebuff(requestData.Caster.Id, 0, 2);
                 requestData.Target.AddEffect(rootDebuff);
-                rootDebuff.ApplyEffect(requestData.Target);
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;
                 AttackService.SetDamage(requestData.Caster, requestData.Target, requestData.Caster.Dmg * multiply, Consts.DamageType.Physical);

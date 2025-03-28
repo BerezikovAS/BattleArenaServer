@@ -9,7 +9,7 @@ namespace BattleArenaServer.CastCheckers
 
         public bool Check(RequestData requestData, Skill skill)
         {
-            if (requestData.Caster?.EffectList.FirstOrDefault(x => x.Name == "Root") == null)
+            if (requestData.Caster?.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Root)) == null)
                 return nextChecker.Check(requestData, skill);
             return false;
         }

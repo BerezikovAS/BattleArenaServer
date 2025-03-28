@@ -37,7 +37,6 @@ namespace BattleArenaServer.Skills.Knight
 
                 ArmorBuff buffArmor = new ArmorBuff(requestData.Caster.Id, armor, 2);
                 requestData.Caster.AddEffect(buffArmor);
-                buffArmor.ApplyEffect(requestData.Caster);
 
                 return true;
             }

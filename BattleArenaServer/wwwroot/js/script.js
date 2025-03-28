@@ -8,6 +8,28 @@ hubConnection.on("GetField", function (_field) {
     feelField(_field);
 });
 
+hubConnection.on("GetUsersBindings", (_bindings) => {
+    console.log("Receive bindings");
+
+    if (_bindings.activeTeam == userId)
+        isYourTurn = true;
+    else
+        isYourTurn = false;
+    console.log("isYourTurn: " + isYourTurn);
+
+    var redTeam = document.getElementById("redTeam");
+    var blueTeam = document.getElementById("blueTeam");
+    if (_bindings.redTeam != "")
+        redTeam.setAttribute("style", "visibility: hidden;");
+    else
+        redTeam.setAttribute("style", "visibility: visible;");
+
+    if (_bindings.blueTeam != "")
+        blueTeam.setAttribute("style", "visibility: hidden; margin-left: 100px;");
+    else
+        blueTeam.setAttribute("style", "visibility: visible; margin-left: 100px;");
+});
+
 hubConnection.on("DrawSpellArea", async function (spellArea) {
     //console.log("Receive spell area");
     await drawSpellArea(spellArea);
@@ -32,8 +54,15 @@ var idActiveHero = 0;
 var idCastingSpell = -1;
 var heroInfo;
 var idHexArea = -1;
+var isYourTurn = false;
+var userId = "";
 
-window.onload = async function() {
+window.onload = async function () {
+
+    userId = getCookie("user_id");
+    //setUserCookie();
+    console.log("user_id: " + userId);
+
     await hubConnection.start();
 
     await hubConnection.invoke("SendActiveHero")
@@ -45,6 +74,12 @@ window.onload = async function() {
         .catch(function (err) {
             return console.error(err.toString());
         });
+
+    await hubConnection.invoke("GetUsersBindings")
+        .catch(function (err) {
+            return console.error(err.toString());
+        });
+
     feelHeroInfo(0, hero.coordid);
 }
 
@@ -129,7 +164,7 @@ async function feelField(_field) {
             fillEffectsOnHex(hex, element.hero)
             
             element.hero.coordid = element.id;
-            if(element.hero.type === 0)
+            if(element.hero.type !== 1)
                 heroes[element.hero.id] = element.hero;
         }
         if (element.obstacle != null) {
@@ -156,7 +191,13 @@ async function feelField(_field) {
     //idActiveHero = await getActiveHero();
 
     hero = heroes[idActiveHero];
+    if (hero === undefined) {
+        idActiveHero = await getActiveHero();
+        hero = heroes[idActiveHero];
+    }
+        
 
+    console.log(hero);
     console.log(heroes);
 
     enableUpgrades(hero);
@@ -167,6 +208,10 @@ async function feelField(_field) {
 }
 
 function hexClick(_hex) {
+
+    if (isYourTurn == false)
+        return;
+
     if (idCastingSpell >= 0) {
         castSpell(idCastingSpell, _hex.getAttribute("id"));
         return;
@@ -202,4 +247,8 @@ function cancel() {
     console.log(hexes[idActiveHero]);
     fillFootHovers(hexes[hero.coordid], hexes);
     enableSpells(hero);
+}
+
+function bindUserToTeam(_team) {
+    setUserBindings(userId, _team);
 }
