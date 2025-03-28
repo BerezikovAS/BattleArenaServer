@@ -37,7 +37,6 @@ namespace BattleArenaServer.Skills.AssassinSkills
             {
                 RuptureDebuff ruptureDebuff = new RuptureDebuff(requestData.Caster.Id, ruptureDmg, ruptureDuration);
                 requestData.Target.AddEffect(ruptureDebuff);
-                ruptureDebuff.ApplyEffect(requestData.Target);
 
                 AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
                 

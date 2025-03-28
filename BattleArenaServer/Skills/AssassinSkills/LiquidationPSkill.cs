@@ -43,12 +43,12 @@ namespace BattleArenaServer.Skills.AssassinSkills
 
         private bool Liquidation(Hero attacker, Hero defender, int dmg)
         {
-            Effect? liquidation = defender.EffectList.FirstOrDefault(x => x.Name == "Liquidation");
+            Effect? liquidation = defender.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Liquidation));
             if (liquidation == null)
             {
                 foreach (var hero in GameData._heroes.Where(x => x.Team != attacker.Team))
                 {
-                    Effect? liquidationRemove = hero.EffectList.FirstOrDefault(x => x.Name == "Liquidation");
+                    Effect? liquidationRemove = hero.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Liquidation));
                     if (liquidationRemove != null)
                     {
                         liquidationRemove.RemoveEffect(hero);
@@ -58,7 +58,6 @@ namespace BattleArenaServer.Skills.AssassinSkills
 
                 LiquidationDebuff liquidationDebuff = new LiquidationDebuff(attacker.Id, extraDmg, 99);
                 defender.AddEffect(liquidationDebuff);
-                liquidationDebuff.ApplyEffect(defender);
             }
             else
             {

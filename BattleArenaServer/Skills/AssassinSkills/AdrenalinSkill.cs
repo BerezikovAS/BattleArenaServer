@@ -36,7 +36,6 @@ namespace BattleArenaServer.Skills.AssassinSkills
 
                 AdrenalinUnique adrenalinUnique = new AdrenalinUnique(requestData.Caster.Id, extraAP, 1);
                 requestData.Caster.AddEffect(adrenalinUnique);
-                adrenalinUnique.ApplyEffect(requestData.Caster);
 
                 coolDownNow = coolDown;
 

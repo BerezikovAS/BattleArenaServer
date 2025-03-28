@@ -12,6 +12,8 @@ namespace BattleArenaServer.Effects.Debuffs
             value = _value;
             duration = _duration;
             description = "Дальность атаки и применения способностей снижена до 1.";
+
+            effectTags.Add(Consts.EffectTag.Blind);
         }
 
         public override void ApplyEffect(Hero hero)

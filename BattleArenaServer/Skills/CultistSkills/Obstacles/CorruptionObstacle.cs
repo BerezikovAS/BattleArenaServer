@@ -1,5 +1,4 @@
-﻿using BattleArenaServer.Effects.Debuffs;
-using BattleArenaServer.Models.Obstacles;
+﻿using BattleArenaServer.Models.Obstacles;
 using BattleArenaServer.Models;
 using BattleArenaServer.Services;
 

@@ -47,7 +47,6 @@ namespace BattleArenaServer.Skills.ElementalistSkills
                         {
                             BurnDebuff burnDebuff = new BurnDebuff(requestData.Caster.Id, percentLoss, duration);
                             n.HERO.AddEffect(burnDebuff);
-                            burnDebuff.ApplyEffect(n.HERO);
                         }
                     }
                 }

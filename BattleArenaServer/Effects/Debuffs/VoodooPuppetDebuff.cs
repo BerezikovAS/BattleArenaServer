@@ -33,7 +33,8 @@ namespace BattleArenaServer.Effects.Debuffs
         {
             Hex dir = UtilityService.GetDirection(currentHex, targetHex);
 
-            foreach (Hero enemy in GameData._heroes.Where(x => x.EffectList.FirstOrDefault(y => y.Name == "VoodooPuppet" && y.idCaster == hero.Id) != null))
+            foreach (Hero enemy in GameData._heroes.Where(x => x.EffectList.FirstOrDefault(y => y.Name == "VoodooPuppet" && y.idCaster == hero.Id) != null
+                && x.HP > 0))
             {
                 Hex? enemyHex = GameData._hexes.FirstOrDefault(x => x.ID == enemy.HexId);
                 if (enemyHex != null)

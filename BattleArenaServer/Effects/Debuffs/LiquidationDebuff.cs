@@ -11,6 +11,8 @@ namespace BattleArenaServer.Effects.Debuffs
             idCaster = _idCaster;
             value = _value;
             duration = _duration;
+
+            effectTags.Add(Consts.EffectTag.Liquidation);
         }
 
         public override void ApplyEffect(Hero hero)

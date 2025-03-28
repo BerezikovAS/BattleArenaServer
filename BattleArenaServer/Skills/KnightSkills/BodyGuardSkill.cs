@@ -34,7 +34,6 @@ namespace BattleArenaServer.Skills.Knight
             {
                 BodyGuardBuff bodyGuardBuff = new BodyGuardBuff(requestData.Caster.Id, defence, duration);
                 requestData.Target.AddEffect(bodyGuardBuff);
-                bodyGuardBuff.ApplyEffect(requestData.Target);
 
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;

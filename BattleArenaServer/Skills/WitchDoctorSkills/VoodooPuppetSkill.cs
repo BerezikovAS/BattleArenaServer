@@ -32,7 +32,6 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
             {
                 VoodooPuppetDebuff voodooPuppetDebuff = new VoodooPuppetDebuff(requestData.Caster.Id, 0, 1);
                 requestData.Target.AddEffect(voodooPuppetDebuff);
-                voodooPuppetDebuff.ApplyEffect(requestData.Target);
 
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;

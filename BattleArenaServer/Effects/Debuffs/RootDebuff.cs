@@ -12,6 +12,8 @@ namespace BattleArenaServer.Effects.Debuffs
             value = _value;
             duration = _duration;
             description = "Персонаж не может перемещаться";
+
+            effectTags.Add(Consts.EffectTag.Root);
         }
 
         public override void ApplyEffect(Hero _hero)

@@ -31,6 +31,9 @@ function attackHero(_hero, _hex) {
 }
 
 function endTurn() {
+    if (isYourTurn == false)
+        return;
+
     hubConnection.invoke("EndTurn")
         .catch(function (err) {
             return console.error(err.toString());
@@ -70,6 +73,13 @@ function getSpellArea(target, caster, spell) {
         });
 }
 
+function setUserBindings(_userId, _team) {
+    hubConnection.invoke("BindingUserToTeam", _userId, _team)
+        .catch(function (err) {
+            return console.error(err.toString());
+        });
+}
+
 function castSpell(_spell, _target = -1)
 {
     console.log("castSpell");
@@ -100,4 +110,40 @@ function castSpell(_spell, _target = -1)
         .catch(function (err) {
             return console.error(err.toString());
         });
+}
+
+// Установка cookie при первом посещении
+function setUserCookie() {
+    const userId = generateUniqueId(); // Генерируем уникальный ID
+    const expires = new Date();
+    expires.setFullYear(expires.getFullYear() + 1); // Cookie на 1 год
+
+    document.cookie = `user_id=${userId}; expires=${expires.toUTCString()}; path=/`;
+    return userId;
+}
+
+// Генерация уникального ID
+function generateUniqueId() {
+    return 'uid-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
+}
+
+// Чтение cookie по имени
+function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        const [cookieName, cookieValue] = cookie.split('=').map(c => c.trim());
+        if (cookieName === name) {
+            return cookieValue;
+        }
+    }
+    return null;
+}
+
+// Проверка наличия cookie пользователя
+function getUserId() {
+    let userId = getCookie('user_id');
+    if (!userId) {
+        userId = setUserCookie();
+    }
+    return userId;
 }

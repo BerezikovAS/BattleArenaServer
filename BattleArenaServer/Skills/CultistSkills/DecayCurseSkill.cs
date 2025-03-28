@@ -40,7 +40,6 @@ namespace BattleArenaServer.Skills.CultistSkills
                     {
                         DecayDebuff decayDebuff = new DecayDebuff(requestData.Caster.Id, 0, 2);
                         hex.HERO.AddEffect(decayDebuff);
-                        decayDebuff.ApplyEffect(hex.HERO);
                     }
                 }
 

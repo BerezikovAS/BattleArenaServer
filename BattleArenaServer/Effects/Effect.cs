@@ -15,8 +15,14 @@ namespace BattleArenaServer.Effects
 
         public Consts.EffectType effectType { get; set; } = Consts.EffectType.Instant;
 
+        public List<Consts.EffectTag> effectTags = new List<Consts.EffectTag>();
+
         public abstract void ApplyEffect(Hero hero);
 
         public abstract void RemoveEffect(Hero hero);
+
+        public virtual void RefreshDescr() { }
+
+        public virtual void ApplyAfterEffect(Hero hero) { }
     }
 }

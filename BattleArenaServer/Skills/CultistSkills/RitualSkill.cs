@@ -35,7 +35,7 @@ namespace BattleArenaServer.Skills.Crossbowman
             if (requestData.Caster != null)
             {
                 int ritualPower = 0;
-                var ritual = requestData.Caster.EffectList.FirstOrDefault(x => x.Name == "Ritual");
+                var ritual = requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Ritual));
 
                 //Добавляем эффект ритуала, или просто увеличиваем значение, если он уже есть
                 if (ritual != null)
@@ -45,12 +45,12 @@ namespace BattleArenaServer.Skills.Crossbowman
                 }
                 else
                 {
-                    RitualUnique ritualUnique = new RitualUnique(requestData.Caster.Id, 1, 100);
+                    RitualUnique ritualUnique = new RitualUnique(requestData.Caster.Id, 0, 100);
                     requestData.Caster.AddEffect(ritualUnique);
                 }
 
                 //Наносим урон
-                foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, 1))
+                foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
                 {
                     if (hex.HERO != null && hex.HERO.Team != requestData.Caster.Team)
                         AttackService.SetDamage(requestData.Caster, hex.HERO, dmg, dmgType);

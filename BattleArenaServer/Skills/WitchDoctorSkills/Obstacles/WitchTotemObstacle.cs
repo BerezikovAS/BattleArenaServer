@@ -24,9 +24,11 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills.Obstacles
 
             Armor = 3;
             Resist = 3;
+
+            this.AddEffect = AddEffectTotem;
         }
 
-        public override void AddEffect(Effect effect)
+        private void AddEffectTotem(Effect effect)
         {
             if (effect is TotemChargeUnique)
                 EffectList.Add(effect);
@@ -34,15 +36,16 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills.Obstacles
 
         public void EndLifeTotem(Hex currentHex)
         {
-            int? charges = this.EffectList.FirstOrDefault(x => x.Name == "TotemCharge").value;
+            Effect? charge = this.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.TotemCharge));
+            int charges = charge == null ? 0 : charge.value;
 
             foreach (var hex in UtilityService.GetHexesRadius(currentHex, _radius))
             {
-                int dmg = _baseDmg + (charges ?? 0) * _chargeDmg;
+                int dmg = _baseDmg + charges * _chargeDmg;
                 if (hex.HERO != null && hex.HERO.Team != this.Team)
                     AttackService.SetDamage(this, hex.HERO, dmg, Consts.DamageType.Pure);
                 else if (hex.HERO != null)
-                    hex.HERO.Heal((charges ?? 0) * _chargeDmg);
+                    hex.HERO.Heal(charges * _chargeDmg);
             }
         }
     }

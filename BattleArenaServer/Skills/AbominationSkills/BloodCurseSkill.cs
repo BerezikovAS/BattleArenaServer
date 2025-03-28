@@ -33,7 +33,6 @@ namespace BattleArenaServer.Skills.AbominationSkills
             {
                 BloodCurseDebuff bloodCurseDebuff = new BloodCurseDebuff(requestData.Caster.Id, percent, 2);
                 requestData.Target.AddEffect(bloodCurseDebuff);
-                bloodCurseDebuff.ApplyEffect(requestData.Target);
 
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;

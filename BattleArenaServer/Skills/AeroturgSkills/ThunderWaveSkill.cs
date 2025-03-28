@@ -46,7 +46,6 @@ namespace BattleArenaServer.Skills.AeroturgSkills
                         {
                             ResistDebuff resistDebuff = new ResistDebuff(requestData.Caster.Id, resistReduction, 2);
                             hex.HERO.AddEffect(resistDebuff);
-                            resistDebuff.ApplyEffect(hex.HERO);
                         }
 
                         AttackService.SetDamage(requestData.Caster, hex.HERO, dmg, dmgType);

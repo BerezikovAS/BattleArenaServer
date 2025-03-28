@@ -32,7 +32,6 @@ namespace BattleArenaServer.Skills.AeroturgSkills
             {
                 AirFormBuff airFormBuff = new AirFormBuff(requestData.Caster.Id, percentReduce, 2);
                 requestData.Caster.AddEffect(airFormBuff);
-                airFormBuff.ApplyEffect(requestData.Caster);
 
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;

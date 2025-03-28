@@ -2,12 +2,14 @@
 using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.Models.Obstacles;
+using BattleArenaServer.Models.Summons;
 
 namespace BattleArenaServer.Services
 {
     public class TimingService : ITiming
     {
         private int turn = 1;
+        private bool isProcessed = true;
 
         public TimingService()
         {
@@ -31,6 +33,10 @@ namespace BattleArenaServer.Services
 
         public int EndTurn()
         {
+            if (!isProcessed)
+                return GameData.idActiveHero;
+
+            isProcessed = false;
             // Сначала применим все эффекты в конце хода каждого героя команды
             foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam))
             {
@@ -54,14 +60,27 @@ namespace BattleArenaServer.Services
                 DecreaseStatusDuration(hero.Id);
             }
 
+            // Поскольку саммоны находятся в Героях, то их "протухание" делаем отдельно вне цикла
+            DecreaseLifeTimeSummons(GameData.activeTeam);
+
             AddUpgradePoints(++turn);
-            GameData.activeTeam = GameData.activeTeam == "blue" ? "red" : "blue";
+            if (GameData.activeTeam == "blue")
+            {
+                GameData.activeTeam = "red";
+                GameData.userTeamBindings.ActiveTeam = GameData.userTeamBindings.RedTeam;
+            }
+            else
+            {
+                GameData.activeTeam = "blue";
+                GameData.userTeamBindings.ActiveTeam = GameData.userTeamBindings.BlueTeam;
+            }
 
             foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam && x.HP > 0))
             {
                 RefreshStartTurnAbilities(hero);
                 GameData.idActiveHero = hero.Id;
             }
+            isProcessed = true;
             return GameData.idActiveHero;
         }
 
@@ -80,7 +99,7 @@ namespace BattleArenaServer.Services
                 {
                     if (effect.idCaster == heroId && effect.duration > 1)
                         effect.duration--;
-                    else if (effect.idCaster == heroId && effect.duration == 1)
+                    else if (effect.idCaster == heroId && effect.duration <= 1)
                     {
                         effect.RemoveEffect(hero);
                         removeEffects.Add(effect);
@@ -89,6 +108,7 @@ namespace BattleArenaServer.Services
                 foreach (var effect in removeEffects)
                 {
                     hero.EffectList.Remove(effect);
+                    effect.ApplyAfterEffect(hero);
                 }
             }
         }
@@ -114,6 +134,7 @@ namespace BattleArenaServer.Services
                         Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == obst.HexId);
                         if (hex != null)
                             hex.RemoveObstacle();
+                        obst.HexId = -1;
                         AttackService.ContinuousAuraAction();
                     }
                 }
@@ -130,6 +151,7 @@ namespace BattleArenaServer.Services
                         Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == surface.HexId);
                         if (hex != null)
                             hex.RemoveSurface(surface);
+                        surface.HexId = -1;
                         AttackService.ContinuousAuraAction();
                         removeSurf.Add(surface);
                     }
@@ -153,16 +175,40 @@ namespace BattleArenaServer.Services
                             obst.endLifeEffect(hex);
                             hex.RemoveHero();
                         }
+                        obst.HexId = -1;
 
                         AttackService.ContinuousAuraAction();
                         removeObst.Add(obst);
-
                     }
                 }
             }
             // Удалем то что уже протухло
             foreach (var obst in removeObst)
                 GameData._solidObstacles.Remove(obst);
+        }
+
+        public void DecreaseLifeTimeSummons(string team)
+        {
+            // Также не забываем про саммонов
+            List<Summon> summons = new List<Summon>();
+            foreach (var summon in GameData._heroes)
+            {
+                if (summon is Summon)
+                {
+                    if (summon.Team == team && --(summon as Summon).lifeTime <= 0)
+                    {
+                        Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == summon.HexId);
+                        if (hex != null)
+                            hex.RemoveHero();
+
+                        AttackService.ContinuousAuraAction();
+                        summons.Add(summon as Summon);
+                    }
+                }
+            }
+            // Удалем то что уже протухло
+            foreach (var summon in summons)
+                GameData._heroes.Remove(summon);
         }
 
         public void EndTurnStatusApplyEffect(Hero hero)
@@ -195,7 +241,8 @@ namespace BattleArenaServer.Services
         {
             if (turn % 4 == 1)
                 foreach (var hero in GameData._heroes)
-                    hero.UpgradePoints++;
+                    if (hero is not Summon)
+                        hero.UpgradePoints++;
         }
     }
 }

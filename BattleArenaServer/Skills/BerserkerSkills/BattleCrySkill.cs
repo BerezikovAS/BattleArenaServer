@@ -42,7 +42,6 @@ namespace BattleArenaServer.Skills.BerserkerSkills
 
                             ArmorDebuff armorDebuff = new ArmorDebuff(requestData.Caster.Id, decrArmor, 2);
                             n.HERO.AddEffect(armorDebuff);
-                            armorDebuff.ApplyEffect(n.HERO);
                         }
                     }
                     requestData.Caster.AP -= requireAP;

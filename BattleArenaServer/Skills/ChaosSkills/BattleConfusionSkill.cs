@@ -51,14 +51,12 @@ namespace BattleArenaServer.Skills.ChaosSkills
                 if (statsSkill[1] > 0)
                 {
                     ArmorBuff armorBuff = new ArmorBuff(requestData.Caster.Id, statsSkill[1] * 2, 2);
-                    armorBuff.ApplyEffect(requestData.Caster);
                     requestData.Caster.AddEffect(armorBuff);
                 }
 
                 if (statsSkill[2] > 0)
                 {
                     ResistBuff resistBuff = new ResistBuff(requestData.Caster.Id, statsSkill[2] * 2, 2);
-                    resistBuff.ApplyEffect(requestData.Caster);
                     requestData.Caster.AddEffect(resistBuff);
                 }
 

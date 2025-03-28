@@ -41,12 +41,8 @@ namespace BattleArenaServer.Skills.ElementalistSkills
                     {
                         AttackService.SetDamage(requestData.Caster, n.HERO, dmg, Consts.DamageType.Magic);
 
-                        if (n.HERO != null)
-                        {
-                            ResistDebuff resistDebuff = new ResistDebuff(requestData.Caster.Id, reduceResist, 2);
-                            n.HERO.AddEffect(resistDebuff);
-                            resistDebuff.ApplyEffect(n.HERO);
-                        }
+                        ResistDebuff resistDebuff = new ResistDebuff(requestData.Caster.Id, reduceResist, 2);
+                        n.HERO.AddEffect(resistDebuff);
                     }
                 }
                 requestData.Caster.AP -= requireAP;

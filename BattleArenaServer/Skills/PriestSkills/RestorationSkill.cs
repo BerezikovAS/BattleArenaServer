@@ -7,12 +7,12 @@ namespace BattleArenaServer.Skills.Priest
 {
     public class RestorationSkill : Skill
     {
-        int heal = 200;
+        int heal = 150;
         public RestorationSkill()
         {
             name = "Restoration";
             title = $"Восстанавливает себе или союзнику {heal} ХП.";
-            titleUpg = "+1 к дальности, также снимает негативные эффекты с цели.";
+            titleUpg = "Также снимает негативные эффекты с цели.";
             coolDown = 5;
             coolDownNow = 0;
             requireAP = 2;
@@ -49,7 +49,7 @@ namespace BattleArenaServer.Skills.Priest
                     }
                 }
 
-                requestData.Target.Heal(200);
+                requestData.Target.Heal(heal);
 
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;
@@ -64,10 +64,6 @@ namespace BattleArenaServer.Skills.Priest
             if (!upgraded)
             {
                 upgraded = true;
-                requireAP -= 1;
-                stats.requireAP -= 1;
-                range += 1;
-                stats.range += 1;
                 title = $"Восстанавливает себе или союзнику {heal} ХП и снимает негативные эффекты.";
                 return true;
             }

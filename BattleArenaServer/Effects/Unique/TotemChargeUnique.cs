@@ -12,6 +12,8 @@ namespace BattleArenaServer.Effects.Unique
             value = _value;
             duration = _duration;
             description = $"{value} зарядов.";
+
+            effectTags.Add(Consts.EffectTag.TotemCharge);
         }
 
         public override void ApplyEffect(Hero _hero)

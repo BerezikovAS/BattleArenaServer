@@ -8,7 +8,7 @@ namespace BattleArenaServer.Skills
     {
         public EmptySkill()
         {
-            name = "-None-";
+            name = "X";
             coolDown = 100;
             coolDownNow = 0;
             requireAP = 0;

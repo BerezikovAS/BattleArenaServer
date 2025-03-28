@@ -4,6 +4,7 @@ using BattleArenaServer.Models.Obstacles;
 using BattleArenaServer.Services;
 using BattleArenaServer.Skills.WitchDoctorSkills;
 using Microsoft.AspNetCore.SignalR;
+using System;
 
 namespace BattleArenaServer.Hubs
 {
@@ -36,7 +37,7 @@ namespace BattleArenaServer.Hubs
             heroes.Add(new WitchDoctorHero(0, ""));
             heroes.Add(new AssassinHero(0, ""));
             heroes.Add(new KnightHero(0, ""));
-            heroes.Add(new CrossbowmanHero(0, ""));
+            heroes.Add(new ArcherHero(0, ""));
             heroes.Add(new BerserkerHero(0, ""));
             heroes.Add(new PriestHero(0, ""));
             heroes.Add(new AeroturgHero(0, ""));
@@ -46,6 +47,11 @@ namespace BattleArenaServer.Hubs
             heroes.Add(new ElementalistHero(0, ""));
             heroes.Add(new CultistHero(0, ""));
             heroes.Add(new NecromancerHero(0, ""));
+            heroes.Add(new ShadowHero(0, ""));
+            heroes.Add(new TinkerHero(0, ""));
+            heroes.Add(new GuardianHero(0, ""));
+            heroes.Add(new FairyHero(0, ""));
+            heroes.Add(new InvokerHero(0, ""));
 
             string team = "red";
             Random rnd = new Random();
@@ -139,18 +145,26 @@ namespace BattleArenaServer.Hubs
             try
             {
                 GameData.ClearAllObjects();
-
+                GameData.activeTeam = "red";
                 CreateGameField();
                 CreateHeroList();
+                timingService = new TimingService();
+                GameData.userTeamBindings.ClearBindings();
+                await SetActiveHero(GameData.idActiveHero);
+                await GetUsersBindings();
+
                 await this.Clients.All.SendAsync("GetField", GameData._hexes);
             }
-            catch { }
+            catch
+            {
+                Console.WriteLine("Error in RecreateGame()");
+            }
         }
 
         public async Task GetField()
         {
             try { await this.Clients.All.SendAsync("GetField", GameData._hexes); }
-            catch { }
+            catch { Console.WriteLine("Error in GetField()"); }
         }
 
         public async Task UpgradeSkill(int cur_pos, int skill)
@@ -163,7 +177,7 @@ namespace BattleArenaServer.Hubs
                 {
                     hero.UpgradePoints--;
                     try { await this.Clients.All.SendAsync("GetField", GameData._hexes); }
-                    catch { }
+                    catch { Console.WriteLine("Error in UpgradeSkill()"); }
                 }
             }
         }
@@ -172,22 +186,28 @@ namespace BattleArenaServer.Hubs
         {
             RequestData requestData = new RequestData(cur_pos, targer_pos);
             if (requestData.Caster != null)
-                requestData.Caster.MoveSkill.Cast(requestData);
+            {
+                if (requestData.Target == null && requestData.TargetHex != null && requestData.TargetHex.OBSTACLE != null
+                    && requestData.TargetHex.OBSTACLE.Name == "AstralPortal")
+                    AttackService.MoveHero(requestData.Caster, requestData.CasterHex, requestData.TargetHex);
+                else
+                    requestData.Caster.MoveSkill.Cast(requestData);
+            }
 
             try { await this.Clients.All.SendAsync("GetField", GameData._hexes); }
-            catch { }
+            catch { Console.WriteLine("Error in StepHero()"); }
         }
 
         public async Task SpellCast(int targer_pos, int cur_pos, int skill)
         {
             RequestData requestData = new RequestData(cur_pos, targer_pos);
-            if (requestData.Caster != null && requestData.Caster.EffectList.FirstOrDefault(x => x.Name == "Silence") == null)
+            if (requestData.Caster != null && requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Silence)) == null)
             {
                 requestData.Caster.beforeSpellCast(requestData.Caster, requestData.Target, requestData.Caster.SkillList[skill]);
                 // Кастуем))
                 requestData.Caster.SkillList[skill].Cast(requestData);
                 try { await this.Clients.All.SendAsync("GetField", GameData._hexes); }
-                catch { }
+                catch { Console.WriteLine("Error in SpellCast()"); }
             }
         }
 
@@ -196,36 +216,39 @@ namespace BattleArenaServer.Hubs
             RequestData requestData = new RequestData(cur_pos, targer_pos);
 
             if (requestData.CasterHex != null && requestData.TargetHex != null && requestData.Caster != null && requestData.Target != null &&
-                requestData.Target.EffectList.FirstOrDefault(x => x.Name == "Smoke") == null)
+                requestData.Target.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.NonTargetable)) == null && // Цель должна быть доступна для выбора
+                requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Disarm)) == null) // Атакующий не должен быть обезоружен
             {
                 Hero attacker = requestData.Caster;
                 Hero defender = requestData.Target;
 
-                int range = attacker.EffectList.FirstOrDefault(x => x.Name == "Blind") == null ? attacker.AttackRadius + attacker.StatsEffect.AttackRadius : 1;
+                int range = attacker.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Blind)) == null ? attacker.AttackRadius + attacker.StatsEffect.AttackRadius : 1;
 
                 if (requestData.CasterHex.Distance(requestData.TargetHex) > range || attacker.AP < attacker.APtoAttack)
                     return;
 
                 attacker.AP -= attacker.APtoAttack;
                 // К урону добавляем дополнительный от пассивок и эффектов
-                int dmg = (int)((attacker.Dmg + attacker.passiveAttackDamage(attacker, defender) + attacker.StatsEffect.Dmg) * attacker.StatsEffect.DmgMultiplier);
+                int dmg = (int)((attacker.Dmg + attacker.GetPassiveAttackDamage(attacker, defender) + attacker.StatsEffect.Dmg) * attacker.StatsEffect.DmgMultiplier);
 
                 // Эффекты перед атакой
                 attacker.beforeAttack(attacker, defender, dmg);
+                defender.beforeReceivedAttack(attacker, defender, dmg);
                 // Сама атака с нанесением урона
                 AttackService.SetDamage(attacker, defender, dmg, Consts.DamageType.Physical);
                 // Эффекты после атаки
                 attacker.afterAttack(attacker, defender, dmg);
+                defender.afterReceivedAttack(attacker, defender, dmg);
             }
 
             try { await this.Clients.All.SendAsync("GetField", GameData._hexes); }
-            catch { }
+            catch { Console.WriteLine("Error in AttackHero()"); }
         }
 
         public async Task SendSpellArea(int target, int caster, int spell)
         {
             try { await this.Clients.All.SendAsync("DrawSpellArea", GetSpellArea(target, caster, spell)); }
-            catch { }
+            catch { Console.WriteLine("Error in SendSpellArea()"); }
         }
 
         public async Task SetActiveHero(int idActiveHero)
@@ -235,13 +258,13 @@ namespace BattleArenaServer.Hubs
                 GameData.idActiveHero = idActiveHero;
 
             try { await this.Clients.All.SendAsync("GetActiveHero", GameData.idActiveHero); }
-            catch { }
+            catch { Console.WriteLine("Error in SetActiveHero()"); }
         }
 
         public async Task SendActiveHero()
         {
-            try { await this.Clients.All.SendAsync("GetActiveHero", GameData.idActiveHero); }
-            catch { }
+            try { await this.Clients.All.SendAsync("GetActiveHero", timingService.GetActiveHero()); }
+            catch { Console.WriteLine("Error in SendActiveHero()"); }
         }
 
         public async void EndTurn()
@@ -249,9 +272,31 @@ namespace BattleArenaServer.Hubs
             try
             {
                 timingService.EndTurn();
+                await GetUsersBindings();
                 await this.Clients.All.SendAsync("GetField", GameData._hexes);
             }
-            catch { }
+            catch { Console.WriteLine("Error in EndTurn()"); }
+        }
+
+        public async Task BindingUserToTeam(string userId, string team)
+        {
+            if (team == "red")
+                GameData.userTeamBindings.RedTeam = userId;
+            else
+                GameData.userTeamBindings.BlueTeam = userId;
+
+            if (GameData.userTeamBindings.RedTeam != "" && GameData.userTeamBindings.BlueTeam != "") // Выбраны обе команды, можно начинать сражение
+                GameData.userTeamBindings.ActiveTeam = GameData.userTeamBindings.RedTeam;
+
+            await GetUsersBindings();
+        }
+
+        public async Task GetUsersBindings()
+        {
+            try {
+                await this.Clients.All.SendAsync("GetUsersBindings", GameData.userTeamBindings);
+            }
+            catch { Console.WriteLine("Error in SendActiveHero()"); }
         }
 
         private int[] GetSpellArea(int target, int caster, int spell)
@@ -261,7 +306,7 @@ namespace BattleArenaServer.Hubs
             List<int> spellArea = new List<int>();
 
             int spellRange = skill.range;
-            if (casterHero.EffectList.FirstOrDefault(x => x.Name == "Blind") != null && spellRange > 1)
+            if (casterHero.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Blind)) != null && spellRange > 1)
                 spellRange = 1;
 
             int dist = GameData._hexes[target].Distance(GameData._hexes[caster]);
@@ -279,7 +324,7 @@ namespace BattleArenaServer.Hubs
                     if (dist <= spellRange)
                     {
                         if (GameData._hexes[target].HERO != null && GameData._hexes[target].HERO.Team != casterHero.Team &&
-                            GameData._hexes[target].HERO.EffectList.FirstOrDefault(x => x.Name == "Smoke") == null)
+                            GameData._hexes[target].HERO.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.NonTargetable)) == null)
                             spellArea.Add(target);
                     }
                     break;
@@ -305,7 +350,7 @@ namespace BattleArenaServer.Hubs
                     if (dist <= spellRange)
                     {
                         if (GameData._hexes[target].HERO != null &&
-                            (GameData._hexes[target].HERO.EffectList.FirstOrDefault(x => x.Name == "Smoke") == null || GameData._hexes[target].HERO.Team == casterHero.Team))
+                            (GameData._hexes[target].HERO.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.NonTargetable)) == null || GameData._hexes[target].HERO.Team == casterHero.Team))
                             spellArea.Add(target);
                     }
                     break;
@@ -313,7 +358,7 @@ namespace BattleArenaServer.Hubs
                     if (dist <= spellRange)
                     {
                         if (GameData._hexes[target].HERO != null && GameData._hexes[target].HERO.Id != casterHero.Id &&
-                            (GameData._hexes[target].HERO.EffectList.FirstOrDefault(x => x.Name == "Smoke") == null || GameData._hexes[target].HERO.Team == casterHero.Team))
+                            (GameData._hexes[target].HERO.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.NonTargetable)) == null || GameData._hexes[target].HERO.Team == casterHero.Team))
                             spellArea.Add(target);
                     }
                     break;
@@ -328,6 +373,13 @@ namespace BattleArenaServer.Hubs
                     if (dist <= spellRange)
                     {
                         foreach (var hex in UtilityService.GetHexesSmallCone(GameData._hexes[caster], GameData._hexes[target], skill.radius))
+                            spellArea.Add(hex.ID);
+                    }
+                    break;
+                case Consts.SpellArea.WideLine:
+                    if (dist <= spellRange)
+                    {
+                        foreach (var hex in UtilityService.GetHexesWideLine(GameData._hexes[caster], GameData._hexes[target], skill.radius))
                             spellArea.Add(hex.ID);
                     }
                     break;

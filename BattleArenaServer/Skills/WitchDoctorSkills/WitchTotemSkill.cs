@@ -11,7 +11,7 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
     {
         int totemHP = 150;
         int lifeTime = 3;
-        int baseDmg = 40;
+        int baseDmg = 15;
         int chargeDmg = 10;
 
         public WitchTotemSkill()

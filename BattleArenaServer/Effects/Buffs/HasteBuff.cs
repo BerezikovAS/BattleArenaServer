@@ -12,6 +12,8 @@ namespace BattleArenaServer.Effects.Buffs
             value = _value;
             duration = _duration;
             description = "Вы можете переместиться, не тратя очки действий.";
+
+            effectTags.Add(Consts.EffectTag.Haste);
         }
 
         public override void ApplyEffect(Hero _hero)
