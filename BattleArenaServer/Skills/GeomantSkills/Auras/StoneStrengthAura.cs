@@ -42,6 +42,7 @@ namespace BattleArenaServer.Skills.GeomantSkills.Auras
             source.Armor -= stalaktiteCount;
             source.Resist -= stalaktiteCount;
             source.Dmg -= stalaktiteCount * 10;
+            stalaktiteCount = 0;
         }
     }
 }

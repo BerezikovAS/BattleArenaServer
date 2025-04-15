@@ -34,18 +34,27 @@ namespace BattleArenaServer.Services
         {
             try
             {
-                // Сначала применим все эффекты в конце хода каждого героя команды
-                foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam))
+                try
                 {
-                    AttackService.EndTurnAuraAction(hero);
-                    EndTurnStatusApplyEffect(hero);
+                    // Сначала применим все эффекты в конце хода каждого героя команды
+                    foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam))
+                    {
+                        AttackService.EndTurnAuraAction(hero);
+                        EndTurnStatusApplyEffect(hero);
+                    }
                 }
-                // Также пробегаемся по объектам, которые тоже могут иметь ауры
-                foreach (var hero in GameData._solidObstacles.Where(x => x.Team == GameData.activeTeam))
+                catch (Exception ex) { Console.WriteLine(ex.Message); }
+
+                try
                 {
-                    AttackService.EndTurnAuraAction(hero);
-                    EndTurnStatusApplyEffect(hero);
+                    // Также пробегаемся по объектам, которые тоже могут иметь ауры
+                    foreach (var hero in GameData._solidObstacles.Where(x => x.Team == GameData.activeTeam))
+                    {
+                        AttackService.EndTurnAuraAction(hero);
+                        EndTurnStatusApplyEffect(hero);
+                    }
                 }
+                catch (Exception ex) { Console.WriteLine(ex.Message); }
 
                 // Затем начнем уменьшать кд, срок действия эффекта и время жизни созданных объектов
                 foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam))
@@ -303,6 +312,12 @@ namespace BattleArenaServer.Services
                     if (effect.effectType == Consts.EffectType.EndTurn)
                         effect.ApplyEffect(hero);
                 }
+            }
+            if (hero.HP <= 0)
+            {
+                foreach (var effect in hero.EffectList)
+                    effect.RemoveEffect(hero);
+                hero.EffectList.Clear();
             }
         }
 

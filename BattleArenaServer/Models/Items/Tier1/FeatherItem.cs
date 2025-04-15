@@ -5,15 +5,15 @@ namespace BattleArenaServer.Models.Items.Tier1
 {
     public class FeatherItem : Item
     {
-        int heal = 10;
-        int maxCharges = 12;
+        int heal = 14;
+        int maxCharges = 10;
 
         public FeatherItem()
         {
             Name = "Feather";
             Amount = 1;
             Cost = 10;
-            Description = $"Когда Вы используете действие перемещения, перо получает 1 заряд. Используйте перо, чтобы восстановить {heal} ХП за заряд. (Макс: 12 зарядов)";
+            Description = $"Когда Вы используете действие перемещения, перо получает 1 заряд. Используйте перо, чтобы восстановить {heal} ХП за заряд. (Макс: {maxCharges} зарядов)";
             Level = 1;
             SellCost = 5;
 
@@ -50,8 +50,8 @@ namespace BattleArenaServer.Models.Items.Tier1
 
     public class FeatherSkill : Skill
     {
-        int heal = 10;
-        int maxCharges = 12;
+        int heal = 14;
+        int maxCharges = 10;
         public int charges { get; set; } = 0;
 
         public FeatherSkill(int heal, int maxCharges)
