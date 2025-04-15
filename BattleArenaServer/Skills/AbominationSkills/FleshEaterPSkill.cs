@@ -36,7 +36,7 @@ namespace BattleArenaServer.Skills.AbominationSkills
             return false;
         }
 
-        private bool FleshEater(Hero attacker, Hero defender, int dmg)
+        private bool FleshEater(Hero attacker, Hero defender, int dmg, Consts.DamageType dmgType)
         {
             if (defender == null)
                 return false;

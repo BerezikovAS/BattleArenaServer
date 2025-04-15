@@ -7,14 +7,14 @@ namespace BattleArenaServer.Skills.InvokerSkills
 {
     public class ManaBlastSkill : Skill
     {
-        private int percentDmg = 10;
+        private int percentDmg = 15;
         public ManaBlastSkill()
         {
             name = "Mana Blast";
             dmg = 0;
             title = $"Резкий выплеск маны провоцирует магический взрыв. Враги в области получают магический урон равный {percentDmg}% от их максимального ХП.";
-            titleUpg = "+4% к урону от макс. ХП";
-            coolDown = 5;
+            titleUpg = "+6% к урону от макс. ХП";
+            coolDown = 4;
             coolDownNow = 0;
             requireAP = 2;
             nonTarget = false;
@@ -55,7 +55,7 @@ namespace BattleArenaServer.Skills.InvokerSkills
             if (!upgraded)
             {
                 upgraded = true;
-                percentDmg += 4;
+                percentDmg += 6;
                 title = $"Резкий выплеск маны провоцирует магический взрыв. Враги в области получают магический урон равный {percentDmg}% от их максимального ХП.";
                 return true;
             }

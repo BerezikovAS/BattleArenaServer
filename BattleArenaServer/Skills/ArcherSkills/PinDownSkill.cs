@@ -35,9 +35,11 @@ namespace BattleArenaServer.Skills.Crossbowman
             {
                 RootDebuff rootDebuff = new RootDebuff(requestData.Caster.Id, 0, 2);
                 requestData.Target.AddEffect(rootDebuff);
+                
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
+                
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
                 return true;
             }
 

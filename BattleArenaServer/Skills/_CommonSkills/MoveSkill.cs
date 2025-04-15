@@ -26,25 +26,33 @@ namespace BattleArenaServer.Skills._CommonSkills
 
         public override bool Cast(RequestData requestData)
         {
+            bool isHaste = false;
+
+            Effect? slow = requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Slow));
+            if (slow != null)
+                requireAP = 2;
+
             Effect? haste = requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Haste));
             if (haste != null)
             {
-                stats.requireAP = requireAP;
+                isHaste = true;
                 requestData.Caster.EffectList.Remove(haste);
                 requireAP = 0;
             }
-            else
-                requireAP = stats.requireAP;
 
             if (!request.startRequest(requestData, this))
                 return false;
 
             if (requestData.Caster != null && requestData.CasterHex != null && requestData.TargetHex != null)
             {
-                requestData.Caster.AP -= requireAP;
+                if (!isHaste)
+                    requestData.Caster.AP -= requireAP;
+
+                requireAP = 1;
                 AttackService.MoveHero(requestData.Caster, requestData.CasterHex, requestData.TargetHex);
                 return true;
             }
+            requireAP = 1;
             return false;
         }
 

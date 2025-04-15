@@ -27,7 +27,7 @@ namespace BattleArenaServer.Effects.Buffs
             _hero.afterReceiveDmg -= AfterReceiveDmgDelegate;
         }
 
-        private void AfterReceiveDmgDelegate(Hero defender, Hero? attacker, int dmg)
+        private void AfterReceiveDmgDelegate(Hero defender, Hero? attacker, int dmg, Consts.DamageType dmgType)
         {
             Hero? targetHero = GameData._heroes.FirstOrDefault(x => x.Id == target);
             if (targetHero != null)

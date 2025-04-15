@@ -12,8 +12,9 @@ namespace BattleArenaServer.Skills.NecromancerSkills
         {
             name = "Deadly Aura";
             title = $"Враги вокруг Вас имеют -{reduce_resist} к сопротивлению.";
-            titleUpg = "+2 к снижению сопротивления.";
-            Aura = new DeadlyAura(false, reduce_resist);
+            titleUpg = "+1 к снижению сопротивления, +1 к радиусу ауры.";
+            radius = 1;
+            Aura = new DeadlyAura(false, reduce_resist, radius);
             hero.AuraList.Add(Aura);
         }
 
@@ -31,13 +32,13 @@ namespace BattleArenaServer.Skills.NecromancerSkills
             if (!upgraded)
             {
                 upgraded = true;
-                reduce_resist += 2;
+                reduce_resist += 1;
                 Aura.CancelEffect(hero);
                 hero.AuraList.Remove(Aura);
-                Aura = new DeadlyAura(false, reduce_resist);
+                Aura = new DeadlyAura(false, reduce_resist, radius);
                 hero.AuraList.Add(Aura);
                 AttackService.ContinuousAuraAction();
-                title = $"Враги вокруг Вас имеют -{reduce_resist} к сопротивлению.";
+                title = $"Враги в радиусе 2-х клеток от Вас имеют -{reduce_resist} к сопротивлению.";
                 return true;
             }
             return false;

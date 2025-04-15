@@ -4,7 +4,7 @@ using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
 using BattleArenaServer.Skills.CultistSkills.Obstacles;
 
-namespace BattleArenaServer.Skills.Crossbowman
+namespace BattleArenaServer.Skills.CultistSkills
 {
     public class CorruptionSkill : Skill
     {

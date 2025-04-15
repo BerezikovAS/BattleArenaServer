@@ -9,6 +9,17 @@ namespace BattleArenaServer.Models.Heroes
         {
             Name = "Priest";
 
+            Respawn();
+
+            SkillList[0] = new BlessAuraPSkill(this);
+            SkillList[1] = new BlindingLightSkill();
+            SkillList[2] = new SmightSkill();
+            SkillList[3] = new RestorationSkill();
+            SkillList[4] = new CondemnationSkill();
+        }
+
+        public override void Respawn()
+        {
             MaxHP = HP = 875;
             Armor = 2;
             Resist = 3;
@@ -18,11 +29,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 95;
 
-            SkillList[0] = new BlessAuraPSkill(this);
-            SkillList[1] = new BlindingLightSkill();
-            SkillList[2] = new SmightSkill();
-            SkillList[3] = new RestorationSkill();
-            SkillList[4] = new CondemnationSkill();
+            base.Respawn();
         }
     }
 }

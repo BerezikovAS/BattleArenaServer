@@ -7,13 +7,13 @@ namespace BattleArenaServer.Skills.ChaosSkills
 {
     public class HellJawsSkill : Skill
     {
-        int extraDmg = 40;
+        int extraDmg = 30;
         public HellJawsSkill()
         {
             name = "Hell Jaws";
             dmg = 120;
             title = $"Враг получает {dmg} физичского урона. Урон увеличивается на {extraDmg} за каждого героя или объект вокруг цели.";
-            titleUpg = $"-1 к ОД, +1 к дальности.";
+            titleUpg = $"+1 к дальности, +10 к урону за героя или объект";
             coolDown = 3;
             coolDownNow = 0;
             requireAP = 2;
@@ -58,7 +58,7 @@ namespace BattleArenaServer.Skills.ChaosSkills
                 upgraded = true;
                 range += 1;
                 stats.range += 1;
-                requireAP -= 1;
+                extraDmg += 10;
                 return true;
             }
             return false;

@@ -46,7 +46,7 @@ namespace BattleArenaServer.Skills.ChaosSkills
 
                 Random rnd = new Random();
                 Hero heroDmg = heroes[rnd.Next(0, heroes.Count)];
-                int dmg = heroDmg.Dmg + heroDmg.StatsEffect.Dmg;
+                int dmg = heroDmg.Dmg;
 
                 foreach (Hero hero in heroes)
                 {

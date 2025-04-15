@@ -10,6 +10,10 @@
             type = Consts.HeroType.Summon;
             this.casterId = casterId;
             this.lifeTime = lifeTime;
+
+            VP = 2;
+            GoldReward = 2;
+            IsMainHero = false;
         }
     }
 }

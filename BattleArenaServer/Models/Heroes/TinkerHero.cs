@@ -8,6 +8,17 @@ namespace BattleArenaServer.Models.Heroes
         {
             Name = "Tinker";
 
+            Respawn();
+
+            SkillList[0] = new EmergencyShieldPSkill(this);
+            SkillList[1] = new FlameTurretSkill();
+            SkillList[2] = new HealingDroneSkill();
+            SkillList[3] = new CopperCageSkill();
+            SkillList[4] = new SteamStrikeSkill();
+        }
+
+        public override void Respawn()
+        {
             MaxHP = HP = 900;
             Armor = 5;
             Resist = 2;
@@ -17,11 +28,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 100;
 
-            SkillList[0] = new EmergencyShieldPSkill(this);
-            SkillList[1] = new FlameTurretSkill();
-            SkillList[2] = new HealingDroneSkill();
-            SkillList[3] = new CopperCageSkill();
-            SkillList[4] = new SteamStrikeSkill();
+            base.Respawn();
         }
     }
 }

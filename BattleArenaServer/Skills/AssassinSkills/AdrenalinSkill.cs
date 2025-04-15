@@ -31,14 +31,12 @@ namespace BattleArenaServer.Skills.AssassinSkills
 
             if (requestData.Caster != null)
             {
-                if (upgraded)
-                    requestData.Caster.Heal(heal);
+                requestData.Caster.Heal(heal);
 
                 AdrenalinUnique adrenalinUnique = new AdrenalinUnique(requestData.Caster.Id, extraAP, 1);
                 requestData.Caster.AddEffect(adrenalinUnique);
 
                 coolDownNow = coolDown;
-
                 return true;
             }
 

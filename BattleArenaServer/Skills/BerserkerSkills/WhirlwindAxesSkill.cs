@@ -10,7 +10,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
         public WhirlwindAxesSkill()
         {
             name = "Whirlwind Axes";
-            dmg = 150;
+            dmg = 140;
             title = $"Вихрь топоров атакует всех врагов вокруг, нанося {dmg} маг. урона";
             titleUpg = "+35 урона, -2 к перезарядке";
             coolDown = 4;

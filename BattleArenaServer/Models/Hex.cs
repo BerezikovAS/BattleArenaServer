@@ -9,6 +9,8 @@ namespace BattleArenaServer.Models
         Hero? Hero { get; set; }
         Obstacle? Obstacle { get; set; }
         List<FillableObstacle> Surfaces { get; set; } = new List<FillableObstacle>();
+        int _vp = 0;
+        string _teamRespawn { get; set; } = "";
 
         public Hex(int[] coord)
         {
@@ -17,11 +19,13 @@ namespace BattleArenaServer.Models
             _id = 0;
         }
 
-        public Hex(int coordX, int coordY, int coordZ, int id)
+        public Hex(int coordX, int coordY, int coordZ, int id, int vp, string teamRespawn = "")
         {
             _coord = new int[3] { coordX, coordY, coordZ };
             Hero = null;
             _id = id;
+            _vp = vp;
+            _teamRespawn = teamRespawn;
         }
 
         public int[] COORD { get { return _coord; } }
@@ -33,6 +37,10 @@ namespace BattleArenaServer.Models
         public List<FillableObstacle> SURFACES { get { return Surfaces; } }
 
         public int ID { get { return _id; } }
+
+        public int VP { get { return _vp; } }
+
+        public string TeamRespawn { get { return _teamRespawn; } }
 
         public void SetHero(Hero hero)
         {
@@ -55,7 +63,7 @@ namespace BattleArenaServer.Models
         public void RemoveObstacle()
         {
             Obstacle = null;
-            GameData._obstacles.Remove(Obstacle);
+            //GameData._obstacles.Remove(Obstacle);
         }
 
         public void AddSurface(FillableObstacle surface)

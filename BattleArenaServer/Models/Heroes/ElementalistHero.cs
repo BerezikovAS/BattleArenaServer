@@ -8,6 +8,17 @@ namespace BattleArenaServer.Models.Heroes
         {
             Name = "Elementalist";
 
+            Respawn();
+
+            SkillList[0] = new ElementEssencePSkill(this);
+            SkillList[1] = new VentusSkill();
+            SkillList[2] = new AquaSkill();
+            SkillList[3] = new IgnisSkill();
+            SkillList[4] = new TerraSkill();
+        }
+
+        public override void Respawn()
+        {
             MaxHP = HP = 875;
             Armor = 2;
             Resist = 4;
@@ -17,11 +28,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 3;
             Dmg = 100;
 
-            SkillList[0] = new ElementEssencePSkill(this);
-            SkillList[1] = new VentusSkill();
-            SkillList[2] = new AquaSkill();
-            SkillList[3] = new IgnisSkill();
-            SkillList[4] = new TerraSkill();
+            base.Respawn();
         }
     }
 }

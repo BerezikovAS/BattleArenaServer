@@ -67,6 +67,12 @@
             Unique
         }
 
+        public enum ItemType
+        {
+            Passive,
+            Active
+        }
+
         public enum EffectTag
         {
             Root,
@@ -80,7 +86,11 @@
             Liquidation,
             Ritual,
             TotemCharge,
-            Disarm
+            Disarm,
+            Slow,
+            GreateJudgement,
+            GuardianAngel,
+            Bubble
         }
     }
 }

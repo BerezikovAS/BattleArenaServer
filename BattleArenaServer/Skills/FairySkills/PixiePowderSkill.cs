@@ -42,7 +42,7 @@ namespace BattleArenaServer.Skills.FairySkills
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                     {
-                        int dealDmg = (int)(Convert.ToDouble(n.HERO.Dmg + n.HERO.StatsEffect.Dmg) * Convert.ToDouble(usedAP) * percentDmg / 100);
+                        int dealDmg = (int)(Convert.ToDouble(n.HERO.Dmg) * Convert.ToDouble(usedAP) * percentDmg / 100);
                         AttackService.SetDamage(requestData.Caster, n.HERO, dealDmg, dmgType);
                     }
                     else if (n.HERO != null && n.HERO.Team == requestData.Caster.Team)

@@ -21,7 +21,7 @@ namespace BattleArenaServer.Skills.InvokerSkills
             titleUpg = "+2 к снижению сопротивления.";
             coolDown = 5;
             coolDownNow = 0;
-            requireAP = 2;
+            requireAP = 1;
             range = 2;
             nonTarget = false;
             area = Consts.SpellArea.Radius;
@@ -42,7 +42,7 @@ namespace BattleArenaServer.Skills.InvokerSkills
                 AttackService.MoveHero(requestData.Caster, requestData.CasterHex, requestData.TargetHex);
 
                 //Ставим магический сгусток
-                int Id = GameData._hexes.Max(x => x.HERO != null ? x.HERO.Id : 0) + 1;
+                int Id = GameData._heroes.Max(x => x.Id) + 1;
                 MagicBundleObstacle magicBundleObstacle 
                     = new MagicBundleObstacle(Id, requestData.Caster.Id, requestData.TargetHex.ID, obstHP, requestData.Caster.Team, lifeTime, resistReduce, dmg);
                 requestData.CasterHex.SetHero(magicBundleObstacle);

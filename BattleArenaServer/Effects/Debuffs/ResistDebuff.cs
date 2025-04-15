@@ -16,12 +16,12 @@ namespace BattleArenaServer.Effects.Debuffs
 
         public override void ApplyEffect(Hero _hero)
         {
-            _hero.StatsEffect.Resist -= value;
+            _hero.Resist -= value;
         }
 
         public override void RemoveEffect(Hero _hero)
         {
-            _hero.StatsEffect.Resist += value;
+            _hero.Resist += value;
         }
     }
 }

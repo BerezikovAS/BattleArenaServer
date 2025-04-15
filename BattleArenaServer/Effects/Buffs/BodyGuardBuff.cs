@@ -32,17 +32,17 @@ namespace BattleArenaServer.Effects.Buffs
             _hero.applyDamage += AttackService.ApplyDamage;
         }
 
-        public bool ApplyDamageDelgate(Hero attacker, Hero defender, int dmg)
+        public bool ApplyDamageDelgate(Hero attacker, Hero defender, int dmg, Consts.DamageType dmgType)
         {
             Hero? buffer = GameData._heroes.FirstOrDefault(x => x.Id == idCaster);
             if (buffer != null && buffer.HP > 0)
             {
                 int halfDmg = dmg / 2;
-                AttackService.ApplyDamage(attacker, buffer, halfDmg);
-                return AttackService.ApplyDamage(attacker, defender, halfDmg);
+                AttackService.ApplyDamage(attacker, buffer, halfDmg, dmgType);
+                return AttackService.ApplyDamage(attacker, defender, halfDmg, dmgType);
             }
             else
-                return AttackService.ApplyDamage(attacker, defender, dmg);
+                return AttackService.ApplyDamage(attacker, defender, dmg, dmgType);
         }
     }
 }

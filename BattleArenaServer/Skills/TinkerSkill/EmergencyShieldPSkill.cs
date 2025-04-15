@@ -43,7 +43,7 @@ namespace BattleArenaServer.Skills.TinkerSkill
             return false;
         }
 
-        private void AfterReceiveDmgDelegate(Hero defender, Hero? attacker, int dmg)
+        private void AfterReceiveDmgDelegate(Hero defender, Hero? attacker, int dmg, Consts.DamageType dmgType)
         {
             dmgReceived += dmg;
             if (dmgReceived >= dmgTreshhold)
@@ -53,8 +53,8 @@ namespace BattleArenaServer.Skills.TinkerSkill
                 if (oldShield != null)
                     defender.EffectList.Remove(oldShield); // Если уже висел старый щит, уберем его
 
-                DmgShieldBuff dmgShieldBuff = new DmgShieldBuff(defender.Id, shieldDurability, 3);
-                defender.EffectList.Add(dmgShieldBuff);
+                DmgShieldBuff dmgShieldBuff = new DmgShieldBuff(defender.Id, shieldDurability, 1);
+                defender.AddEffect(dmgShieldBuff);
             }
         }
     }

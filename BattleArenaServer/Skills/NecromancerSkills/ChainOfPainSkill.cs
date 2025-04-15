@@ -13,7 +13,7 @@ namespace BattleArenaServer.Skills.NecromancerSkills
         {
             name = "Chain Of Pain";
             dmg = 70;
-            title = $"Соединяет себя и врага некротической цепью, нанося тому {dmg} магического урона. {percentTransfer}% полученного урона Вами наносится и врагу.";
+            title = $"Соединяет себя и врага некротической цепью, нанося тому {dmg} магического урона. {percentTransfer}% полученного Вами урона наносится и врагу.";
             titleUpg = "+30% к получению урона врагом.";
             coolDown = 4;
             coolDownNow = 0;
@@ -34,9 +34,10 @@ namespace BattleArenaServer.Skills.NecromancerSkills
 
             if (requestData.Caster != null && requestData.Target != null && requestData.TargetHex != null)
             {
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
                 ChainOfPainDebuff chainOfPainDebuff = new ChainOfPainDebuff(requestData.Caster.Id, percentTransfer, 2);
                 requestData.Target.AddEffect(chainOfPainDebuff);
+                
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
 
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;
@@ -52,7 +53,7 @@ namespace BattleArenaServer.Skills.NecromancerSkills
             {
                 upgraded = true;
                 percentTransfer += 30;
-                title = $"Соединяет себя и врага некротической цепью, нанося тому {dmg} магического урона. {percentTransfer}% полученного урона Вами наносится и врагу.";
+                title = $"Соединяет себя и врага некротической цепью, нанося тому {dmg} магического урона. {percentTransfer}% полученного Вами урона наносится и врагу.";
                 return true;
             }
             return false;

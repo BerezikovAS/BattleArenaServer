@@ -16,12 +16,12 @@ namespace BattleArenaServer.Effects.Debuffs
 
         public override void ApplyEffect(Hero _hero)
         {
-            _hero.StatsEffect.Armor -= value;
+            _hero.Armor -= value;
         }
 
         public override void RemoveEffect(Hero _hero)
         {
-            _hero.StatsEffect.Armor += value;
+            _hero.Armor += value;
         }
     }
 }

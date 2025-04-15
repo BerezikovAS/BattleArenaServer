@@ -1,24 +1,21 @@
-﻿using BattleArenaServer.Effects;
-using BattleArenaServer.Effects.Unique;
+﻿using BattleArenaServer.Effects.Unique;
 using BattleArenaServer.Models;
-using BattleArenaServer.Models.Obstacles;
-using BattleArenaServer.Skills.PriestSkills.Auras;
-using System.Xml.Linq;
 
 namespace BattleArenaServer.Skills.ChaosSkills
 {
     public class ChaosPowerPSkill : PassiveSkill
     {
+        int chaosPoints = 12;
         ChaosPowerUnique chaosPowerUnique;
         public ChaosPowerPSkill(Hero hero) : base(hero)
         {
             name = "Chaos Power";
-            title = $"В начале каждого хода Вы распределяете свои очки хаоса случайным образом между тремя характеристиками." +
+            title = $"В начале каждого хода Вы распределяете {chaosPoints} очков хаоса случайным образом между тремя характеристиками." +
                 $"Урон, броня и сопротивление. Каждое очко хаоса даёт +1 для брони и сопротивления и +8 для урона.";
-            titleUpg = "Увеличивает количество очков хаоса на 3, за каждого поверженного героя.";
+            titleUpg = "Увеличивает количество очков хаоса на 5.";
 
-            chaosPowerUnique = new ChaosPowerUnique(hero.Id, 15, -1);
-            chaosPowerUnique.ApplyEffect(hero);
+            //chaosPowerUnique = new ChaosPowerUnique(hero.Id, chaosPoints, 99);
+            //hero.AddEffect(chaosPowerUnique);
         }
 
         public override bool Cast(RequestData requestData)
@@ -28,24 +25,21 @@ namespace BattleArenaServer.Skills.ChaosSkills
 
         public override void refreshEffect()
         {
-            int chaosPoints = 15;
-            foreach (Hero h in GameData._heroes)
+            if (hero.EffectList.Contains(chaosPowerUnique))
             {
-                if (h is not SolidObstacle && h.HP <= 0)
-                    chaosPoints += 3;
+                chaosPowerUnique.RemoveEffect(hero);
+                hero.EffectList.Remove(chaosPowerUnique);
             }
-
-            chaosPowerUnique.RemoveEffect(hero);
-            chaosPowerUnique = new ChaosPowerUnique(hero.Id, chaosPoints, -1);
-            chaosPowerUnique.ApplyEffect(hero);
+            chaosPowerUnique = new ChaosPowerUnique(hero.Id, chaosPoints, 99);
+            hero.AddEffect(chaosPowerUnique);
         }
 
         public override bool UpgradeSkill()
         {
             upgraded = true;
-            title = $"В начале каждого хода Вы распределяете свои очки хаоса случайным образом между тремя характеристиками." +
-                $"Урон, броня и сопротивление. Каждое очко хаоса даёт +1 для брони и сопротивления и +8 для урона." +
-                $"Вы получаете по 3 доп. очка хаоса за каждого поверженного героя.";
+            chaosPoints += 5;
+            title = $"В начале каждого хода Вы распределяете {chaosPoints} очков хаоса случайным образом между тремя характеристиками." +
+                $"Урон, броня и сопротивление. Каждое очко хаоса даёт +1 для брони и сопротивления и +8 для урона.";
             return true;
         }
     }

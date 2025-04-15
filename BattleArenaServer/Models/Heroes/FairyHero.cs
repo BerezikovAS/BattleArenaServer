@@ -8,8 +8,19 @@ namespace BattleArenaServer.Models.Heroes
         {
             Name = "Fairy";
 
+            Respawn();
+
+            SkillList[0] = new CharmPSkill(this);
+            SkillList[1] = new RebirthSkill();
+            SkillList[2] = new MagicShieldSKill();
+            SkillList[3] = new AstralPortalSkill();
+            SkillList[4] = new PixiePowderSkill();
+        }
+
+        public override void Respawn()
+        {
             MaxHP = HP = 700;
-            Armor = 2;
+            Armor = 0;
             Resist = 6;
 
             AP = 4;
@@ -17,11 +28,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 3;
             Dmg = 95;
 
-            SkillList[0] = new CharmPSkill(this);
-            SkillList[1] = new RebirthSkill();
-            SkillList[2] = new MagicShieldSKill();
-            SkillList[3] = new AstralPortalSkill();
-            SkillList[4] = new PixiePowderSkill();
+            base.Respawn();
         }
     }
 }

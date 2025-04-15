@@ -65,12 +65,10 @@ function fillFootHovers(_hex, _hexes) {
 
 
 // Функции выделения области действия способности
-function fillSpellAreaHovers(_spell) {
-    console.log("fillSpellAreaHovers");
+function fillSpellAreaHovers(_spell, _item) {
     hexes.forEach(el => {
         const _hexHover = document.getElementById(el.id);
-            _hexHover.setAttribute("onmouseenter", "mouseSpellHoverIn(this, " + _spell +")");
-            //_hexHover.setAttribute("onmouseleave", "mouseSpellHoverOut(this, " + _spell +")");
+            _hexHover.setAttribute("onmouseenter", "mouseSpellHoverIn(this, " + _spell + ", '" + _item +"')");
     });
 }
 
@@ -83,9 +81,9 @@ function clearSpellAreaHovers() {
     });
 }
 
-function mouseSpellHoverIn(_hex, _spell) {
+function mouseSpellHoverIn(_hex, _spell, _item) {
     if (_hex.id != idHexArea)
-        getSpellArea(_hex.getAttribute("id"), heroes[idActiveHero].coordid, _spell);
+        getSpellArea(_hex.getAttribute("id"), heroes[idActiveHero].coordid, _spell, _item);
     idHexArea = _hex.id;
 }
 

@@ -8,13 +8,12 @@ namespace BattleArenaServer.Skills.BerserkerSkills
 {
     public class BrokenLegSkill : Skill
     {
-        int multiply = 2;
-        string upgString = "двойной";
         public BrokenLegSkill()
         {
             name = "Broken Leg";
-            title = $"Мощная атака, которая обездвиживает противника. Наносит {upgString} урон атаки.";
-            titleUpg = "Способность наносит тройной урон от атаки.";
+            dmg = 160;
+            title = $"Мощная атака, которая наносит {dmg} физического урона и  обездвиживает противника.";
+            titleUpg = "+60 к урону";
             coolDown = 4;
             coolDownNow = 0;
             requireAP = 3;
@@ -22,7 +21,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             range = 1;
             area = Consts.SpellArea.EnemyTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
-            extraDmgStr = "x2";
+            dmgType = Consts.DamageType.Physical;
         }
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
@@ -36,9 +35,11 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             {
                 RootDebuff rootDebuff = new RootDebuff(requestData.Caster.Id, 0, 2);
                 requestData.Target.AddEffect(rootDebuff);
+                
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
+                
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;
-                AttackService.SetDamage(requestData.Caster, requestData.Target, requestData.Caster.Dmg * multiply, Consts.DamageType.Physical);
                 return true;
             }
 
@@ -50,10 +51,8 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             if (!upgraded)
             {
                 upgraded = true;
-                multiply = 3;
-                upgString = "тройной";
-                extraDmgStr = "x3";
-                title = $"Мощная атака, которая обездвиживает противника. Наносит {upgString} урон атаки.";
+                dmg += 60;
+                title = $"Мощная атака, которая наносит {dmg} физического урона и  обездвиживает противника.";
                 return true;
             }
             return false;

@@ -33,10 +33,11 @@ namespace BattleArenaServer.Skills.ShadowSkills
 
             if (requestData.Caster != null && requestData.Target != null)
             {
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
-
                 SilenceDebuff silenceDebuff = new SilenceDebuff(requestData.Caster.Id, 0, 2);
                 requestData.Target.AddEffect(silenceDebuff);
+                
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
+                
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;
                 return true;

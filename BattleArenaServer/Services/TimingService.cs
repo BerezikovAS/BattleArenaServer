@@ -9,7 +9,6 @@ namespace BattleArenaServer.Services
     public class TimingService : ITiming
     {
         private int turn = 1;
-        private bool isProcessed = true;
 
         public TimingService()
         {
@@ -19,10 +18,10 @@ namespace BattleArenaServer.Services
 
         public int GetActiveHero()
         {
-            Hero? activeHero = GameData._heroes.FirstOrDefault(x => x.Id == GameData.idActiveHero && x.HP > 0);
+            Hero? activeHero = GameData._heroes.FirstOrDefault(x => x.Id == GameData.idActiveHero && x.HP > 0 && x.RespawnTime < 1);
             if (activeHero == null)
             {
-                activeHero = GameData._heroes.FirstOrDefault(x => x.Team == GameData.activeTeam && x.HP > 0);
+                activeHero = GameData._heroes.FirstOrDefault(x => x.Team == GameData.activeTeam && x.HP > 0 && x.RespawnTime < 1);
                 if(activeHero != null)
                     GameData.idActiveHero = activeHero.Id;
                 else
@@ -33,55 +32,122 @@ namespace BattleArenaServer.Services
 
         public int EndTurn()
         {
-            if (!isProcessed)
-                return GameData.idActiveHero;
+            try
+            {
+                // Сначала применим все эффекты в конце хода каждого героя команды
+                foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam))
+                {
+                    AttackService.EndTurnAuraAction(hero);
+                    EndTurnStatusApplyEffect(hero);
+                }
+                // Также пробегаемся по объектам, которые тоже могут иметь ауры
+                foreach (var hero in GameData._solidObstacles.Where(x => x.Team == GameData.activeTeam))
+                {
+                    AttackService.EndTurnAuraAction(hero);
+                    EndTurnStatusApplyEffect(hero);
+                }
 
-            isProcessed = false;
-            // Сначала применим все эффекты в конце хода каждого героя команды
+                // Затем начнем уменьшать кд, срок действия эффекта и время жизни созданных объектов
+                foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam))
+                {
+                    hero.AP = 4;
+                    try
+                    {
+                        DecreaseSkillCooldawn(hero);
+                        DecreaseItemCooldawn(hero);
+                    }
+                    catch (Exception ex) { Console.WriteLine(ex.Message); }
+                    try
+                    {
+                        DecreaseLifeTimeObstacle(hero);
+                    }
+                    catch (Exception ex) { Console.WriteLine(ex.Message); }
+                    try
+                    {
+                        DecreaseStatusDuration(hero.Id);
+                    }
+                    catch (Exception ex) { Console.WriteLine(ex.Message); }
+                }
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+
+            try
+            {
+                // Поскольку саммоны находятся в Героях, то их "протухание" делаем отдельно вне цикла
+                DecreaseLifeTimeSummons(GameData.activeTeam);
+
+                AddUpgradePoints(++turn);
+                if (GameData.activeTeam == "blue")
+                {
+                    GameData.activeTeam = "red";
+                    GameData.userTeamBindings.ActiveTeam = GameData.userTeamBindings.RedTeam;
+                    GameData.userTeamBindings.BlueCoins += 10;
+                }
+                else
+                {
+                    GameData.activeTeam = "blue";
+                    GameData.userTeamBindings.ActiveTeam = GameData.userTeamBindings.BlueTeam;
+                    GameData.userTeamBindings.RedCoins += 10;
+                }
+
+                foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam && x.HP > 0))
+                {
+                    RefreshStartTurnAbilities(hero);
+                    GameData.idActiveHero = hero.Id;
+                }
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+
+            try
+            {
+                DecreaseRespawnTime();
+                AddVPFromAreaControl();
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+
+            // Сначала применим все эффекты в начале хода каждого героя команды
             foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam))
             {
-                AttackService.EndTurnAuraAction(hero);
-                EndTurnStatusApplyEffect(hero);
+                AttackService.StartTurnAuraAction(hero);
             }
             // Также пробегаемся по объектам, которые тоже могут иметь ауры
             foreach (var hero in GameData._solidObstacles.Where(x => x.Team == GameData.activeTeam))
             {
-                AttackService.EndTurnAuraAction(hero);
-                EndTurnStatusApplyEffect(hero);
+                AttackService.StartTurnAuraAction(hero);
             }
 
-            // Затем начнем уменьшать кд, срок действия эффекта и время жизни созданных объектов
-            foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam))
-            {
-                hero.AP = 4;
-                DecreaseSkillCooldawn(hero);
-                DecreaseLifeTimeObstacle(hero);
-
-                DecreaseStatusDuration(hero.Id);
-            }
-
-            // Поскольку саммоны находятся в Героях, то их "протухание" делаем отдельно вне цикла
-            DecreaseLifeTimeSummons(GameData.activeTeam);
-
-            AddUpgradePoints(++turn);
-            if (GameData.activeTeam == "blue")
-            {
-                GameData.activeTeam = "red";
-                GameData.userTeamBindings.ActiveTeam = GameData.userTeamBindings.RedTeam;
-            }
-            else
-            {
-                GameData.activeTeam = "blue";
-                GameData.userTeamBindings.ActiveTeam = GameData.userTeamBindings.BlueTeam;
-            }
-
-            foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam && x.HP > 0))
-            {
-                RefreshStartTurnAbilities(hero);
-                GameData.idActiveHero = hero.Id;
-            }
-            isProcessed = true;
             return GameData.idActiveHero;
+        }
+
+        /// <summary>
+        /// Уменьшение времени респавна героев. Триггерится в начале хода
+        /// </summary>
+        public void DecreaseRespawnTime()
+        {
+            foreach (var hero in GameData._heroes)
+            {
+                if (hero.Team == GameData.activeTeam && hero.RespawnTime > 1)
+                {
+                    if (--hero.RespawnTime <= 1)
+                    {
+                        hero.Respawn();
+                    }
+                }
+            }
+        }
+
+        public void AddVPFromAreaControl()
+        {
+            foreach (var hex in GameData._hexes)
+            {
+                if (hex.VP > 0 && hex.HERO != null && hex.HERO.Team != GameData.activeTeam && hex.HERO.IsMainHero)
+                {
+                    if (hex.HERO.Team == "red")
+                        GameData.userTeamBindings.RedVP += hex.VP;
+                    else
+                        GameData.userTeamBindings.BlueVP += hex.VP;
+                }
+            }
         }
 
         public void RefreshStartTurnAbilities(Hero hero)
@@ -122,9 +188,19 @@ namespace BattleArenaServer.Services
             }
         }
 
+        public void DecreaseItemCooldawn(Hero hero)
+        {
+            foreach (var item in hero.Items)
+            {
+                if (item.Skill.coolDownNow > 0)
+                    item.Skill.coolDownNow--;
+            }
+        }
+
         public void DecreaseLifeTimeObstacle(Hero hero)
         {
             // Пробегаемся по обычным преградам
+            List<Obstacle> removeHexObst = new List<Obstacle>();
             foreach (var obst in GameData._obstacles)
             {
                 if (obst.CasterId == hero.Id)
@@ -133,12 +209,18 @@ namespace BattleArenaServer.Services
                     {
                         Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == obst.HexId);
                         if (hex != null)
+                        {
+                            removeHexObst.Add(obst);
                             hex.RemoveObstacle();
+                        }
                         obst.HexId = -1;
                         AttackService.ContinuousAuraAction();
                     }
                 }
             }
+            // Удалем то что уже протухло
+            foreach (var obst in removeHexObst)
+                GameData._obstacles.Remove(obst);
 
             // Также по поверхностям
             List<FillableObstacle> removeSurf = new List<FillableObstacle>();
@@ -239,7 +321,7 @@ namespace BattleArenaServer.Services
 
         public void AddUpgradePoints(int turn)
         {
-            if (turn % 4 == 1)
+            if (turn % 8 == 1)
                 foreach (var hero in GameData._heroes)
                     if (hero is not Summon)
                         hero.UpgradePoints++;

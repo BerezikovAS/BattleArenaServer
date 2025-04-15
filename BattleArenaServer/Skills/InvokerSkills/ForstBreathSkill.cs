@@ -13,7 +13,7 @@ namespace BattleArenaServer.Skills.InvokerSkills
             dmg = 90;
             title = $"Морозное дыхание наносит врагам в области {dmg} маг. урона и отнимает 1 ОД.";
             titleUpg = "+25 к урону, +1 к дальности";
-            coolDown = 4;
+            coolDown = 5;
             coolDownNow = 0;
             requireAP = 2;
             range = 2;
@@ -37,8 +37,8 @@ namespace BattleArenaServer.Skills.InvokerSkills
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                     {
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
                         n.HERO.AP -= 1;
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
                     }
                 }
                 requestData.Caster.AP -= requireAP;

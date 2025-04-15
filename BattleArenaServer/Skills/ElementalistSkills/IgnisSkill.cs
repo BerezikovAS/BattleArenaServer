@@ -41,13 +41,10 @@ namespace BattleArenaServer.Skills.ElementalistSkills
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                     {
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
+                        BurnDebuff burnDebuff = new BurnDebuff(requestData.Caster.Id, percentLoss, duration);
+                        n.HERO.AddEffect(burnDebuff);
 
-                        if (n.HERO != null)
-                        {
-                            BurnDebuff burnDebuff = new BurnDebuff(requestData.Caster.Id, percentLoss, duration);
-                            n.HERO.AddEffect(burnDebuff);
-                        }
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
                     }
                 }
                 requestData.Caster.AP -= requireAP;

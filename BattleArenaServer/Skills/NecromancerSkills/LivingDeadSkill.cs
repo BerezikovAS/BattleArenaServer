@@ -17,7 +17,7 @@ namespace BattleArenaServer.Skills.NecromancerSkills
         public LivingDeadSkill()
         {
             name = "Living Dead";
-            dmg = 45;
+            dmg = 55;
             title = $"Поднимает к жизни скелета-воина из-под земли, который сражается на Вашей стороне.";
             titleUpg = "Поднимает скелета-лучника.";
             coolDown = 6;
@@ -40,7 +40,7 @@ namespace BattleArenaServer.Skills.NecromancerSkills
             if (requestData.Caster != null && requestData.TargetHex != null && requestData.TargetHex.OBSTACLE == null)
             {
                 //Вызываем скелета
-                int Id = GameData._hexes.Max(x => x.HERO != null ? x.HERO.Id : 0) + 1;
+                int Id = GameData._heroes.Max(x => x.Id) + 1;
                 SkeletonSummon skeleton = new SkeletonSummon(Id, requestData.Caster.Team, skeletonHP, armor, resist, attackRadius, dmg, requestData.Caster.Id, lifeTime);
                 requestData.TargetHex.SetHero(skeleton);
                 GameData._heroes.Add(skeleton);

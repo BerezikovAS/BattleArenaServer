@@ -6,12 +6,14 @@ namespace BattleArenaServer.Skills.AbominationSkills
 {
     public class OssificationSkill : Skill
     {
-        int maxHPreduction = 60;
+        int maxHPreduction = 80;
+        int extraDef = 1;
+        int extraDmg = 7;
         public OssificationSkill()
         {
             name = "Ossification";
-            title = $"Уменьшает максимальный запас ХП на {maxHPreduction}, чтобы навсегда получить +1 к броне и сопротивлению и +7 к урону.";
-            titleUpg = "ХП уменьшается на 30 и способность не тратит ОД.";
+            title = $"Уменьшает максимальный запас ХП на {maxHPreduction}, чтобы навсегда получить +{extraDef} к броне и сопротивлению и +{extraDmg} к урону.";
+            titleUpg = "Уменьшает ХП на 140, но даёт двойной бонус к статам.";
             coolDown = 1;
             coolDownNow = 0;
             requireAP = 1;
@@ -33,9 +35,9 @@ namespace BattleArenaServer.Skills.AbominationSkills
                 if (requestData.Caster.HP > requestData.Caster.MaxHP)
                     requestData.Caster.HP = requestData.Caster.MaxHP;
 
-                requestData.Caster.Armor += 1;
-                requestData.Caster.Resist += 1;
-                requestData.Caster.Dmg += 7;
+                requestData.Caster.Armor += extraDef;
+                requestData.Caster.Resist += extraDef;
+                requestData.Caster.Dmg += extraDmg;
 
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;
@@ -49,9 +51,10 @@ namespace BattleArenaServer.Skills.AbominationSkills
             if (!upgraded)
             {
                 upgraded = true;
-                requireAP = 0;
-                maxHPreduction = 30;
-                title = $"Уменьшает максимальный запас ХП на {maxHPreduction}, чтобы навсегда получить +1 к броне и сопротивлению и +7 к урону.";
+                maxHPreduction += 60;
+                extraDef += 1;
+                extraDmg += 7;
+                title = $"Уменьшает максимальный запас ХП на {maxHPreduction}, чтобы навсегда получить +{extraDef} к броне и сопротивлению и +{extraDmg} к урону.";
                 return true;
             }
             return false;

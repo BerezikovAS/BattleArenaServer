@@ -12,18 +12,17 @@ namespace BattleArenaServer.Effects.Debuffs
             value = _value;
             duration = _duration;
             description = "Стоимость передвижения увеличена на 1 ОД.";
+            effectTags.Add(Consts.EffectTag.Slow);
         }
 
         public override void ApplyEffect(Hero _hero)
         {
-            _hero.MoveSkill.requireAP += 1;
-            _hero.MoveSkill.stats.requireAP += 1;
+
         }
 
         public override void RemoveEffect(Hero _hero)
         {
-            _hero.MoveSkill.requireAP -= 1;
-            _hero.MoveSkill.stats.requireAP -= 1;
+
         }
     }
 }

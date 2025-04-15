@@ -43,9 +43,10 @@ namespace BattleArenaServer.Skills.CultistSkills
                     }
                 }
 
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
+
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
                 return true;
             }
 

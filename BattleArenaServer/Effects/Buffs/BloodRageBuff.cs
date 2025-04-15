@@ -31,9 +31,9 @@ namespace BattleArenaServer.Effects.Buffs
             _hero.afterAttack -= AfterAttackDelegate;
         }
 
-        private bool AfterAttackDelegate(Hero attacker, Hero defender, int dmg)
+        private bool AfterAttackDelegate(Hero attacker, Hero defender, int dmg, Consts.DamageType dmgType)
         {
-            return AttackService.ApplyDamage(attacker, attacker, 35);
+            return AttackService.ApplyDamage(attacker, attacker, 35, dmgType);
         }
     }
 }

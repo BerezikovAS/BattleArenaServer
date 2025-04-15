@@ -14,7 +14,7 @@ namespace BattleArenaServer.Skills.Crossbowman
             name = "Caltrop";
             title = $"Устанавливает ловушку с колючками перед собой.\nЕсли применить на врага, то герой сначала отпрыгнет от него." +
                 $"\nЛовушка наносит 50 чистого урона сразу и вызывает кровотечение на {bleedingDuration} хода, наносящее по {bleedingDamage} урона каждый ход. Ловушка исчезнет через 3 хода.";
-            titleUpg = "+20 к урону от кровотечения. Кровотечение длится 3 хода.";
+            titleUpg = "Устанавливает еще 2 дополнительные ловушки рядом";
             coolDown = 3;
             coolDownNow = 0;
             requireAP = 1;
@@ -45,6 +45,18 @@ namespace BattleArenaServer.Skills.Crossbowman
                     CaltropObstacle caltropObstacle = new CaltropObstacle(requestData.Caster.Id, requestData.CasterHex.ID, 3, requestData.Caster.Team, bleedingDamage, bleedingDuration);
                     requestData.CasterHex.SetObstacle(caltropObstacle);
 
+                    if (upgraded)
+                    {
+                        List<Hex> list = new List<Hex>();
+                        list = GameData._hexes.FindAll(x => x.Distance(moveHex) == 1 && x.Distance(requestData.CasterHex) == 1);
+                        foreach (var hex in list)
+                            if (hex.IsFree() && hex.OBSTACLE == null)
+                            {
+                                CaltropObstacle caltropObstacle2 = new CaltropObstacle(requestData.Caster.Id, requestData.CasterHex.ID, 3, requestData.Caster.Team, bleedingDamage, bleedingDuration);
+                                hex.SetObstacle(caltropObstacle2);
+                            }
+                    }
+
                     requestData.Caster.AP -= requireAP;
                     coolDownNow = coolDown;
                     return true;
@@ -56,10 +68,22 @@ namespace BattleArenaServer.Skills.Crossbowman
                 if (!request.startRequest(requestData, this))
                     return false;
 
-                if (requestData.TargetHex != null && requestData.Caster != null)
+                if (requestData.TargetHex != null && requestData.Caster != null && requestData.CasterHex != null)
                 {
                     CaltropObstacle caltropObstacle = new CaltropObstacle(requestData.Caster.Id, requestData.TargetHex.ID, 3, requestData.Caster.Team, bleedingDamage, bleedingDuration);
                     requestData.TargetHex.SetObstacle(caltropObstacle);
+
+                    if (upgraded)
+                    {
+                        List<Hex> list = new List<Hex>();
+                        list = GameData._hexes.FindAll(x => x.Distance(requestData.CasterHex) == 1 && x.Distance(requestData.TargetHex) == 1);
+                        foreach (var hex in list)
+                            if (hex.IsFree() && hex.OBSTACLE == null)
+                            {
+                                CaltropObstacle caltropObstacle2 = new CaltropObstacle(requestData.Caster.Id, requestData.CasterHex.ID, 3, requestData.Caster.Team, bleedingDamage, bleedingDuration);
+                                hex.SetObstacle(caltropObstacle2);
+                            }
+                    }
 
                     requestData.Caster.AP -= requireAP;
                     coolDownNow = coolDown;
@@ -74,9 +98,7 @@ namespace BattleArenaServer.Skills.Crossbowman
             if (!upgraded)
             {
                 upgraded = true;
-                bleedingDamage += 20;
-                bleedingDuration += 1;
-                title = $"Устанавливает ловушку с колючками перед собой.\nЕсли применить на врага, то герой сначала отпрыгнет от него." +
+                title = $"Устанавливает 3 ловушки с колючками перед собой.\nЕсли применить на врага, то герой сначала отпрыгнет от него." +
                 $"\nЛовушка наносит 50 чистого урона сразу и вызывает кровотечение на {bleedingDuration} хода, наносящее по {bleedingDamage} урона каждый ход. Ловушка исчезнет через 3 хода.";
                 return true;
             }

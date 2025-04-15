@@ -8,6 +8,17 @@ namespace BattleArenaServer.Models.Heroes
         {
             Name = "Geomant";
 
+            Respawn();
+
+            SkillList[0] = new StoneStrenghtPSkill(this);
+            SkillList[1] = new StalaktiteSkill();
+            SkillList[2] = new GiantBoulderSkill();
+            SkillList[3] = new StoneBloodSkill();
+            SkillList[4] = new EarthquakeSkill();
+        }
+
+        public override void Respawn()
+        {
             MaxHP = HP = 850;
             Armor = 2;
             Resist = 2;
@@ -17,11 +28,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 3;
             Dmg = 100;
 
-            SkillList[0] = new StoneStrenghtPSkill(this);
-            SkillList[1] = new StalaktiteSkill();
-            SkillList[2] = new GiantBoulderSkill();
-            SkillList[3] = new StoneBloodSkill();
-            SkillList[4] = new EarthquakeSkill();
+            base.Respawn();
         }
     }
 }

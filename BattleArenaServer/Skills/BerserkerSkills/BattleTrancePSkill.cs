@@ -53,7 +53,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
                     if (n.HERO != null && n.HERO.Team != attacker.Team && n.HERO.type != Consts.HeroType.Obstacle)
                         enemiesCount++;
                 }
-                extraDmg = (attacker.Dmg + attacker.StatsEffect.Dmg) * ((enemiesCount - cntEnemiesPenalty) * 0.2);
+                extraDmg = attacker.Dmg * ((enemiesCount - cntEnemiesPenalty) * 0.2);
                 return (int)(Math.Round(extraDmg));
             }
             return 0;

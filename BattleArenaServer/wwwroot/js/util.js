@@ -24,12 +24,13 @@ function feelActiveHeroInfo(_hero) {
 function feelSpells(_hero) {
     var i = 0;
     _hero.skillList.forEach(skill => {
+        if (i > 4)
+            return;
         const spell = document.getElementById("spell" + i);
         const cdInfo = document.getElementById("cd" + i);
         const spellDiv = document.getElementById("sp" + i);
         const spellUpg = document.getElementById("upgrade" + i);
         spell.innerText = skill.name;
-        //spellDiv.title = skill.title;
         spellUpg.title = skill.titleUpg;
 
         if (skill.skillType == 1) {
@@ -102,6 +103,35 @@ function feelAP(_ap) {
 
     const resist = document.getElementById("active_heroinfo_resist");
     resist.innerText = _hero.resist + _hero.statsEffect.resist;
+
+
+    let cnt = 1;
+    for (var i = 1; i <= 3; i++) {
+        const itemBtn = document.getElementById("itemBtn" + i);
+        const itemDiv = document.getElementById("itemDiv" + i);
+        itemBtn.removeAttribute("src");
+        itemDiv.className = "item";
+        const cdItem = document.getElementById("cdItem" + i);
+        cdItem.innerText = "";
+    }
+
+    _hero.items.forEach(item => {
+        const itemBtn = document.getElementById("itemBtn" + cnt);
+        const itemDiv = document.getElementById("itemDiv" + cnt);
+        itemBtn.setAttribute("src", "items/" + item.name + ".png");
+        itemBtn.setAttribute("onclick", "castItem('" + item.name + "')");
+        itemDiv.classList.add("level" + item.level);
+        itemDiv.title = item.description;
+
+        if (item.skill.coolDownNow > 0) {
+            itemDiv.classList.add("cooldawn");
+            const cdItem = document.getElementById("cdItem" + cnt);
+            cdItem.innerText = item.skill.coolDownNow;
+        }
+        cnt++;
+    });
+
+
 
     fillEffectsOnHeroInfo(_hero, "statusbar");
 }
@@ -204,6 +234,42 @@ function getPercentResist(_value) {
     return percent;
 }
 
+function fillBanchHeroes(_heroes) {
+    var ch = 1;
+    isNeedRespawnPoint = false;
+    _heroes.forEach(_hero => {
+        const banchHero = document.getElementById("banch_hero" + ch);
+        const iconBanchHero = document.getElementById("banch_icon" + ch);
+
+        //console.log(_heroes);
+
+        var margin = ch > 1 ? "; margin-left: 6px;" : "";
+        var gray = _hero.respawnTime < 1 ? " filter: grayscale(100%);" : "";
+
+        var _color = "rgb(0, 99, 248)";
+        if (_hero != null & _hero.team == "red" & gray == "")
+            _color = "red";
+
+        banchHero.setAttribute("style", gray + " display: inline-block; background-color: " + _color + margin);
+        iconBanchHero.setAttribute("src", "heroes/" + _hero.name + ".png");
+
+        const cdInfo = document.getElementById("cdBanch" + ch);
+        if (_hero.respawnTime > 1) {
+            cdInfo.innerText = _hero.respawnTime - 1;
+        }
+        else {
+            cdInfo.innerText = "";
+        }
+
+        if (_hero.respawnTime == 1) // надо выставить героя
+            isNeedRespawnPoint = true;
+
+        banchHeroes[ch] = _hero;
+
+        ch++;
+    });
+}
+
 // Заполнить инфу о герое
 function feelHeroInfo(_hex, _hexId) {
     var _hero;
@@ -250,6 +316,7 @@ function feelHeroInfo(_hex, _hexId) {
         const hp = document.getElementById("heroinfo_hp");
         hp.innerText = _hero.hp + " / " + _hero.maxHP;
 
+        //console.log(_hero);
         var hpPercent = 300 * _hero.hp / _hero.maxHP;
         const hpbar = document.getElementById("heroinfo_hpbar");
         hpbar.setAttribute("style", "width: " + hpPercent + "px; background-color: " + _color);
@@ -259,6 +326,9 @@ function feelHeroInfo(_hex, _hexId) {
 
         var i = 0;
         _hero.skillList.forEach(skill => {
+            if (i > 4)
+                return;
+
             const spell = document.getElementById("spellInfo" + i);
             const cdInfo = document.getElementById("cdInfo" + i);
             const spInfo = document.getElementById("spInfo" + i);
@@ -281,6 +351,31 @@ function feelHeroInfo(_hex, _hexId) {
             i++;
         });
 
+        let cnt = 1;
+        for (var i = 1; i <= 3; i++) {
+            const itemBtn = document.getElementById("itemBtnInfo" + i);
+            const itemDiv = document.getElementById("itemDivInfo" + i);
+            itemBtn.removeAttribute("src");
+            itemDiv.className = "item";
+            const cdItem = document.getElementById("cdItemInfo" + i);
+            cdItem.innerText = "";
+        }
+
+        _hero.items.forEach(item => {
+            const itemBtn = document.getElementById("itemBtnInfo" + cnt);
+            const itemDiv = document.getElementById("itemDivInfo" + cnt);
+            itemBtn.setAttribute("src", "items/" + item.name + ".png");
+            itemDiv.classList.add("level" + item.level);
+            itemDiv.title = item.description;
+
+            if (item.skill.coolDownNow > 0) {
+                itemDiv.classList.add("cooldawn");
+                const cdItem = document.getElementById("cdItemInfo" + cnt);
+                cdItem.innerText = item.skill.coolDownNow;
+            }
+            cnt++;
+        });
+
         fillEffectsOnHeroInfo(_hero, "statusbar_info");
     }
 }
@@ -293,10 +388,17 @@ function fillEffectsOnHeroInfo(_hero, _panel)
     }
 
     _hero.effectList.forEach(effect => {
-        const status = document.createElement("button");
-        status.setAttribute("class", "statusbaritem");
+        var statusclass = "statusbaritem buff";
+        if (effect.type == 1)
+            statusclass = "statusbaritem debuff"
+
+        const status = document.createElement("div");
+        status.setAttribute("class", statusclass);
         status.setAttribute("style", "background-image: url(\"effects/" + effect.name + ".png\");");
         status.title = effect.description;
+
+        if (effect.name == "PhysShield" || effect.name == "MagicShield" || effect.name == "DmgShield")
+            status.innerText = effect.value;
         statusBar.appendChild(status);
     });
 }
@@ -323,6 +425,8 @@ function fillEffectsOnHex(_hex, _hero)
 function enableUpgrades(_hero) {
     let i = 0;
     _hero.skillList.forEach(skill => {
+        if (i > 4)
+            return;
         const spellUp = document.getElementById("upgrade" + i);
         if(_hero.upgradePoints > 0 & !skill.upgraded) {
             spellUp.disable = false;
@@ -418,4 +522,102 @@ function getHexesDirections() {
     hexesDir[4].coord = [-1, 0, 1];
     hexesDir[5].coord = [0, -1, 1];
     return hexesDir;
+}
+
+function showVP(_VP) {
+    var redVP = _VP.redVP;
+    var blueVP = _VP.blueVP;
+
+    var redVPText = document.getElementById("vp_red");
+    var blueVPText = document.getElementById("vp_blue");
+    var vpLine = document.getElementById("vp_line_c");
+    var victory = document.getElementById("victory");
+
+    redVPText.innerText = redVP;
+    blueVPText.innerText = blueVP;
+
+    var width = 649 * redVP / (redVP + blueVP);
+    vpLine.setAttribute("style", "width: " + width + "px; height: 90px; background-color: red;");
+
+    if (redVP >= 100) {
+        victory.innerText = "ПОБЕДА КРАСНЫХ!";
+        victory.removeAttribute("style");
+        victory.setAttribute("class", "Victory VictoryRed");
+    }
+    else if (blueVP >= 100) {
+        victory.innerText = "ПОБЕДА СИНИХ!";
+        victory.removeAttribute("style");
+        victory.setAttribute("class", "Victory VictoryBlue");
+    }
+    else
+        victory.setAttribute("style", "visibility: collapse;");
+
+    //Также отобразим монетки
+    const coins = document.getElementById("team_coins");
+    if (activeTeam == "red")
+        coins.innerText = _VP.redCoins;
+    else
+        coins.innerText = _VP.blueCoins;
+}
+
+function fillShop(items) {
+    const shop = document.getElementById("shop");
+    while (shop.firstChild) {
+        shop.removeChild(shop.firstChild);
+    }
+
+    items.forEach(item => {
+        const shIt = document.createElement("div");
+        const img = document.createElement("img");
+        const btn = document.createElement("div");
+
+        let itemHave = false;
+        hero.items.forEach(it => {
+            if (it.name == item.name)
+                itemHave = true;
+        });
+        shIt.title = item.description;
+
+        img.setAttribute("style", "width: 80px;");
+        img.setAttribute("src", "items/" + item.name + ".png");
+
+
+        if (itemHave) {
+            shIt.setAttribute("class", "ShopItem Sell");
+            btn.setAttribute("class", "ShopButton Sell");
+            btn.setAttribute("onclick", "sellItem('" + item.name + "')");
+            btn.innerText = "SELL " + item.sellCost;
+        }
+        else if (item.amount <= 0) {
+            shIt.setAttribute("class", "ShopItem Sold");
+            btn.setAttribute("class", "ShopButton Sold");
+            btn.innerText = "SOLD";
+        }
+        else {
+            shIt.setAttribute("class", "ShopItem lvl" + item.level);
+            btn.setAttribute("class", "ShopButton");
+            btn.setAttribute("onclick", "buyItem('" + item.name + "')");
+            btn.innerText = "BUY " + item.cost;
+        }
+        shop.appendChild(shIt);
+        shIt.appendChild(img);
+        shIt.appendChild(btn);
+
+    });
+}
+
+//1 - показать
+//0 - спрятать
+function showHideShop(mode) {
+    const shop = document.getElementById("shop");
+    const btn = document.getElementById("showShop");
+    console.log(shop);
+    if (mode == 1) {
+        shop.setAttribute("style", "visibility: visible;");
+        btn.setAttribute("onclick", "showHideShop(0)");
+    }
+    else {
+        shop.setAttribute("style", "visibility: collapse;");
+        btn.setAttribute("onclick", "showHideShop(1)");
+    }
 }

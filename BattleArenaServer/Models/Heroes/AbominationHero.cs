@@ -1,4 +1,5 @@
-﻿using BattleArenaServer.Skills.AbominationSkills;
+﻿using BattleArenaServer.Models.Items;
+using BattleArenaServer.Skills.AbominationSkills;
 
 namespace BattleArenaServer.Models.Heroes
 {
@@ -8,6 +9,20 @@ namespace BattleArenaServer.Models.Heroes
         {
             Name = "Abomination";
 
+            Respawn();
+
+            SkillList[0] = new FleshEaterPSkill(this);
+            SkillList[1] = new BloodCurseSkill();
+            SkillList[2] = new BloodTransferSkill();
+            SkillList[3] = new BloodRainSkill();
+            SkillList[4] = new OssificationSkill();
+
+            foreach (var item in Items)
+                item.ApplyEffect(this);
+        }
+
+        public override void Respawn()
+        {
             MaxHP = HP = 1500;
             Armor = 0;
             Resist = 0;
@@ -17,11 +32,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 100;
 
-            SkillList[0] = new FleshEaterPSkill(this);
-            SkillList[1] = new BloodCurseSkill();
-            SkillList[2] = new BloodTransferSkill();
-            SkillList[3] = new BloodRainSkill();
-            SkillList[4] = new OssificationSkill();
+            base.Respawn();
         }
     }
 }

@@ -32,16 +32,16 @@ namespace BattleArenaServer.Skills.GeomantSkills.Auras
 
         public override void ApplyEffect(Hero source, Hero target)
         {
-            source.StatsEffect.Armor += stalaktiteCount;
-            source.StatsEffect.Resist += stalaktiteCount;
-            source.StatsEffect.Dmg += stalaktiteCount * 10;
+            source.Armor += stalaktiteCount;
+            source.Resist += stalaktiteCount;
+            source.Dmg += stalaktiteCount * 10;
         }
 
         public override void CancelEffect(Hero source)
         {
-            source.StatsEffect.Armor -= stalaktiteCount;
-            source.StatsEffect.Resist -= stalaktiteCount;
-            source.StatsEffect.Dmg -= stalaktiteCount * 10;
+            source.Armor -= stalaktiteCount;
+            source.Resist -= stalaktiteCount;
+            source.Dmg -= stalaktiteCount * 10;
         }
     }
 }

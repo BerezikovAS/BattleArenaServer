@@ -9,11 +9,12 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
 {
     public class PurificationSkill : Skill
     {
+        int extraDef = 1;
         public PurificationSkill()
         {
             name = "Purification";
-            title = $"Очищающий свет снимает негативные эффекты с союзников. За каждый снятый эффект герой получает +1 брони и +1 сопротивления.";
-            titleUpg = "-3 к перезарядке";
+            title = $"Очищающий свет снимает негативные эффекты с союзников. За каждый снятый эффект герой получает +{extraDef} брони и +{extraDef} сопротивления.";
+            titleUpg = "+2 к броне и сопротивлению за негативный эффект";
             coolDown = 5;
             coolDownNow = 0;
             requireAP = 1;
@@ -72,9 +73,8 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
             if (!upgraded)
             {
                 upgraded = true;
-                coolDown -= 3;
-                stats.coolDown -= 3;
-                title = $"Очищающий свет снимает негативные эффекты с союзников. За каждый снятый эффект герой получает +1 брони и +1 сопротивления.";
+                extraDef += 2;
+                title = $"Очищающий свет снимает негативные эффекты с союзников. За каждый снятый эффект герой получает +{extraDef} брони и +{extraDef} сопротивления.";
                 return true;
             }
             return false;

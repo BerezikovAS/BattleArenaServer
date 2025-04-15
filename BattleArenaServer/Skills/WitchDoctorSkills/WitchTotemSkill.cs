@@ -1,6 +1,5 @@
 ﻿using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
-using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
 using BattleArenaServer.Skills.WitchDoctorSkills.Auras;
 using BattleArenaServer.Skills.WitchDoctorSkills.Obstacles;
@@ -21,8 +20,8 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
             title = $"Размещает древний тотем, который в конце Вашего хода наносит каждому врагу {dmg} чистого урона и увеличивает свой заряд на 1." +
                 $"\nЕсли тотем уничтожен или срок жизни подошел к концу, то врагам в радиусе наносится урон, а союзники восстанавливают ХП в зависимости от зарядов." +
                 $"\nУрон = {baseDmg} + 'Заряды' * {chargeDmg}, Лечение = 'Заряды' * {chargeDmg}";
-            titleUpg = "+7 к урону за заряд. +50 к ХП.";
-            coolDown = 3;
+            titleUpg = "+5 к урону за заряд. +50 к ХП.";
+            coolDown = 4;
             coolDownNow = 0;
             requireAP = 2;
             range = 2;
@@ -42,7 +41,7 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
             if (requestData.Caster != null && requestData.TargetHex != null && requestData.TargetHex.OBSTACLE == null)
             {
                 //Ставим тотем
-                int Id = GameData._hexes.Max(x => x.HERO != null ? x.HERO.Id : 0) + 1;
+                int Id = GameData._heroes.Max(x => x.Id) + 1;
                 WitchTotemObstacle witchTotemObstacle = 
                     new WitchTotemObstacle(Id, requestData.Caster.Id, requestData.TargetHex.ID, totemHP, requestData.Caster.Team, lifeTime, 2, baseDmg, chargeDmg);
                 requestData.TargetHex.SetHero(witchTotemObstacle);
@@ -64,7 +63,7 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
             if (!upgraded)
             {
                 upgraded = true;
-                chargeDmg += 7; ;
+                chargeDmg += 5;
                 totemHP += 50;
                 title = $"Размещает древний тотем, который в конце Вашего хода наносит каждому врагу {dmg} чистого урона и увеличивает свой заряд на 1." +
                 $"\nЕсли тотем уничтожен или срок жизни подошел к концу, то врагам в радиусе наносится урон, а союзники восстанавливают ХП в зависимости от зарядов." +

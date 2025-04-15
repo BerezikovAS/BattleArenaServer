@@ -5,8 +5,8 @@ namespace BattleArenaServer.Skills.FairySkills
     public class CharmPSkill : PassiveSkill
     {
         int burnAP = 1;
-        int decreaseDmg1 = 35;
-        int decreaseDmg2 = 55;
+        int decreaseDmg1 = 25;
+        int decreaseDmg2 = 40;
         int percentDecrease = 0;
         public CharmPSkill(Hero hero) : base(hero)
         {

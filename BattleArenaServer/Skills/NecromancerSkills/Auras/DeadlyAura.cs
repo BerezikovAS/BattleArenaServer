@@ -6,10 +6,10 @@ namespace BattleArenaServer.Skills.NecromancerSkills.Auras
     public class DeadlyAura : Aura
     {
         int reduce_resist = 0;
-        public DeadlyAura(bool upgraded, int reduce_resist)
+        public DeadlyAura(bool upgraded, int reduce_resist, int radius)
         {
             Name = "DeadlyAura";
-            radius = 1;
+            this.radius = radius;
             type = Consts.AuraType.Continuous;
             this.reduce_resist = reduce_resist;
         }
