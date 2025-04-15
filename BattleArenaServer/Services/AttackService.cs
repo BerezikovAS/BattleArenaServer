@@ -192,9 +192,7 @@ namespace BattleArenaServer.Services
             if (defender.IsMainHero)
             {
                 defender.RespawnTime = 4;
-                foreach (var effect in defender.EffectList)
-                    effect.RemoveEffect(defender);
-                defender.EffectList.Clear();
+                
                 foreach (var item in defender.Items)
                     item.RemoveEffect(defender);
             }
