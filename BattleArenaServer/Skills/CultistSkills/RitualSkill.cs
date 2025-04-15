@@ -3,9 +3,8 @@ using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
-using BattleArenaServer.Skills.CultistSkills;
 
-namespace BattleArenaServer.Skills.Crossbowman
+namespace BattleArenaServer.Skills.CultistSkills
 {
     public class RitualSkill : Skill
     {
@@ -13,7 +12,7 @@ namespace BattleArenaServer.Skills.Crossbowman
         {
             name = "Ritual";
             dmg = 80;
-            title = $"Добавляет 1 очко ритуала и наносит врагам по соседству {dmg} магического урона. Когда кол-во очков достигает 5, вы трансформируетесь в Древнего.";
+            title = $"Добавляет 1 очко ритуала и наносит врагам по соседству {dmg} магического урона. Когда кол-во очков достигает 4, вы трансформируетесь в Древнего.";
             titleUpg = "+20 к урону, +1 к радиусу";
             coolDown = 1;
             coolDownNow = 0;
@@ -57,7 +56,7 @@ namespace BattleArenaServer.Skills.Crossbowman
                 }
 
                 //Достигли нужного значения. Превращаемся
-                if (ritualPower >= 5)
+                if (ritualPower >= 4)
                 {
                     requestData.Caster.Name = "Cthulhu";
                     requestData.Caster.MaxHP += 500;
@@ -85,7 +84,7 @@ namespace BattleArenaServer.Skills.Crossbowman
                 dmg += 20;
                 radius += 1;
                 stats.radius += 1;
-                title = $"Добавляет 1 очко ритуала и наносит врагам по соседству {dmg} магического урона. Когда кол-во очков достигает 5, вы трансформируетесь в Древнего.";
+                title = $"Добавляет 1 очко ритуала и наносит врагам по соседству {dmg} магического урона. Когда кол-во очков достигает 4, вы трансформируетесь в Древнего.";
                 return true;
             }
             return false;

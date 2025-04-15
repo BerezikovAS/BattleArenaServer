@@ -22,7 +22,6 @@ namespace BattleArenaServer.Effects.Debuffs
             {
                 ChainOfPainBuff chainOfPainBuff = new ChainOfPainBuff(idCaster, value, duration, _hero.Id);
                 caster.AddEffect(chainOfPainBuff);
-                chainOfPainBuff.ApplyEffect(caster);
             }
         }
 
@@ -33,7 +32,10 @@ namespace BattleArenaServer.Effects.Debuffs
             {
                 Effect? chainOfPainBuff = caster.EffectList.FirstOrDefault(x => x.Name == "ChainOfPain" && x.type == Consts.StatusEffect.Buff);
                 if (chainOfPainBuff != null)
+                {
+                    chainOfPainBuff.RemoveEffect(caster);
                     caster.EffectList.Remove(chainOfPainBuff);
+                }
             }
         }
     }

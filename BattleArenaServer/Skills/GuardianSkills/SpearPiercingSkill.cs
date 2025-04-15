@@ -13,8 +13,8 @@ namespace BattleArenaServer.Skills.GuardianSkills
             name = "Spear Piercing";
             dmg = 120;
             title = $"Проведите атаку по врагам по прямой на 2 клетки. Эта атака игнорирует до {armorPiercing} брони и наносит {dmg} физ. урона.";
-            titleUpg = "+3 к игнорированию брони, -1 к перезарядке";
-            coolDown = 4;
+            titleUpg = "+2 к игнорированию брони, -1 к перезарядке";
+            coolDown = 3;
             coolDownNow = 0;
             requireAP = 2;
             radius = 2;
@@ -37,7 +37,7 @@ namespace BattleArenaServer.Skills.GuardianSkills
                 foreach (var n in UtilityService.GetHexesOneLine(requestData.CasterHex, requestData.TargetHex, radius))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
-                        AttackService.SetDamage(requestData.Caster, n.HERO, requestData.Caster.Dmg, dmgType);
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
                 }
                 requestData.Caster.armorPiercing -= ArmorPiercing;
                 requestData.Caster.AP -= requireAP;
@@ -53,7 +53,7 @@ namespace BattleArenaServer.Skills.GuardianSkills
             if (!upgraded)
             {
                 upgraded = true;
-                armorPiercing += 3;
+                armorPiercing += 2;
                 coolDown -= 1;
                 stats.coolDown -= 1;
                 title = $"Проведите атаку по врагам по прямой на 2 клетки. Эта атака игнорирует до {armorPiercing} брони и наносит {dmg} физ. урона.";

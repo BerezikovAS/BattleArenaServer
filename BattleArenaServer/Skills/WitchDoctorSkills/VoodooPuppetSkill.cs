@@ -10,7 +10,8 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
         public VoodooPuppetSkill()
         {
             name = "Voodoo Puppet";
-            title = $"Завораживает врага, отчего тот будет повторять Ваши движения.";
+            dmg = 40;
+            title = $"Завораживает врага, отчего тот будет повторять Ваши движения. За каждую пройденную клетку враг получает {dmg} маг. урона.";
             titleUpg = "+1 к дальности. Способность не тратит ОД.";
             coolDown = 4;
             coolDownNow = 0;
@@ -30,7 +31,7 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
 
             if (requestData.Caster != null && requestData.Target != null)
             {
-                VoodooPuppetDebuff voodooPuppetDebuff = new VoodooPuppetDebuff(requestData.Caster.Id, 0, 1);
+                VoodooPuppetDebuff voodooPuppetDebuff = new VoodooPuppetDebuff(requestData.Caster.Id, dmg, 1);
                 requestData.Target.AddEffect(voodooPuppetDebuff);
 
                 requestData.Caster.AP -= requireAP;

@@ -22,7 +22,7 @@ namespace BattleArenaServer.Skills.Crossbowman.Obstacles
             bleedingDur = bleedingDuration;
 
             //Одновременно может существовать только одна ловушка. Если она уже на поле, уберем её
-            Obstacle? obst = GameData._obstacles.FirstOrDefault(x => x.Name == "Caltrop");
+            /*Obstacle? obst = GameData._obstacles.FirstOrDefault(x => x.Name == "Caltrop");
             if (obst != null)
             {
                 Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == obst.HexId);
@@ -31,7 +31,7 @@ namespace BattleArenaServer.Skills.Crossbowman.Obstacles
                     hex.RemoveObstacle();
                     GameData._obstacles.Remove(obst);
                 }
-            }
+            }*/
         }
         public override void ApplyEffect(Hero hero, Hex hex)
         {

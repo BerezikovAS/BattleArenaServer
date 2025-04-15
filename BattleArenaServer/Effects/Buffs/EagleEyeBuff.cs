@@ -17,13 +17,13 @@ namespace BattleArenaServer.Effects.Buffs
         public override void ApplyEffect(Hero _hero)
         {
             _hero.StatsEffect.AttackRadius += 1;
-            _hero.StatsEffect.Dmg += value;
+            _hero.Dmg += value;
         }
 
         public override void RemoveEffect(Hero _hero)
         {
             _hero.StatsEffect.AttackRadius -= 1;
-            _hero.StatsEffect.Dmg -= value;
+            _hero.Dmg -= value;
         }
     }
 }

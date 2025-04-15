@@ -12,7 +12,7 @@ namespace BattleArenaServer.Skills.GuardianSkills
         {
             name = "Battle Order";
             title = $"Боевой приказ заставляет Вас или союзника сражаться не обращая внимания на недуги. Защищает от негативных эффектов.";
-            titleUpg = "Также даёт ускорение.";
+            titleUpg = "+1 к дальности, также даёт ускорение.";
             coolDown = 4;
             coolDownNow = 0;
             requireAP = 1;
@@ -31,7 +31,7 @@ namespace BattleArenaServer.Skills.GuardianSkills
                 if (!request.startRequest(requestData, this))
                     return false;
 
-                ImmunUnique immunUnique = new ImmunUnique(requestData.Caster.Id, 0, 2);
+                ImmunUnique immunUnique = new ImmunUnique(requestData.Caster.Id, 0, 3);
                 requestData.Target.AddEffect(immunUnique);
 
                 if (upgraded)
@@ -52,6 +52,8 @@ namespace BattleArenaServer.Skills.GuardianSkills
             if (!upgraded)
             {
                 upgraded = true;
+                range += 1;
+                stats.range += 1;
                 title = $"Боевой приказ заставляет Вас или союзника сражаться не обращая внимания на недуги. Защищает от негативных эффектов и даёт ускорение.";
                 return true;
             }

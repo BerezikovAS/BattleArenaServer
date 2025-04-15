@@ -24,7 +24,7 @@ namespace BattleArenaServer.Effects.Debuffs
             _hero.applyDamage -= ApplyDamageDelegate;
         }
 
-        private bool ApplyDamageDelegate(Hero? attacker, Hero defender, int dmg)
+        private bool ApplyDamageDelegate(Hero? attacker, Hero defender, int dmg, Consts.DamageType dmgType)
         {
             Hero? caster = GameData._heroes.FirstOrDefault(x => x.Id == idCaster && x.HP > 0);
             if (defender != null && caster != null)

@@ -233,15 +233,17 @@ namespace BattleArenaServer.Services
             int coordX = (h2.COORD[0] - h1.COORD[0]) / dist;
             int coordY = (h2.COORD[1] - h1.COORD[1]) / dist;
             int coordZ = (h2.COORD[2] - h1.COORD[2]) / dist;
-            Hex direction = new Hex(coordX, coordY, coordZ, -1);
+            Hex direction = new Hex(coordX, coordY, coordZ, -1, 0);
             return direction;
         }
 
         public static Hex? GetOneHexOnDirection(Hex hex, Hex dirHex, int order, int mode = 0)
         {
-            Hex direction = GetDirection(hex, dirHex);
+            Hex? direction = null;
             if (mode == 1)
                 direction = dirHex;
+            else
+                direction = GetDirection(hex, dirHex);
 
             Hex ? findHex = null;
 
@@ -267,6 +269,19 @@ namespace BattleArenaServer.Services
             res[1] += coord2[1] * dist;
             res[2] += coord2[2] * dist;
             return res;
+        }
+
+        public static List<Hero> GetBanchHeroes()
+        {
+            List<Hero> list = new List<Hero>();
+
+            foreach (var hero in GameData._heroes)
+            {
+                if (hero.IsMainHero && hero.Team == GameData.activeTeam)
+                    list.Add(hero);
+            }
+
+            return list;
         }
     }
 }

@@ -8,14 +8,14 @@ namespace BattleArenaServer.Skills.Knight
 {
     public class ShieldBashSkill : BodyGuardSkill
     {
-        int extraDmg = 20;
+        int extraDmg = 16;
         int loseAP = 1;
         public ShieldBashSkill()
         {
             name = "Shieldbash";
             dmg = 60;
             title = $"Оглушает врага и наносит ему физический урон, зависящий от брони владельца.\nОглушенный враг теряет {loseAP} ОД в свой ход. ({extraDmg} доп. урона за ед. брони)";
-            titleUpg = "+10 к урону за броню, +1 потере ОД";
+            titleUpg = "+8 к урону за броню, +1 потере ОД";
             coolDown = 4;
             coolDownNow = 0;
             range = 1;
@@ -52,7 +52,7 @@ namespace BattleArenaServer.Skills.Knight
             {
                 upgraded = true;
                 loseAP += 1;
-                extraDmg += 10;
+                extraDmg += 8;
                 title = $"Оглушает врага и наносит ему физический урон, зависящий от брони владельца.\nОглушенный враг теряет {loseAP} ОД в свой ход. ({extraDmg} доп. урона за ед. брони)";
                 return true;
             }

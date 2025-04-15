@@ -9,6 +9,17 @@ namespace BattleArenaServer.Models.Heroes
         {
             Name = "Knight";
 
+            Respawn();
+
+            SkillList[0] = new HighShieldPSkill(this);
+            SkillList[1] = new SecondBreathSkill();
+            SkillList[2] = new ShieldBashSkill();
+            SkillList[3] = new BodyGuardSkill();
+            SkillList[4] = new RetributionSkill();
+        }
+
+        public override void Respawn()
+        {
             MaxHP = HP = 1000;
             Armor = 6;
             Resist = 3;
@@ -18,11 +29,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 110;
 
-            SkillList[0] = new HighShieldPSkill(this);
-            SkillList[1] = new SecondBreathSkill();
-            SkillList[2] = new ShieldBashSkill();
-            SkillList[3] = new BodyGuardSkill();
-            SkillList[4] = new RetributionSkill();
+            base.Respawn();
         }
     }
 }

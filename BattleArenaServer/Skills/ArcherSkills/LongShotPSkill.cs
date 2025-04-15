@@ -4,12 +4,12 @@ namespace BattleArenaServer.Skills.Crossbowman
 {
     public class LongShotPSkill : PassiveSkill
     {
-        double extraDmgPercent = 0.10;
+        double extraDmgPercent = 0.12;
         public LongShotPSkill(Hero hero) : base(hero)
         {
             name = "Long Shot";
             title = $"Чем дальше цель атаки, тем больше урона она получит. +{Math.Round(extraDmgPercent * 100)}% к урону за каждую клетку между Вами и целью.";
-            titleUpg = "+6% к бонусу урона за клетку.";
+            titleUpg = "+7% к бонусу урона за клетку.";
             hero.passiveAttackDamage += LongShot;
         }
 
@@ -28,7 +28,7 @@ namespace BattleArenaServer.Skills.Crossbowman
             {
                 upgraded = true;
                 hero.passiveAttackDamage -= LongShot;
-                extraDmgPercent += 0.06;
+                extraDmgPercent += 0.07;
                 hero.passiveAttackDamage += LongShot;
                 title = $"Чем дальше цель атаки, тем больше урона она получит. +{Math.Round(extraDmgPercent * 100)}% к урону за каждую клетку между Вами и целью.";
                 return true;
@@ -45,7 +45,7 @@ namespace BattleArenaServer.Skills.Crossbowman
 
             if (attackerHex != null && defenderHex != null)
             {
-                double extraDmg = (attacker.Dmg + attacker.StatsEffect.Dmg) * extraDmgPercent * (attackerHex.Distance(defenderHex) - 1);
+                double extraDmg = attacker.Dmg * extraDmgPercent * (attackerHex.Distance(defenderHex) - 1);
                 return (int)(Math.Round(extraDmg));
             }
             return 0;

@@ -8,11 +8,12 @@ namespace BattleArenaServer.Skills.ShadowSkills
 {
     public class BladeOfDarknessSkill : Skill
     {
-        int percentDmg = 15;
+        int percentDmg = 12;
         public BladeOfDarknessSkill()
         {
             name = "Blade Of Darkness";
-            title = $"Атака из тьмы наносит врагу магический урон, равный {percentDmg}% от текущего ХП цели. Также накладывает слепоту.";
+            dmg = 60;
+            title = $"Атака из тьмы наносит врагу магический урон, равный {dmg} + {percentDmg}% от текущего ХП цели. Также накладывает слепоту.";
             titleUpg = "+10% к урону от текущего ХП цели.";
             coolDown = 4;
             coolDownNow = 0;
@@ -33,11 +34,13 @@ namespace BattleArenaServer.Skills.ShadowSkills
 
             if (requestData.Caster != null && requestData.Target != null)
             {
-                int dmg = (int)(Convert.ToDouble(requestData.Target.HP * percentDmg) / 100);
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
+                int dmgDeal = dmg + (int)(Convert.ToDouble(requestData.Target.HP * percentDmg) / 100);
 
                 BlindDebuff blindDebuff = new BlindDebuff(requestData.Caster.Id, 0, 2);
                 requestData.Target.AddEffect(blindDebuff);
+                
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmgDeal, dmgType);
+                
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;
                 return true;
@@ -52,7 +55,7 @@ namespace BattleArenaServer.Skills.ShadowSkills
             {
                 upgraded = true;
                 percentDmg += 10;
-                title = $"Атака из тьмы наносит врагу магический урон, равный {percentDmg}% от текущего ХП цели. Также накладывает слепоту.";
+                title = $"Атака из тьмы наносит врагу магический урон, равный {dmg} + {percentDmg}% от текущего ХП цели. Также накладывает слепоту.";
                 return true;
             }
             return false;

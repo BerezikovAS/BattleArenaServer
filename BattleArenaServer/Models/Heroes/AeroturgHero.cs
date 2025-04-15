@@ -8,6 +8,17 @@ namespace BattleArenaServer.Models.Heroes
         {
             Name = "Aeroturg";
 
+            Respawn();
+
+            SkillList[0] = new OverChargePSkill(this);
+            SkillList[1] = new SwapSkill();
+            SkillList[2] = new ChainLightningSkill();
+            SkillList[3] = new ThunderWaveSkill();
+            SkillList[4] = new AirFormSkill();
+        }
+
+        public override void Respawn()
+        {
             MaxHP = HP = 850;
             Armor = 2;
             Resist = 5;
@@ -17,11 +28,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 3;
             Dmg = 105;
 
-            SkillList[0] = new OverChargePSkill(this);
-            SkillList[1] = new SwapSkill();
-            SkillList[2] = new ChainLightningSkill();
-            SkillList[3] = new ThunderWaveSkill();
-            SkillList[4] = new AirFormSkill();
+            base.Respawn();
         }
     }
 }

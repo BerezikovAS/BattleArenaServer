@@ -37,9 +37,10 @@ namespace BattleArenaServer.Skills.NecromancerSkills
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                     {
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
                         SlowDebuff slowDebuff = new SlowDebuff(requestData.Caster.Id, 0, 2);
                         n.HERO.AddEffect(slowDebuff);
+
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
                     }
                 }
                 requestData.Caster.AP -= requireAP;

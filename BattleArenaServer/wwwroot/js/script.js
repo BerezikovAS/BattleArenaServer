@@ -1,24 +1,53 @@
 const hubConnection = new signalR.HubConnectionBuilder()
     .withUrl("http://localhost:8080/fieldhub", { withCredentials: false, mode: 'no-cors' })
-    //.withUrl("http://51.250.44.177:8080/fieldhub", { withCredentials: false, mode: 'no-cors' }) //ip виртуалки
+    //.withUrl("http://130.193.45.251:8080/fieldhub", { withCredentials: false, mode: 'no-cors' }) //ip виртуалки
     .build();
 
 hubConnection.on("GetField", function (_field) {
-    console.log("Receive field");
+    //console.log("Receive field");
     feelField(_field);
+});
+
+hubConnection.on("GetVP", function (_VP) {
+    showVP(_VP);
+});
+
+hubConnection.on("GetBanchHeroes", function (_banchHeroes) {
+    //console.log("Receive field");
+    fillBanchHeroes(_banchHeroes);
+});
+
+hubConnection.on("SetShopItems", function (_items) {
+    shopItems = _items;
+    fillShop(shopItems);
 });
 
 hubConnection.on("GetUsersBindings", (_bindings) => {
     console.log("Receive bindings");
 
-    if (_bindings.activeTeam == userId)
-        isYourTurn = true;
-    else
-        isYourTurn = false;
-    console.log("isYourTurn: " + isYourTurn);
-
     var redTeam = document.getElementById("redTeam");
     var blueTeam = document.getElementById("blueTeam");
+    var teams = document.getElementById("team_btns");
+    var vp_line = document.getElementById("vp_line");
+    var vp_line = document.getElementById("vp_line");
+    var turn = document.getElementById("turn");
+
+    activeTeam = _bindings.activeTeamStr;
+    if (_bindings.activeTeam == userId) {
+        isYourTurn = true;
+        turn.innerText = "YOUR TURN";
+        if (activeTeam == "red")
+            turn.setAttribute("class", "Turn VictoryRed");
+        else
+            turn.setAttribute("class", "Turn VictoryBlue");
+    }
+    else {
+        isYourTurn = false;
+        turn.setAttribute("class", "Turn Gray");
+        turn.innerText = "OPPONENT TURN";
+    }
+
+
     if (_bindings.redTeam != "")
         redTeam.setAttribute("style", "visibility: hidden;");
     else
@@ -28,6 +57,19 @@ hubConnection.on("GetUsersBindings", (_bindings) => {
         blueTeam.setAttribute("style", "visibility: hidden; margin-left: 100px;");
     else
         blueTeam.setAttribute("style", "visibility: visible; margin-left: 100px;");
+
+    if (_bindings.redTeam != "" && _bindings.blueTeam != "") {
+        teams.setAttribute("style", "visibility: collapse; height: 10px;");
+        vp_line.setAttribute("style", "width: 860px; display: inline-block;");
+        turn.removeAttribute("style");
+    }
+    else {
+        teams.removeAttribute("style");
+        vp_line.setAttribute("style", "width: 860px; display: inline-block; visibility: collapse;");
+        turn.setAttribute("style", "visibility: collapse;");
+    }
+
+    //showVP(_bindings);
 });
 
 hubConnection.on("DrawSpellArea", async function (spellArea) {
@@ -36,7 +78,7 @@ hubConnection.on("DrawSpellArea", async function (spellArea) {
 });
 
 hubConnection.on("GetActiveHero", function (idActHero) {
-    console.log("Receive active hero");
+    //console.log("Receive active hero");
     idActiveHero = idActHero;
     hero = heroes[idActiveHero];
     enableUpgrades(hero);
@@ -48,6 +90,7 @@ hubConnection.on("GetActiveHero", function (idActHero) {
 const field = document.getElementById("field");
 var hexes = [];
 var heroes = [];
+var banchHeroes = [];
 var mode = "Move";
 var hero;
 var idActiveHero = 0;
@@ -56,11 +99,19 @@ var heroInfo;
 var idHexArea = -1;
 var isYourTurn = false;
 var userId = "";
+var activeTeam = "red";
+var isNeedRespawnPoint = false;
+var selectedBanchHero = -1;
+var shopItems;
+var nameCastingItem = "";
 
 window.onload = async function () {
 
     userId = getCookie("user_id");
-    //setUserCookie();
+    if (userId == null || userId == undefined) {
+        setUserCookie();
+        userId = getCookie("user_id");
+    }
     console.log("user_id: " + userId);
 
     await hubConnection.start();
@@ -138,13 +189,21 @@ async function feelField(_field) {
         hex.setAttribute("id", element.id);
         hex.setAttribute("onclick", "hexClick(this)");
 
+        if (element.vp == 1)
+            hex.setAttribute("class", "VP");
+        else if (element.vp == 2)
+            hex.setAttribute("class", "TwoVP");
+        else
+            hex.setAttribute("class", "NonVP");
+
+
         if(element.hero != null) {
 
             const teamImg = document.createElement("img");
             if(element.hero.team == "red")
-                teamImg.setAttribute("src", "http://i.imgur.com/9HMnxKs.png");
+                teamImg.setAttribute("src", "red_back.png");
             else
-                teamImg.setAttribute("src", "https://celes.club/uploads/posts/2022-11/1667393225_4-celes-club-p-fon-golubogo-tsveta-oboi-4.jpg");
+                teamImg.setAttribute("src", "blue_back.png");
             teamImg.setAttribute("style", "position: absolute; height: " + getPercentHP(element.hero) + "px; width: 100px;");
 
             const heroImg = document.createElement("img");
@@ -187,47 +246,45 @@ async function feelField(_field) {
         field.appendChild(hex);
         hexes.push(element);
     });
-    //heroes = heroes.toSorted((a, b) => a.id - b.id);
-    //idActiveHero = await getActiveHero();
 
     hero = heroes[idActiveHero];
     if (hero === undefined) {
         idActiveHero = await getActiveHero();
         hero = heroes[idActiveHero];
     }
-        
-
-    console.log(hero);
-    console.log(heroes);
 
     enableUpgrades(hero);
-    //btnEndTurn.innerText = hero.ap;
     feelActiveHeroInfo(hero);
     fillFootHovers(hexes[hero.coordid], hexes);
     enableSpells(hero);
 }
 
 function hexClick(_hex) {
-
     if (isYourTurn == false)
         return;
+
+    if (selectedBanchHero != -1) {
+        setRespawnedHero(selectedBanchHero, _hex.id);
+        selectedBanchHero = -1;
+        return;
+    }
+
+    selectedBanchHero = -1;
 
     if (idCastingSpell >= 0) {
         castSpell(idCastingSpell, _hex.getAttribute("id"));
         return;
     }
+
+    if (nameCastingItem != "") {
+        castItem(nameCastingItem, _hex.getAttribute("id"));
+        return;
+    }
     
     var _target = hexes[_hex.getAttribute("id")].hero;
 
-    if (_target != null && _target.team == hero.team) {
+    if (_target != null && _target.team == activeTeam) {
         setActiveHero(_target.id);
-        //idActiveHero = _target.id;
-        //hero = _target;
-        //enableUpgrades(_target);
-        //feelActiveHeroInfo(_target);
-        //enableSpells(_target);
-        //fillFootHovers(hexes[_target.coordid], hexes);
-
     } else if (_target == null) {
         stepHero(hero, _hex);
     } else if (_target.team !== hero.team) {
@@ -239,16 +296,23 @@ function hexClick(_hex) {
 
 function cancel() {
     idCastingSpell = -1;
+    nameCastingItem = ""
     for (let index = 0; index < 5; index++) {
         clearHovers();
     } 
     clearHoversActions();
     hero = heroes[idActiveHero];
-    console.log(hexes[idActiveHero]);
     fillFootHovers(hexes[hero.coordid], hexes);
     enableSpells(hero);
 }
 
 function bindUserToTeam(_team) {
     setUserBindings(userId, _team);
+}
+
+function selectBanchHero(_idBanchHero) {
+    if (banchHeroes[_idBanchHero].respawnTime == 1) {
+        selectedBanchHero = banchHeroes[_idBanchHero].id;
+        getRespawnArea(selectedBanchHero);
+    }
 }

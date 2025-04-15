@@ -1,6 +1,5 @@
-﻿using BattleArenaServer.Effects;
-using BattleArenaServer.Skills;
-using BattleArenaServer.Skills.TinkerSkill.SummonsSkills;
+﻿using BattleArenaServer.Skills;
+using BattleArenaServer.Skills._SummonsSkills;
 
 namespace BattleArenaServer.Models.Summons
 {

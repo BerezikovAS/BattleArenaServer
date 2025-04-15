@@ -20,6 +20,10 @@ namespace BattleArenaServer.Models
 
         public static List<FillableObstacle> _surfaces = new List<FillableObstacle>();
 
+        public static List<Item> _blueShop = new List<Item>();
+
+        public static List<Item> _redShop = new List<Item>();
+
         public static void ClearAllObjects()
         {
             activeTeam = "red";

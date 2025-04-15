@@ -10,6 +10,10 @@
             type = Consts.HeroType.Obstacle;
             this.casterId = casterId;
             this.lifeTime = lifeTime;
+
+            VP = 0;
+            GoldReward = 1;
+            IsMainHero = false;
         }
 
         public delegate void EndLifeEffect(Hex currentHex);

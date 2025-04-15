@@ -8,6 +8,17 @@ namespace BattleArenaServer.Models.Heroes
         {
             Name = "Guardian";
 
+            Respawn();
+
+            SkillList[0] = new EncouragePSkill(this);
+            SkillList[1] = new OnslaughtSkill();
+            SkillList[2] = new SpearPiercingSkill();
+            SkillList[3] = new BattleOrderSkill();
+            SkillList[4] = new DisarmStrikeSkill();
+        }
+
+        public override void Respawn()
+        {
             MaxHP = HP = 1000;
             Armor = 5;
             Resist = 3;
@@ -17,11 +28,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 105;
 
-            SkillList[0] = new EncouragePSkill(this);
-            SkillList[1] = new OnslaughtSkill();
-            SkillList[2] = new SpearPiercingSkill();
-            SkillList[3] = new BattleOrderSkill();
-            SkillList[4] = new DisarmStrikeSkill();
+            base.Respawn();
         }
     }
 }

@@ -8,7 +8,7 @@
     <link href='https://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
   </head>
   <body style="background-color: rgb(26, 145, 26);">
-      <div style="display: flex;">
+      <div style="display: flex; height: 702px;">
           <div style="display: inline-block; background-color:darkgreen; padding:20px; padding-bottom: 40px; border: 4px solid rgb(1, 73, 1); border-radius: 50px; margin-right: 20px;">
               <div class="main">
                   <div id="field" class="container">
@@ -56,7 +56,7 @@
                       </div>
                   </div>
 
-                  <div id="statusbar_info" style="min-height: 50px; width: inherit; text-align: center;">
+                  <div id="statusbar_info" style="min-height: 50px; max-height: 50px; width: inherit; text-align: center; line-height: 46px;">
 
                   </div>
               </div>
@@ -64,68 +64,105 @@
 
 
 
+              <div style="display: inline-block;">
+                  <div style="background-color: rgba(69, 180, 69, 0.863); padding: 12px; border: 4px solid rgb(1, 73, 1); border-radius: 20px; margin-top: 4px;">
 
-              <div style="background-color: rgba(69, 180, 69, 0.863); padding: 12px; border: 4px solid rgb(1, 73, 1); border-radius: 20px; margin-top: 4px;">
+                      <div style="justify-content: space-around; text-align:center; font-size: 26px; font-weight: 800; margin-bottom: 10px;">YOUR TURN</div>
 
-                  <div style="justify-content: space-around; text-align:center; font-size: 26px; font-weight: 800; margin-bottom: 10px;">YOUR TURN</div>
+                      <div style="display: flex;">
+                          <div class="heroinfo_icon" id="hero_icon" style=" margin-bottom: 20px;"><img id="hero_icon_img" class="heroinfo_icon_img"></div>
 
-                  <div style="display: flex;">
-                      <div class="heroinfo_icon" id="hero_icon" style=" margin-bottom: 20px;"><img id="hero_icon_img" class="heroinfo_icon_img"></div>
+                          <div>
+                              <div id="AProw" class="AP_container" style="margin-left: 11px;"></div>
+                              <div id="hpbarcur" class="hpbar">
+                                  <div id="heroinfo_hpbarcur" class="hpbarCurrent" style="width: 300px;"></div>
+                                  <h id="heroinfo_hpcur" style="z-index: 2; position: relative;">1000</h>
+                              </div>
+                          </div>
 
-                      <div>
-                          <div id="AProw" class="AP_container"></div>
-                          <div id="hpbarcur" class="hpbar">
-                              <div id="heroinfo_hpbarcur" class="hpbarCurrent" style="width: 300px;"></div>
-                              <h id="heroinfo_hpcur" style="z-index: 2; position: relative;">1000</h>
+                          <div>
+                              <table style="color: rgb(1, 43, 1); font-weight: 800;">
+                                  <tr style="height: 58px;">
+                                      <td class="heroinfo"><img src="icons/meleeattack.png" style="height: 30px;"><div style="width: 48px; padding-left: 8px;" id="active_heroinfo_damage">100</div></td>
+                                      <td class="heroinfo"><img src="icons/armor.png" style="height: 30px;"><div style="width: 48px; padding-left: 8px;" id="active_heroinfo_armor">3</div></td>
+                                      <td class="heroinfo" style="background-color: gold;"><img src="icons/coins.png" style="height: 30px;"><div style="width: 36px; padding-left: 8px;" id="team_coins">-10</div></td>
+                                  </tr>
+                                  <tr style="height: 30px;">
+                                      <td class="heroinfo"><img src="icons/rangeattack.png" style="height: 30px;"><div style="width: 48px; padding-left: 8px;" id="active_heroinfo_range">1</div></td>
+                                      <td class="heroinfo"><img src="icons/resist.png" style="height: 30px;"><div style="width: 48px; padding-left: 8px;" id="active_heroinfo_resist">2</div></td>
+                                  </tr>
+                              </table>
                           </div>
                       </div>
 
-                      <div>
-                          <table style="color: rgb(1, 43, 1); font-weight: 800;">
-                              <tr style="height: 58px;">
-                                  <td class="heroinfo"><img src="icons/meleeattack.png" style="height: 30px;"><div style="width: 54px; padding-left: 8px;" id="active_heroinfo_damage">100</div></td>
-                                  <td class="heroinfo"><img src="icons/armor.png" style="height: 30px;"><div style="width: 54px; padding-left: 8px;" id="active_heroinfo_armor">3</div></td>
-                              </tr>
-                              <tr style="height: 30px;">
-                                  <td class="heroinfo"><img src="icons/rangeattack.png" style="height: 30px;"><div style="width: 54px; padding-left: 8px;" id="active_heroinfo_range">1</div></td>
-                                  <td class="heroinfo"><img src="icons/resist.png" style="height: 30px;"><div style="width: 54px; padding-left: 8px;" id="active_heroinfo_resist">2</div></td>
-                              </tr>
-                          </table>
+                      <div class="bot" style="display: flex;">
+                          <div>
+                              <button id="upgrade0" class="upgrade" onclick="upgradeSkill(0)">+</button>
+                              <div onmouseenter="showSpellInfo(0, this, 0)" onmouseleave="hideSpellInfo()" id="sp0"><div class="cooldawn"><p class="cooldawn" id="cd0"></p></div><button id="spell0" class="spell">Spell0</button></div>
+                          </div>
+                          <div>
+                              <button id="upgrade1" class="upgrade" onclick="upgradeSkill(1)">+</button>
+                              <div onclick="castSpell(1)" onmouseenter="showSpellInfo(1, this, 0)" onmouseleave="hideSpellInfo()" id="sp1"><div class="cooldawn"><p class="cooldawn" id="cd1"></p></div><button id="spell1" class="spell">Spell1</button></div>
+                          </div>
+                          <div>
+                              <button id="upgrade2" class="upgrade" onclick="upgradeSkill(2)">+</button>
+                              <div onclick="castSpell(2)" onmouseenter="showSpellInfo(2, this, 0)" onmouseleave="hideSpellInfo()" id="sp2"><div class="cooldawn"><p class="cooldawn" id="cd2"></p></div><button id="spell2" class="spell">Spell2</button></div>
+                          </div>
+                          <div>
+                              <button id="upgrade3" class="upgrade" onclick="upgradeSkill(3)">+</button>
+                              <div onclick="castSpell(3)" onmouseenter="showSpellInfo(3, this, 0)" onmouseleave="hideSpellInfo()" id="sp3"><div class="cooldawn"><p class="cooldawn" id="cd3"></p></div><button id="spell3" class="spell">Spell3</button></div>
+                          </div>
+                          <div>
+                              <button id="upgrade4" class="upgrade" onclick="upgradeSkill(4)">+</button>
+                              <div onclick="castSpell(4)" onmouseenter="showSpellInfo(4, this, 0)" onmouseleave="hideSpellInfo()" id="sp4"><div class="cooldawn"><p class="cooldawn" id="cd4"></p></div><button id="spell4" class="spell">Spell4</button></div>
+                          </div>
+                          <button class="controls" onclick="endTurn()"><img src="EndTurn.png" style="width: 80px;" /></button>
+                          <button style="margin-left: 6px;" class="controls" onclick="cancel()"><img src="Cancel.png" style="width: 80px;" /></button>
+                      </div>
+
+                      <div id="statusbar" style="min-height: 50px; max-height: 50px; width: inherit; text-align: center; line-height: 46px;">
+
                       </div>
                   </div>
 
-                  <div class="bot" style="display: flex;">
-                      <div>
-                          <button id="upgrade0" class="upgrade" onclick="upgradeSkill(0)">+</button>
-                          <div onmouseenter="showSpellInfo(0, this, 0)" onmouseleave="hideSpellInfo()" id="sp0"><div class="cooldawn"><p class="cooldawn" id="cd0"></p></div><button id="spell0" class="spell">Spell0</button></div>
-                      </div>
-                      <div>
-                          <button id="upgrade1" class="upgrade" onclick="upgradeSkill(1)">+</button>
-                          <div onclick="castSpell(1)" onmouseenter="showSpellInfo(1, this, 0)" onmouseleave="hideSpellInfo()" id="sp1"><div class="cooldawn"><p class="cooldawn" id="cd1"></p></div><button id="spell1" class="spell">Spell1</button></div>
-                      </div>
-                      <div>
-                          <button id="upgrade2" class="upgrade" onclick="upgradeSkill(2)">+</button>
-                          <div onclick="castSpell(2)" onmouseenter="showSpellInfo(2, this, 0)" onmouseleave="hideSpellInfo()" id="sp2"><div class="cooldawn"><p class="cooldawn" id="cd2"></p></div><button id="spell2" class="spell">Spell2</button></div>
-                      </div>
-                      <div>
-                          <button id="upgrade3" class="upgrade" onclick="upgradeSkill(3)">+</button>
-                          <div onclick="castSpell(3)" onmouseenter="showSpellInfo(3, this, 0)" onmouseleave="hideSpellInfo()" id="sp3"><div class="cooldawn"><p class="cooldawn" id="cd3"></p></div><button id="spell3" class="spell">Spell3</button></div>
-                      </div>
-                      <div>
-                          <button id="upgrade4" class="upgrade" onclick="upgradeSkill(4)">+</button>
-                          <div onclick="castSpell(4)" onmouseenter="showSpellInfo(4, this, 0)" onmouseleave="hideSpellInfo()" id="sp4"><div class="cooldawn"><p class="cooldawn" id="cd4"></p></div><button id="spell4" class="spell">Spell4</button></div>
-                      </div>
-                      <button class="controls" onclick="endTurn()"><img src="EndTurn.png" style="width: 80px;" /></button>
-                      <button style="margin-left: 6px;" class="controls" onclick="cancel()"><img src="Cancel.png" style="width: 80px;" /></button>
+              </div>
+
+              <div style="background-color: rgba(69, 180, 69, 0.863); padding: 12px; border: 4px solid rgb(1, 73, 1); border-radius: 20px; margin-top: 4px; width: 340px; height: 108px;">
+                  <div id="banch_hero1" class="heroinfo_icon" style="display: inline-block;" onclick="selectBanchHero(1)">
+                      <p class="cooldawn" id="cdBanch1" style="position: absolute; padding-left: 38px; z-index: 100;"></p>
+                      <img id="banch_icon1" class="heroinfo_icon_img">
                   </div>
+                  <div id="banch_hero2" class="heroinfo_icon" style="display: inline-block; margin-left: 6px;" onclick="selectBanchHero(2)">
+                      <p class="cooldawn" id="cdBanch2" style="position: absolute; padding-left: 38px; z-index: 100;"></p>
+                      <img id="banch_icon2" class="heroinfo_icon_img">
+                  </div>
+                  <div id="banch_hero3" class="heroinfo_icon" style="display: inline-block; margin-left: 6px;" onclick="selectBanchHero(3)">
+                      <p class="cooldawn" id="cdBanch3" style="position: absolute; padding-left: 38px; z-index: 100;"></p>
+                      <img id="banch_icon3" class="heroinfo_icon_img">
+                  </div>
+              </div>
+          </div>
 
-                  <div id="statusbar" style="min-height: 50px; width: inherit; text-align: center; margin-top: 10px;">
-
+          <div style="display: inline-block;">
+              <div id="info_items" style="background-color: rgba(69, 180, 69, 0.863); padding: 12px; border: 4px solid rgb(1, 73, 1); border-radius: 20px; margin-left: 4px; width: 92px; height: 281px;">
+                  <button id="itemDivInfo1" class="item"><img id="itemBtnInfo1" style="width:60px;" /><p id="cdItemInfo1" class="ItemCD"></p></button>
+                  <button id="itemDivInfo2" class="item"><img id="itemBtnInfo2" style="width:60px;" /><p id="cdItemInfo2" class="ItemCD"></p></button>
+                  <button id="itemDivInfo3" class="item"><img id="itemBtnInfo3" style="width:60px;" /><p id="cdItemInfo3" class="ItemCD"></p></button>
+              </div>
+              <div style="background-color: rgba(69, 180, 69, 0.863); padding: 12px; border: 4px solid rgb(1, 73, 1); border-radius: 20px; margin-left: 4px; margin-top: 4px; width: 92px; height: 341px;">
+                  <div id="items" style="height: 300px;">
+                      <button id="itemDiv1" class="item"><img id="itemBtn1" style="width:60px;" /><p id="cdItem1" class="ItemCD"></p></button>
+                      <button id="itemDiv2" class="item"><img id="itemBtn2" style="width:60px;" /><p id="cdItem2" class="ItemCD"></button>
+                      <button id="itemDiv3" class="item"><img id="itemBtn3" style="width:60px;" /><p id="cdItem3" class="ItemCD"></button>
+                  </div>
+                  <div>
+                      <button id="showShop" onclick="showHideShop(1)" style="background-color: rgb(151, 248, 142); border: 3px solid rgb(1, 73, 1); padding: 4px 6px 4px 6px; border-radius: 20px; font-size: 18px; font-weight: 500; margin-top: -16px;">
+                          <img src="icons/shop.png" style="height: 24px;"> SHOP</button>
                   </div>
               </div>
           </div>
       </div>
-      <div id="skillInfo" class="skillInfo skillInfoShow" style="top: -200px; left: -200px;">
+      <div id="skillInfo" class="skillInfo skillInfoShow" style="top: -300px; left: -300px;">
           <div id="skillInfoName" class="skillDiv" style="text-align: center; font-weight: bold;">Name</div>
           <div style="text-align: center; position: absolute; top: 16px;">__________________</div>
           <div id="skillInfoDescr" class="skillDiv" style="margin-top: 10px; font-size: 16px;">sdfsddddddd dddddddddddddd dddddddddddd dddd ddddddddddd ddddd dddd</div>
@@ -157,11 +194,60 @@
           </div>
       </div>
 
-      <div style="display:flex; padding: 20px;">
-          <button id="redTeam" class="TeamPick Red" onclick="bindUserToTeam('red')">ЗА КРАСНЫХ!</button>
-          <button id="blueTeam" class="TeamPick Blue" onclick="bindUserToTeam('blue')" style="margin-left: 100px;">ЗА СИНИХ!</button>
-          <button style="margin-left: 700px; height: 30px;" onclick="recreateGame()">пересоздать игру</button>
+      <div id="team_btns" style="position: absolute; display: flex;">
+          <div style="display:flex; padding: 20px;">
+              <button id="redTeam" class="TeamPick Red" onclick="bindUserToTeam('red')">ЗА КРАСНЫХ!</button>
+              <button id="blueTeam" class="TeamPick Blue" onclick="bindUserToTeam('blue')" style="margin-left: 100px;">ЗА СИНИХ!</button>
+          </div>
       </div>
+
+      <div id="vp_line" style="width: 860px; display: inline-block;">
+
+          <div style="display: flex; width: 865px; height: 90px; border: 4px solid rgb(1, 73, 1); border-radius: 0px 0px 50px 50px; position: relative; top: -60px; z-index: -5;">
+              <div id="vp_red" class="VPDiv" style="background-color: red; flex: 1; border-radius: 0px 0px 0px 46px;">5</div>
+              <div style="background-color: rgba(0, 99, 248, 1); flex: 6; "><div id="vp_line_c" style="width: 600px; height: 90px; background-color: red;"></div></div>
+              <div id="vp_blue" class="VPDiv" style="background-color: rgba(0, 99, 248, 1); flex: 1; border-radius: 0px 0px 46px 0px;">15</div>
+          </div>
+
+          <div id="turn" class="Turn Gray"></div>
+      </div>
+
+      <div id="victory" class="Victory VictoryRed" style="visibility: collapse;">
+          ПОБЕДА СИНИХ!
+      </div>
+      <button style="margin-left: 650px; height: 30px; width: 150px; position: absolute; left: 840px; top: 740px;" onclick="recreateGame()">пересоздать игру</button>
+
+
+
+
+
+
+      <!-- SHOP -->
+      <div id="shop" class="Shop" style="visibility: collapse;">
+          <div id="shop" style="display: inline-block;">
+
+              <div class="ShopItem lvl1">
+                  <img src="items/Apple.png" style="width: 80px;" />
+                  <div class="ShopButton">BUY 10</div>
+              </div>
+
+              <div class="ShopItem Sold">
+                  <img src="items/Axe.png" style="width: 80px;" />
+                  <div class="ShopButton Sold">SOLD</div>
+              </div>
+
+              <div class="ShopItem Sell">
+                  <img src="items/Tiara.png" style="width: 80px;" />
+                  <div class="ShopButton Sell">SELL 27</div>
+              </div>
+
+              <div class="ShopItem lvl4">
+                  <img src="items/RoyalSeal.png" style="width: 80px;" />
+                  <div class="ShopButton">BUY 80</div>
+              </div>
+          </div>
+      </div>
+      <!-- SHOP -->
 
 
       <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>

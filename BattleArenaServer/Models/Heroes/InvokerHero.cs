@@ -8,6 +8,17 @@ namespace BattleArenaServer.Models.Heroes
         {
             Name = "Invoker";
 
+            Respawn();
+
+            SkillList[0] = new SpellRechargePSkill(this);
+            SkillList[1] = new ArcaneBoltSkill();
+            SkillList[2] = new ForstBreathSkill();
+            SkillList[3] = new ManaBlastSkill();
+            SkillList[4] = new TrickyEscapeSkill();
+        }
+
+        public override void Respawn()
+        {
             MaxHP = HP = 850;
             Armor = 3;
             Resist = 3;
@@ -17,11 +28,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 3;
             Dmg = 100;
 
-            SkillList[0] = new SpellRechargePSkill(this);
-            SkillList[1] = new ArcaneBoltSkill();
-            SkillList[2] = new ForstBreathSkill();
-            SkillList[3] = new ManaBlastSkill();
-            SkillList[4] = new TrickyEscapeSkill();
+            base.Respawn();
         }
     }
 }

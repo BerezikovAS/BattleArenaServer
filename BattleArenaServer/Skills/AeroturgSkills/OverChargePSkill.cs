@@ -39,7 +39,7 @@ namespace BattleArenaServer.Skills.AeroturgSkills
             return false;
         }
 
-        private bool AfterAttackDelegate(Hero attacker, Hero? defender, int dmg)
+        private bool AfterAttackDelegate(Hero attacker, Hero? defender, int dmg, Consts.DamageType dmgType)
         {
             Hex? targetHex = GameData._hexes.FirstOrDefault(x => x.ID == defender?.HexId);
             if (targetHex != null && defender != null)

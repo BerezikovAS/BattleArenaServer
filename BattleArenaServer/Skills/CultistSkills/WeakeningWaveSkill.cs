@@ -39,13 +39,10 @@ namespace BattleArenaServer.Skills.CultistSkills
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                     {
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
+                        WeaknessDebuff weaknessDebuff = new WeaknessDebuff(requestData.Caster.Id, percentDmgReduction, 2);
+                        n.HERO.AddEffect(weaknessDebuff);
 
-                        if (n.HERO != null)
-                        {
-                            WeaknessDebuff weaknessDebuff = new WeaknessDebuff(requestData.Caster.Id, percentDmgReduction, 2);
-                            n.HERO.AddEffect(weaknessDebuff);
-                        }
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
                     }
                 }
                 requestData.Caster.AP -= requireAP;

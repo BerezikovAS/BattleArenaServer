@@ -7,12 +7,12 @@ namespace BattleArenaServer.Skills.ElementalistSkills
 {
     public class TerraSkill : Skill
     {
-        private int shieldDurability = 150;
+        private int shieldDurability = 130;
         public TerraSkill()
         {
             name = "Terra";
             title = $"Создает каменный щит вокруг себя или союзника, который поглощает {shieldDurability} физического урона.";
-            titleUpg = "+60 к прочности щита";
+            titleUpg = "+45 к прочности щита";
             coolDown = 4;
             coolDownNow = 0;
             requireAP = 1;
@@ -46,7 +46,7 @@ namespace BattleArenaServer.Skills.ElementalistSkills
             if (!upgraded)
             {
                 upgraded = true;
-                shieldDurability += 60;
+                shieldDurability += 45;
                 title = $"Создает каменный щит вокруг себя или союзника, который поглощает {shieldDurability} физического урона.";
                 return true;
             }

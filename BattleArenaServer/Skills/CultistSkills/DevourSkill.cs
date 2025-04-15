@@ -39,9 +39,7 @@ namespace BattleArenaServer.Skills.CultistSkills
                     return false;
 
                 //Съедаем бедолагу
-                requestData.Target.HP = 0;
-                requestData.TargetHex.RemoveHero();
-                AttackService.ContinuousAuraAction();
+                AttackService.KillHero(requestData.Target);
 
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;

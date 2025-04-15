@@ -14,7 +14,7 @@ namespace BattleArenaServer.Skills.ShadowSkills
         {
             name = "Shadow Twin";
             dmg = 0;
-            title = $"Призывает своего двойника, который обладает пассивными способностями своего заклинателя.";
+            title = $"Призывает двойника, который обладает пассивными способностями цели.";
             titleUpg = "-2 к перезарядке";
             coolDown = 4;
             coolDownNow = 0;
@@ -41,7 +41,7 @@ namespace BattleArenaServer.Skills.ShadowSkills
                     return false; //Если таковой нет, то выходим без применения эффектов
 
                 //Создаем копию цели
-                int Id = GameData._hexes.Max(x => x.HERO != null ? x.HERO.Id : 0) + 1;
+                int Id = GameData._heroes.Max(x => x.Id) + 1;
                 ShadowTwinSummon doppelganger = new ShadowTwinSummon(Id, requestData.Caster.Team, requestData.Caster.Id, lifeTime, requestData.Target);
 
                 //Вешаем на неё уникальный эффект

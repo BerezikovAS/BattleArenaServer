@@ -6,11 +6,11 @@ namespace BattleArenaServer.Skills.FairySkills
 {
     public class RebirthSkill : Skill
     {
-        int decreaseMaxHP = 150;
+        int decreaseMaxHP = 175;
         public RebirthSkill()
         {
             name = "Rebirth";
-            title = $"Магическое перерождение отнимает у Вас {decreaseMaxHP} ХП и полностью восстанавливает здоровье.";
+            title = $"Магическое перерождение отнимает у Вас {decreaseMaxHP} Макс. ХП и полностью восстанавливает здоровье.";
             titleUpg = "-2 к перезарядке, -1 ОД";
             coolDown = 5;
             coolDownNow = 0;

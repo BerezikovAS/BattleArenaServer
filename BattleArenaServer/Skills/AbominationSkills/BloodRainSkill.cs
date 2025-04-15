@@ -12,7 +12,8 @@ namespace BattleArenaServer.Skills.AbominationSkills
         public BloodRainSkill()
         {
             name = "Blood Rain";
-            title = $"Вызывает кровавый дождь, который накладывает кровотечение на 2 хода на врагов в области.\n" +
+            dmg = 60;
+            title = $"Вызывает кровавый дождь, который наносит {dmg} маг. урона и накладывает кровотечение на 2 хода на врагов в области.\n" +
                 $"Эффект отнимает {Math.Round(percent * 100)}% от разницы максимального ХП врага и заклинателя в конце хода противника.";
             titleUpg = "+1 к радиусу";
             coolDown = 4;
@@ -23,6 +24,7 @@ namespace BattleArenaServer.Skills.AbominationSkills
             nonTarget = false;
             area = Consts.SpellArea.Radius;
             stats = new SkillStats(coolDown, requireAP, range, radius);
+            dmgType = Consts.DamageType.Magic;
         }
 
         public new ISkillCastRequest request => new RangeAoECastRequest();
@@ -41,6 +43,8 @@ namespace BattleArenaServer.Skills.AbominationSkills
                         int bleedingDmg = Convert.ToInt32((double)(requestData.Caster.MaxHP - n.HERO.MaxHP) * percent);
                         BleedingDebuff bleedingDebuff = new BleedingDebuff(requestData.Caster.Id, bleedingDmg, 3);
                         n.HERO.AddEffect(bleedingDebuff);
+
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
                     }
                 }
 

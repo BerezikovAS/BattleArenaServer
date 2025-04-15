@@ -15,11 +15,11 @@ namespace BattleArenaServer.Skills.GeomantSkills
             title = $"Землятрясение поражает врагов вокруг, нанося магический урон и сбивая с ног, отчего те теряют 1 ОД.\n" +
                 $"Урон зависит от количества свободных клеток вокруг цели (X). Столоктиты считаются свободными гексами и дают двойной бонус.\n" +
                 $"({dmg} + {extraDmg} * X)";
-            titleUpg = "+8 к урону за гекс. +1 к радиусу";
+            titleUpg = "+6 к урону за гекс. +1 к радиусу";
             coolDown = 6;
             coolDownNow = 0;
-            requireAP = 3;
-            radius = 3;
+            requireAP = 2;
+            radius = 2;
             nonTarget = false;
             area = Consts.SpellArea.Radius;
             stats = new SkillStats(coolDown, requireAP, range, radius);
@@ -65,7 +65,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
             if (!upgraded)
             {
                 upgraded = true;
-                extraDmg += 8;
+                extraDmg += 6;
                 radius += 1;
                 stats.radius += 1;
                 title = $"Землятрясение поражает врагов вокруг, нанося магический урон и сбивая с ног, отчего те теряют 1 ОД.\n" +

@@ -7,8 +7,8 @@ namespace BattleArenaServer.Skills.Knight
 {
     public class BodyGuardSkill : Skill
     {
-        int defence = 2;
-        int duration = 2;
+        int defence = 3;
+        int duration = 3;
         public BodyGuardSkill()
         {
             name = "Body guard";

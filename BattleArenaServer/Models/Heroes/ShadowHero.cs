@@ -8,6 +8,17 @@ namespace BattleArenaServer.Models.Heroes
         {
             Name = "Shadow";
 
+            Respawn();
+
+            SkillList[0] = new ShadowsEverywherePSkill(this);
+            SkillList[1] = new ShadowWalkSkill();
+            SkillList[2] = new BladeOfDarknessSkill();
+            SkillList[3] = new SuffocationSkill();
+            SkillList[4] = new ShadowTwinSkill();
+        }
+
+        public override void Respawn()
+        {
             MaxHP = HP = 900;
             Armor = 5;
             Resist = 3;
@@ -17,11 +28,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 95;
 
-            SkillList[0] = new ShadowsEverywherePSkill(this);
-            SkillList[1] = new ShadowWalkSkill();
-            SkillList[2] = new BladeOfDarknessSkill();
-            SkillList[3] = new SuffocationSkill();
-            SkillList[4] = new ShadowTwinSkill();
+            base.Respawn();
         }
     }
 }

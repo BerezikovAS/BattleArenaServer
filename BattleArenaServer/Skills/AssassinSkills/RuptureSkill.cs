@@ -14,7 +14,7 @@ namespace BattleArenaServer.Skills.AssassinSkills
         {
             dmg = 150;
             name = "Rupture";
-            title = $"Наносит {dmg} физического урона и подрезает сухожилие жертвы. Передвигаясь, цель будет терять {ruptureDmg} ХП за пройденный гекс.";
+            title = $"Наносит {dmg} магического урона и подрезает сухожилие жертвы. Передвигаясь, цель будет терять {ruptureDmg} ХП за пройденный гекс.";
             titleUpg = "Негативный эффект длится 2 хода.";
             coolDown = 4;
             coolDownNow = 0;
@@ -23,7 +23,7 @@ namespace BattleArenaServer.Skills.AssassinSkills
             range = 1;
             area = Consts.SpellArea.EnemyTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
-            dmgType = Consts.DamageType.Physical;
+            dmgType = Consts.DamageType.Magic;
         }
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();

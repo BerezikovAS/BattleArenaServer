@@ -41,7 +41,10 @@ namespace BattleArenaServer.Effects.Debuffs
                 {
                     Hex? moveHex = UtilityService.GetOneHexOnDirection(enemyHex, dir, 1, 1);
                     if (moveHex != null && moveHex.IsFree())
+                    {
                         AttackService.MoveHero(enemy, enemyHex, moveHex);
+                        AttackService.SetDamage(hero, enemy, value, Consts.DamageType.Magic);
+                    }
                 }
             }
         }

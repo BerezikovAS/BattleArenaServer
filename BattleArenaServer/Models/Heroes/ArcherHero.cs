@@ -8,20 +8,27 @@ namespace BattleArenaServer.Models.Heroes
         {
             Name = "Archer";
 
-            MaxHP = HP = 875;
-            Armor = 3;
-            Resist = 3;
-
-            AP = 4;
-
-            AttackRadius = 4;
-            Dmg = 102;
+            Respawn();
 
             SkillList[0] = new LongShotPSkill(this);
             SkillList[1] = new EagleEyeSkill();
             SkillList[2] = new CaltropSkill();
             SkillList[3] = new SharpFangSkill();
             SkillList[4] = new PinDownSkill();
+        }
+
+        public override void Respawn()
+        {
+            MaxHP = HP = 875;
+            Armor = 3;
+            Resist = 3;
+
+            AP = 4;
+
+            AttackRadius = 3;
+            Dmg = 102;
+
+            base.Respawn();
         }
     }
 }

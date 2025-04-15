@@ -35,7 +35,7 @@ namespace BattleArenaServer.Skills.NecromancerSkills
 
             if (requestData.Caster != null && requestData.TargetHex != null && requestData.CasterHex != null)
             {
-                AttackService.dealedDmg = 0;
+                requestData.Caster.DamageDealed = 0;
                 foreach (var n in UtilityService.GetHexesSmallCone(requestData.CasterHex, requestData.TargetHex, radius))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
@@ -43,7 +43,7 @@ namespace BattleArenaServer.Skills.NecromancerSkills
                         AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
                     }
                 }
-                int heal = Convert.ToInt32(Convert.ToDouble(AttackService.dealedDmg * percentHeal) / 100);
+                int heal = Convert.ToInt32(Convert.ToDouble(requestData.Caster.DamageDealed * percentHeal) / 100);
                 requestData.Caster.Heal(heal);
 
                 requestData.Caster.AP -= requireAP;

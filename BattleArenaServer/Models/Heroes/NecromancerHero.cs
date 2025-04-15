@@ -8,6 +8,17 @@ namespace BattleArenaServer.Models.Heroes
         {
             Name = "Necromancer";
 
+            Respawn();
+
+            SkillList[0] = new DeadlyAuraPSkill(this);
+            SkillList[1] = new LivingDeadSkill();
+            SkillList[2] = new LifeDrainSkill();
+            SkillList[3] = new ChainOfPainSkill();
+            SkillList[4] = new GraveHandsSkill();
+        }
+
+        public override void Respawn()
+        {
             MaxHP = HP = 800;
             Armor = 2;
             Resist = 3;
@@ -17,11 +28,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 3;
             Dmg = 100;
 
-            SkillList[0] = new DeadlyAuraPSkill(this);
-            SkillList[1] = new LivingDeadSkill();
-            SkillList[2] = new LifeDrainSkill();
-            SkillList[3] = new ChainOfPainSkill();
-            SkillList[4] = new GraveHandsSkill();
+            base.Respawn();
         }
     }
 }

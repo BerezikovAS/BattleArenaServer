@@ -37,7 +37,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
             if (requestData.Caster != null && requestData.TargetHex != null && requestData.TargetHex.OBSTACLE == null)
             {
                 //Ставим столоктит
-                int Id = GameData._hexes.Max(x => x.HERO != null ? x.HERO.Id : 0) + 1;
+                int Id = GameData._heroes.Max(x => x.Id) + 1;
                 StalaktiteObstacle stalaktiteObstacle = new StalaktiteObstacle(Id, requestData.Caster.Id, requestData.TargetHex.ID, stalaktiteHP, requestData.Caster.Team, lifeTime);
                 requestData.TargetHex.SetHero(stalaktiteObstacle);
                 GameData._solidObstacles.Add(stalaktiteObstacle);

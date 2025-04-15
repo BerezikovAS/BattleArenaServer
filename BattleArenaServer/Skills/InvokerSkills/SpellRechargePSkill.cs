@@ -36,7 +36,7 @@ namespace BattleArenaServer.Skills.InvokerSkills
             return false;
         }
 
-        private bool AfterAttackDelegate(Hero attacker, Hero? defender, int dmg)
+        private bool AfterAttackDelegate(Hero attacker, Hero? defender, int dmg, Consts.DamageType dmgType)
         {
             foreach (var spell in attacker.SkillList)
             {

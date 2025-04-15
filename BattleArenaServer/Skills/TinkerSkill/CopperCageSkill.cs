@@ -11,8 +11,8 @@ namespace BattleArenaServer.Skills.TinkerSkill
         public CopperCageSkill()
         {
             name = "Copper Cage";
-            dmg = 50;
-            title = $"Наносит {dmg} магического урона цели и над ней нависает медная клетка, есть цель не передвинется хотя бы на 2 клетке, то получит еще {dmg} урона " +
+            dmg = 60;
+            title = $"Наносит {dmg} магического урона цели и над ней нависает медная клетка, если цель не передвинется хотя бы на 2 клетки, то получит еще {dmg} урона " +
                 "и обездвижется.";
             titleUpg = "+25 к урону";
             coolDown = 3;
@@ -34,10 +34,10 @@ namespace BattleArenaServer.Skills.TinkerSkill
 
             if (requestData.Caster != null && requestData.Target != null)
             {
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
-
                 CopperCageDebuff copperCageDebuff = new CopperCageDebuff(requestData.Caster.Id, 2, 2, dmg);
                 requestData.Target.AddEffect(copperCageDebuff);
+                
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
 
                 requestData.Caster.AP -= requireAP;
                 coolDownNow = coolDown;
@@ -53,7 +53,7 @@ namespace BattleArenaServer.Skills.TinkerSkill
             {
                 upgraded = true;
                 dmg += 25;
-                title = $"Наносит {dmg} магического урона цели и над ней нависает медная клетка, есть цель не передвинется хотя бы на 2 клетке, то получит еще {dmg} урона " +
+                title = $"Наносит {dmg} магического урона цели и над ней нависает медная клетка, если цель не передвинется хотя бы на 2 клетки, то получит еще {dmg} урона " +
                     "и обездвижется.";
                 return true;
             }

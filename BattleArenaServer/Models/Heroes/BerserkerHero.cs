@@ -8,6 +8,17 @@ namespace BattleArenaServer.Models.Heroes
         {
             Name = "Berserker";
 
+            Respawn();            
+
+            SkillList[0] = new BattleTrancePSkill(this);
+            SkillList[1] = new WhirlwindAxesSkill();
+            SkillList[2] = new BrokenLegSkill();
+            SkillList[3] = new BattleCrySkill();
+            SkillList[4] = new BloodRageSkill();
+        }
+
+        public override void Respawn()
+        {
             MaxHP = HP = 1000;
             Armor = 5;
             Resist = 3;
@@ -17,11 +28,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 112;
 
-            SkillList[0] = new BattleTrancePSkill(this);
-            SkillList[1] = new WhirlwindAxesSkill();
-            SkillList[2] = new BrokenLegSkill();
-            SkillList[3] = new BattleCrySkill();
-            SkillList[4] = new BloodRageSkill();
+            base.Respawn();
         }
     }
 }

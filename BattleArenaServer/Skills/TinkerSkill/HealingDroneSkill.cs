@@ -40,7 +40,7 @@ namespace BattleArenaServer.Skills.TinkerSkill
             if (requestData.Caster != null && requestData.TargetHex != null && requestData.TargetHex.OBSTACLE == null)
             {
                 //Запускаем дрона
-                int Id = GameData._hexes.Max(x => x.HERO != null ? x.HERO.Id : 0) + 1;
+                int Id = GameData._heroes.Max(x => x.Id) + 1;
                 HealingDroneSummon healingDroneSummon =
                     new HealingDroneSummon(Id, requestData.Caster.Team, requestData.Caster.Id, lifeTime, droneHP, armor, resist, upgraded);
                 requestData.TargetHex.SetHero(healingDroneSummon);

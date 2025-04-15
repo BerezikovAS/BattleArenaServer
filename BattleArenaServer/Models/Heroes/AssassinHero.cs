@@ -8,6 +8,17 @@ namespace BattleArenaServer.Models.Heroes
         {
             Name = "Assassin";
 
+            Respawn();
+
+            SkillList[0] = new LiquidationPSkill(this);
+            SkillList[1] = new BlitzAttackSkill();
+            SkillList[2] = new SmokeBombSkill();
+            SkillList[3] = new RuptureSkill();
+            SkillList[4] = new AdrenalinSkill();
+        }
+
+        public override void Respawn()
+        {
             MaxHP = HP = 900;
             Armor = 4;
             Resist = 4;
@@ -17,11 +28,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 105;
 
-            SkillList[0] = new LiquidationPSkill(this);
-            SkillList[1] = new BlitzAttackSkill();
-            SkillList[2] = new SmokeBombSkill();
-            SkillList[3] = new RuptureSkill();
-            SkillList[4] = new AdrenalinSkill();
+            base.Respawn();
         }
     }
 }

@@ -38,7 +38,7 @@ namespace BattleArenaServer.Effects.Debuffs
             AttackService.SetDamage(attacker, hero, dmg, Consts.DamageType.Magic);
         }
 
-        private void AfterReceiveDmgDelegate(Hero defender, Hero? attacker, int dmg)
+        private void AfterReceiveDmgDelegate(Hero defender, Hero? attacker, int dmg, Consts.DamageType dmgType)
         {
             dmgReceived += dmg;
         }
