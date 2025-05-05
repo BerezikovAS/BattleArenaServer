@@ -68,7 +68,7 @@ namespace BattleArenaServer.Skills.CultistSkills
                     requestData.Caster.SkillList[4] = new DevourSkill();
                 }
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

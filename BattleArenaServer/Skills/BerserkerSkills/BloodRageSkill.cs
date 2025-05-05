@@ -8,10 +8,11 @@ namespace BattleArenaServer.Skills.BerserkerSkills
     public class BloodRageSkill : Skill
     {
         int extraDmg = 0;
+        int hpLoss = 45;
         public BloodRageSkill()
         {
             name = "Blood Rage";
-            title = "Ваши атаки стоят всего 1 очко действия, но каждая из них отнимает у Вас 35 ХП.";
+            title = $"Ваши атаки стоят всего 1 очко действия, но каждая из них отнимает у Вас {hpLoss} ХП.";
             titleUpg = $"+30 к урону от атак.";
             coolDown = 4;
             coolDownNow = 0;
@@ -29,10 +30,10 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             {
                 if (requestData.Caster != null)
                 {
-                    BloodRageBuff bloodRageBuff = new BloodRageBuff(requestData.Caster.Id, extraDmg, 1);
+                    BloodRageBuff bloodRageBuff = new BloodRageBuff(requestData.Caster.Id, extraDmg, 1, hpLoss);
                     requestData.Caster.AddEffect(bloodRageBuff);
 
-                    requestData.Caster.AP -= requireAP;
+                    requestData.Caster.SpendAP(requireAP);
                     coolDownNow = coolDown;
                     return true;
                 }

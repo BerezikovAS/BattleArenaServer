@@ -7,7 +7,7 @@ namespace BattleArenaServer.Skills.InvokerSkills
 {
     public class ManaBlastSkill : Skill
     {
-        private int percentDmg = 15;
+        private int percentDmg = 17;
         public ManaBlastSkill()
         {
             name = "Mana Blast";
@@ -42,7 +42,7 @@ namespace BattleArenaServer.Skills.InvokerSkills
                         AttackService.SetDamage(requestData.Caster, n.HERO, resDmg, Consts.DamageType.Magic);
                     }
                 }
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

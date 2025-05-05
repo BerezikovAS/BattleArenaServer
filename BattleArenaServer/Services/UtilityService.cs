@@ -18,15 +18,29 @@ namespace BattleArenaServer.Services
             return hexesRadius;
         }
 
-        public static List<Hex> GetHexesLines(List<Hex> _hexes, int _idhex, int _radius = 100)
+        public static List<Hex> GetHexesCircle(Hex casterHex, Hex targetHex, int radius)
+        {
+            List<Hex> hexesRadius = new List<Hex>();
+            if (casterHex != null && targetHex != null && casterHex.Distance(targetHex) <= radius)
+            {
+                int dist = casterHex.Distance(targetHex);
+                foreach (var n in GameData._hexes)
+                {
+                    if (n.Distance(casterHex) == dist)
+                        hexesRadius.Add(n);
+                }
+            }
+            return hexesRadius;
+        }
+
+        public static List<Hex> GetHexesLines(Hex casterHex, int _radius = 100)
         {
             List<Hex> hexesLines = new List<Hex>();
-            Hex? hex = _hexes.FirstOrDefault(x => x.ID == _idhex);
-            if (hex != null)
+            if (casterHex != null)
             {
-                foreach (var n in _hexes)
+                foreach (var n in GameData._hexes)
                 {
-                    if (n.Distance(hex) <= _radius & IsOnLine(hex, n))
+                    if (n.Distance(casterHex) <= _radius & IsOnLine(casterHex, n))
                         hexesLines.Add(n);
                 }
             }

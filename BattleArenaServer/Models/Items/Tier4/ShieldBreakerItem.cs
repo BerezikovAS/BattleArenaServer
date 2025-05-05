@@ -73,7 +73,7 @@ namespace BattleArenaServer.Models.Items.Tier4
 
                 AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

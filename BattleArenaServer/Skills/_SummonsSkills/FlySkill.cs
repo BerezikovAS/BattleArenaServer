@@ -36,7 +36,7 @@ namespace BattleArenaServer.Skills._SummonsSkills
                 //Обновим ауры
                 AttackService.ContinuousAuraAction();
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

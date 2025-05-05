@@ -41,7 +41,7 @@ namespace BattleArenaServer.Skills.FairySkills
                         hex.HERO.AddEffect(magicShieldBuff);
                     }
                 }
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

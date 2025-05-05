@@ -14,10 +14,7 @@
 
         public UserTeamBindings() 
         {
-            RedTeam = BlueTeam = ActiveTeam = "";
-            RedVP = 0;
-            BlueVP = 5;
-            RedCoins = BlueCoins = 30;
+            ClearBindings();
         }
 
         public void ClearBindings()
@@ -25,7 +22,8 @@
             RedTeam = BlueTeam = ActiveTeam = "";
             RedVP = 0;
             BlueVP = 5;
-            RedCoins = BlueCoins = 30;
+            RedCoins = 30;
+            BlueCoins = 40;
         }
     }
 }

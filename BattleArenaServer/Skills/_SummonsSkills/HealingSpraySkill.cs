@@ -34,7 +34,7 @@ namespace BattleArenaServer.Skills._SummonsSkills
             {
                 requestData.Target.Heal(heal);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

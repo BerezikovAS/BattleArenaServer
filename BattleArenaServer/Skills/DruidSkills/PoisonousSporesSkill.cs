@@ -13,7 +13,7 @@ namespace BattleArenaServer.Skills.DruidSkills
         public PoisonousSporesSkill()
         {
             name = "Poisonous Spores";
-            dmg = 100;
+            dmg = 115;
             title = $"Выбрасывает вперед ядовитые споры, которые наносят {dmg} маг. урона и заражают врагов, отчего те теряют {percentHPLoss}% ХП в ход." +
                 $" Действует {poisonDuration} хода.";
             titleUpg = "+30 к урону, +3% к потере ХП в ход.";
@@ -47,7 +47,7 @@ namespace BattleArenaServer.Skills.DruidSkills
                         AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
                     }
                 }
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

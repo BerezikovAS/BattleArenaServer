@@ -43,7 +43,7 @@ namespace BattleArenaServer.Skills.AeroturgSkills
                     }
                 }
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

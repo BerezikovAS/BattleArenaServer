@@ -43,7 +43,7 @@ namespace BattleArenaServer.Skills.ChaosSkills
                 }
 
                 AttackService.SetDamage(requestData.Caster, requestData.Target, dmg + extraDmg * heroesCnt, dmgType);
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

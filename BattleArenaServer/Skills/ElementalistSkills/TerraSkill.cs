@@ -34,7 +34,7 @@ namespace BattleArenaServer.Skills.ElementalistSkills
                 PhysShieldBuff physShieldBuff = new PhysShieldBuff(requestData.Caster.Id, shieldDurability, 3);
                 requestData.Target.AddEffect(physShieldBuff);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

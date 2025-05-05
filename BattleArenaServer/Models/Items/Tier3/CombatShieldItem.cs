@@ -75,7 +75,7 @@ namespace BattleArenaServer.Models.Items.Tier3
                 ArmorBuff buffArmor = new ArmorBuff(requestData.Caster.Id, armor, 2);
                 requestData.Caster.AddEffect(buffArmor);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

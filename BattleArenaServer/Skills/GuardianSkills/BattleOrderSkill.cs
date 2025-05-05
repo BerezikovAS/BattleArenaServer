@@ -40,7 +40,7 @@ namespace BattleArenaServer.Skills.GuardianSkills
                     requestData.Target.AddEffect(hasteBuff);
                 }
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

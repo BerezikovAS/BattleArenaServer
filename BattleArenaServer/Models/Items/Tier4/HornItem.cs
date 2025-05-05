@@ -72,7 +72,7 @@ namespace BattleArenaServer.Models.Items.Tier4
                     }
                 }
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

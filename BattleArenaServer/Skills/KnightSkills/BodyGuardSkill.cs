@@ -19,7 +19,7 @@ namespace BattleArenaServer.Skills.Knight
             requireAP = 1;
             range = 1;
             nonTarget = false;
-            area = Consts.SpellArea.AllyTarget;
+            area = Consts.SpellArea.FriendTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
         }
 
@@ -35,7 +35,7 @@ namespace BattleArenaServer.Skills.Knight
                 BodyGuardBuff bodyGuardBuff = new BodyGuardBuff(requestData.Caster.Id, defence, duration);
                 requestData.Target.AddEffect(bodyGuardBuff);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

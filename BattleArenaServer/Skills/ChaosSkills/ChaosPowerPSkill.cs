@@ -13,9 +13,6 @@ namespace BattleArenaServer.Skills.ChaosSkills
             title = $"В начале каждого хода Вы распределяете {chaosPoints} очков хаоса случайным образом между тремя характеристиками." +
                 $"Урон, броня и сопротивление. Каждое очко хаоса даёт +1 для брони и сопротивления и +8 для урона.";
             titleUpg = "Увеличивает количество очков хаоса на 5.";
-
-            //chaosPowerUnique = new ChaosPowerUnique(hero.Id, chaosPoints, 99);
-            //hero.AddEffect(chaosPowerUnique);
         }
 
         public override bool Cast(RequestData requestData)

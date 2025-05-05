@@ -51,7 +51,7 @@ namespace BattleArenaServer.Skills.AssassinSkills
                 SmokeBuff smokeBuff = new SmokeBuff(requestData.Caster.Id, extraArmor, 2);
                 requestData.Caster.AddEffect(smokeBuff);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

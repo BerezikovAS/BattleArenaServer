@@ -12,7 +12,7 @@ namespace BattleArenaServer.Skills.ElementalistSkills
         public AquaSkill()
         {
             name = "Aqua";
-            dmg = 140;
+            dmg = 150;
             title = $"Обрушивает мощный град на врагов в области, нанося {dmg} магического урона и снижает сопротивление магии на {reduceResist}";
             titleUpg = "+1 к дальности, +2 к снижению сопротивления";
             coolDown = 4;
@@ -45,7 +45,7 @@ namespace BattleArenaServer.Skills.ElementalistSkills
                         AttackService.SetDamage(requestData.Caster, n.HERO, dmg, Consts.DamageType.Magic);
                     }
                 }
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

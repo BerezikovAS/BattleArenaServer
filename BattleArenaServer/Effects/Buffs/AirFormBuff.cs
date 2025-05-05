@@ -25,7 +25,7 @@ namespace BattleArenaServer.Effects.Buffs
             _hero.modifierAppliedDamage -= ModifierAppliedDamageDelegate;
         }
 
-        private int ModifierAppliedDamageDelegate(Hero? attacker, Hero defender, int dmg)
+        private int ModifierAppliedDamageDelegate(Hero? attacker, Hero defender, int dmg, Consts.DamageType dmgType)
         {
             double extraDamage = dmg * value * -0.01;
             return (int)Math.Round(extraDamage);

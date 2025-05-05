@@ -26,7 +26,7 @@ namespace BattleArenaServer.Effects.Debuffs
             hero.modifierAppliedDamage -= Liquidation;
         }
 
-        private int Liquidation(Hero attacker, Hero defender, int dmg)
+        private int Liquidation(Hero? attacker, Hero defender, int dmg, Consts.DamageType dmgType)
         {
             if (attacker.Id == idCaster)
                 return value;

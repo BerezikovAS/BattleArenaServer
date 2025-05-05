@@ -56,7 +56,7 @@ namespace BattleArenaServer.Skills.SeraphimSkills
                     AttackService.SetDamage(requestData.Caster, hero, dmg, dmgType);
                 }
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

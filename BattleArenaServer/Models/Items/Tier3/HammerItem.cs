@@ -57,7 +57,7 @@ namespace BattleArenaServer.Models.Items.Tier3
                 if (requestData.Target.AP < 0)
                     requestData.Target.AP = 0;
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

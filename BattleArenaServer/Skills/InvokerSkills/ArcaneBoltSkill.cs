@@ -10,7 +10,7 @@ namespace BattleArenaServer.Skills.InvokerSkills
         public ArcaneBoltSkill()
         {
             name = "Arcane Bolt";
-            dmg = 140;
+            dmg = 160;
             title = $"Магический снаряд наносит врагу {dmg} маг. урона.";
             titleUpg = "+40 к урону";
             coolDown = 4;
@@ -34,7 +34,7 @@ namespace BattleArenaServer.Skills.InvokerSkills
             {
                 AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

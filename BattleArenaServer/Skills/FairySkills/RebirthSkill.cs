@@ -29,7 +29,7 @@ namespace BattleArenaServer.Skills.FairySkills
 
             if (requestData.Caster != null && requestData.CasterHex != null)
             {
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 requestData.Caster.MaxHP -= decreaseMaxHP;
 
                 if (requestData.Caster.MaxHP <= 0)

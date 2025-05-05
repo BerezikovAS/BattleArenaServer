@@ -9,7 +9,7 @@ namespace BattleArenaServer.Skills.ShadowSkills
 {
     public class ShadowTwinSkill : Skill
     {
-        int lifeTime = 2;
+        int lifeTime = 3;
         public ShadowTwinSkill()
         {
             name = "Shadow Twin";
@@ -55,7 +55,7 @@ namespace BattleArenaServer.Skills.ShadowSkills
                 //Обновим ауры
                 AttackService.ContinuousAuraAction();
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

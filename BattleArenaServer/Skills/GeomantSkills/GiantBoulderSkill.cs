@@ -57,7 +57,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
                 }
 
                 //Если не нашли никого, кому влетит камнем, то это вина кастера)
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

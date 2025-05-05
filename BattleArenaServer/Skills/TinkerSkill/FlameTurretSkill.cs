@@ -49,7 +49,7 @@ namespace BattleArenaServer.Skills.TinkerSkill
                 //Обновим ауры
                 AttackService.ContinuousAuraAction();
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

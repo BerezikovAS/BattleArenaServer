@@ -41,7 +41,7 @@ namespace BattleArenaServer.Skills.CultistSkills
                 //Съедаем бедолагу
                 AttackService.KillHero(requestData.Target);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

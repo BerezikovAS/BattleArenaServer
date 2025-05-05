@@ -11,7 +11,7 @@ namespace BattleArenaServer.Effects.Unique
             idCaster = _idCaster;
             value = _value;
             duration = _duration;
-            description = $"Теневая копия наносит 40% урона и получает на 400% урона больше.";
+            description = $"Теневая копия наносит 50% урона и получает на 400% урона больше.";
         }
 
         public override void ApplyEffect(Hero _hero)
@@ -28,10 +28,10 @@ namespace BattleArenaServer.Effects.Unique
 
         private int ReduceAttackDmg(Hero attacker, Hero? defender)
         {
-            return (int)(Convert.ToDouble(attacker.Dmg) * -0.6); //Отнимаем 60% от урона, чтобы получить 40%
+            return (int)(Convert.ToDouble(attacker.Dmg) * -0.5); //Отнимаем 50% от урона, чтобы получить 50%
         }
 
-        private int IncreaseDealedDmg(Hero attacker, Hero? defender, int dmg)
+        private int IncreaseDealedDmg(Hero attacker, Hero? defender, int dmg, Consts.DamageType dmgType)
         {
             return dmg * 4; //Увеличиваем получаемый урон в 5 раз т.е. на 400%
         }

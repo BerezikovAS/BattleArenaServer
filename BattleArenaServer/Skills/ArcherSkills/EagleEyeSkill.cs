@@ -34,7 +34,7 @@ namespace BattleArenaServer.Skills.Crossbowman
                 EagleEyeBuff eagleEyeBuff = new EagleEyeBuff(requestData.Caster.Id, extraDamage, 1);
                 requestData.Caster.AddEffect(eagleEyeBuff);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

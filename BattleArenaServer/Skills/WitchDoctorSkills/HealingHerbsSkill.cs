@@ -41,7 +41,7 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
                         hex.HERO.AddEffect(regenerationBuff);
                     }
                 }
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

@@ -1,4 +1,5 @@
-﻿using BattleArenaServer.Effects.Buffs;
+﻿using BattleArenaServer.Effects;
+using BattleArenaServer.Effects.Buffs;
 using BattleArenaServer.Models;
 using BattleArenaServer.Models.Heroes;
 using BattleArenaServer.Models.Obstacles;
@@ -10,12 +11,14 @@ namespace BattleArenaServer.Hubs
     public class FieldHub : Hub
     {
         TimingService timingService = new TimingService();
+        PickService pickService = new PickService();
 
         public FieldHub()
         {
             CreateGameField();
-            CreateHeroList();
+            //CreateHeroList();
             ShopService.FillItems();
+            pickService.FillHeroesList();
         }
 
         private static void CreateHeroList()
@@ -51,6 +54,12 @@ namespace BattleArenaServer.Hubs
             heroes.Add(new InvokerHero(0, ""));
             heroes.Add(new SeraphimHero(0, ""));
             heroes.Add(new DruidHero(0, ""));
+            heroes.Add(new GhostHero(0, ""));
+            heroes.Add(new MusketeerHero(0, ""));
+            heroes.Add(new DwarfHero(0, ""));
+            heroes.Add(new FallenKingHero(0, ""));
+            heroes.Add(new GolemHero(0, ""));
+            heroes.Add(new PlagueDoctorHero(0, ""));
 
             string team = "red";
             Random rnd = new Random();
@@ -115,7 +124,16 @@ namespace BattleArenaServer.Hubs
                     default: teamRespawn = ""; break;
                 }
 
-                Hex hex = new Hex(_start[0], _start[1], _start[2], i, vp, teamRespawn);
+                //Устанавливаем зоны покупок предметов для команд
+                string teamShop = "";
+                switch (i)
+                {
+                    case 0: case 1: case 7: case 8: case 15: case 22: case 30: case 37: case 38: case 45: case 46: teamShop = "red"; break;
+                    case 5: case 6: case 13: case 14: case 21: case 29: case 36: case 43: case 44: case 50: case 51: teamShop = "blue"; break;
+                    default: teamShop = ""; break;
+                }
+
+                Hex hex = new Hex(_start[0], _start[1], _start[2], i, vp, teamRespawn, teamShop);
                 GameData._hexes.Add(hex);
 
                 //Поскольку мы добавляем гексы слева направо, то при достижении определенных значений, нужно "спуститься" на новую строку
@@ -158,14 +176,16 @@ namespace BattleArenaServer.Hubs
                 GameData.ClearAllObjects();
                 GameData.activeTeam = "red";
                 CreateGameField();
-                CreateHeroList();
+                //CreateHeroList();
                 ShopService.FillItems();
                 timingService = new TimingService();
                 GameData.userTeamBindings.ClearBindings();
+                pickService.FillHeroesList(); // Обновляется список героев для пика
                 await SetActiveHero(GameData.idActiveHero);
                 await GetUsersBindings();
 
-                await SendAllInfo();
+                await this.Clients.All.SendAsync("RecreateGame");
+                //await SendAllInfo();
             }
             catch
             {
@@ -223,9 +243,9 @@ namespace BattleArenaServer.Hubs
             {
                 requestData.Caster.beforeSpellCast(requestData.Caster, requestData.Target, requestData.Caster.SkillList[skill]);
                 // Кастуем))
-                requestData.Caster.SkillList[skill].Cast(requestData);
+                if (requestData.Caster.SkillList[skill].Cast(requestData))
+                    requestData.Caster.afterSpellCast(requestData.Caster, requestData.Target, requestData.Caster.SkillList[skill]);
 
-                requestData.Caster.afterSpellCast(requestData.Caster, requestData.Target, requestData.Caster.SkillList[skill]);
                 try {
                     await SendAllInfo();
                 }
@@ -262,10 +282,25 @@ namespace BattleArenaServer.Hubs
 
                 int range = attacker.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Blind)) == null ? attacker.AttackRadius + attacker.StatsEffect.AttackRadius : 1;
 
-                if (requestData.CasterHex.Distance(requestData.TargetHex) > range || attacker.AP < attacker.APtoAttack)
+                int availableAP = requestData.Caster.AP;
+
+                Effect? taunt = requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Taunt));
+                if (taunt != null && taunt.idCaster != defender.Id) // Если атакующий под таунтом, то он может атаковать только заклинателя
                     return;
 
-                attacker.AP -= attacker.APtoAttack;
+                // Спиритическая связь объединяет ОД двух героев, поэтому доступные ОД - это ОД кастера + ОД связанного героя
+                Effect? spiritLink = requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.SpiritLink));
+                if (spiritLink != null)
+                {
+                    Hero? anotherHero = GameData._heroes.FirstOrDefault(x => x.Id == spiritLink.idCaster);
+                    if (anotherHero != null)
+                        availableAP += anotherHero.AP;
+                }
+
+                if (requestData.CasterHex.Distance(requestData.TargetHex) > range || availableAP < attacker.APtoAttack)
+                    return;
+
+                attacker.SpendAP(attacker.APtoAttack);
                 // К урону добавляем дополнительный от пассивок и эффектов
                 int dmg = (int)((attacker.Dmg + attacker.GetPassiveAttackDamage(attacker, defender)) * attacker.StatsEffect.DmgMultiplier);
 
@@ -403,6 +438,10 @@ namespace BattleArenaServer.Hubs
                 if (item == null)
                     return;
 
+                Hex? hex = GameData._hexes.FirstOrDefault(x => x.HERO != null && x.HERO.Id == idHero);
+                if (hex == null || hex.TeamShop != hero.Team)
+                    return;
+
                 ShopService.BuyItem(hero, item);
 
                 await SendAllInfo();
@@ -423,11 +462,70 @@ namespace BattleArenaServer.Hubs
                 if (item == null)
                     return;
 
+                Hex? hex = GameData._hexes.FirstOrDefault(x => x.HERO != null && x.HERO.Id == idHero);
+                if (hex == null || hex.TeamShop != hero.Team)
+                    return;
+
                 ShopService.SellItem(hero, item);
 
                 await SendAllInfo();
             }
             catch { Console.WriteLine("Error in BuyItem()"); }
+        }
+
+        public async Task GetHeroList()
+        {
+            try
+            {
+                await this.Clients.All.SendAsync("DrawPickedHeroes", pickService.GetHeroes(), pickService.pickBanTurn);
+            }
+            catch { Console.WriteLine("Error in GetHeroList()"); }
+        }
+
+        public async Task BanHero(string heroName)
+        {
+            try
+            {
+                pickService.BanHero(heroName);
+                await this.Clients.All.SendAsync("DrawPickedHeroes", pickService.GetHeroes(), pickService.pickBanTurn);
+                await GetUsersBindings();
+            }
+            catch { Console.WriteLine("Error in BanHero()"); }
+        }
+
+        public async Task PickHero(string heroName)
+        {
+            try
+            {
+                pickService.PickHero(heroName);
+                await this.Clients.All.SendAsync("DrawPickedHeroes", pickService.GetHeroes(), pickService.pickBanTurn);
+                await GetUsersBindings();
+            }
+            catch { Console.WriteLine("Error in PickHero()"); }
+        }
+
+        public async Task BeginBattle()
+        {
+            try
+            {
+                if (GameData._heroes.Count() == 6)
+                {
+                    await this.Clients.All.SendAsync("BeginBattle");
+                    await GetUsersBindings();
+                }
+            }
+            catch { Console.WriteLine("Error in BeginBattle()"); }
+        }
+
+        public async Task BeginRandomBattle()
+        {
+            try
+            {
+                CreateHeroList();
+                await this.Clients.All.SendAsync("BeginBattle");
+                await GetUsersBindings();
+            }
+            catch { Console.WriteLine("Error in BeginBattle()"); }
         }
 
         private int[] GetSpellArea(int target, int caster, int spell, string itemName = "")
@@ -519,6 +617,20 @@ namespace BattleArenaServer.Hubs
                     if (dist <= spellRange)
                     {
                         foreach (var hex in UtilityService.GetHexesWideLine(GameData._hexes[caster], GameData._hexes[target], skill.radius))
+                            spellArea.Add(hex.ID);
+                    }
+                    break;
+                case Consts.SpellArea.Circle:
+                    if (dist <= spellRange)
+                    {
+                        foreach (var hex in UtilityService.GetHexesCircle(GameData._hexes[caster], GameData._hexes[target], skill.radius))
+                            spellArea.Add(hex.ID);
+                    }
+                    break;
+                case Consts.SpellArea.Lines:
+                    if (dist <= spellRange)
+                    {
+                        foreach (var hex in UtilityService.GetHexesLines(GameData._hexes[caster], skill.radius))
                             spellArea.Add(hex.ID);
                     }
                     break;

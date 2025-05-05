@@ -37,7 +37,7 @@ namespace BattleArenaServer.Skills.Crossbowman
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                         AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
                 }
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

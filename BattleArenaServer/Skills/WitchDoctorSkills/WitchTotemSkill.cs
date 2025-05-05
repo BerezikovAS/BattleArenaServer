@@ -51,7 +51,7 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
                 WitchTotemAura witchTotemAura = new WitchTotemAura(dmg);
                 witchTotemObstacle.AuraList.Add(witchTotemAura);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

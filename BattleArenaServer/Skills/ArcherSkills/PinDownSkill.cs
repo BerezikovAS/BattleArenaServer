@@ -12,7 +12,7 @@ namespace BattleArenaServer.Skills.Crossbowman
         {
             name = "Pin Down";
             dmg = 150;
-            title = $"Массивный болт прибивает врага к земле, отчего тот не может передвигаться. {dmg} физического урона.";
+            title = $"Массивный болт прибивает врага к земле, отчего тот не может передвигаться. {dmg} магического урона.";
             titleUpg = "+100 к урону.";
             coolDown = 4;
             coolDownNow = 0;
@@ -21,7 +21,7 @@ namespace BattleArenaServer.Skills.Crossbowman
             nonTarget = false;
             area = Consts.SpellArea.EnemyTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
-            dmgType = Consts.DamageType.Physical;
+            dmgType = Consts.DamageType.Magic;
         }
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
@@ -38,7 +38,7 @@ namespace BattleArenaServer.Skills.Crossbowman
                 
                 AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
                 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

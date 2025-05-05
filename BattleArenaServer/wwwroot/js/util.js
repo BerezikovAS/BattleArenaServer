@@ -15,7 +15,6 @@ function getPercentHP(_hero) {
 
 // Заполнить инфу по активному герою
 function feelActiveHeroInfo(_hero) {
-    console.log(_hero);
     feelAP(_hero.ap);
     feelSpells(_hero)
 }
@@ -23,6 +22,15 @@ function feelActiveHeroInfo(_hero) {
 // Заполнить инфу по скилам
 function feelSpells(_hero) {
     var i = 0;
+    var availableAP = _hero.ap;
+
+    var spLink = _hero.effectList.find(x => x.name === "SpiritLink");
+    if (spLink != null) {
+        var anotherHero = heroes.find(y => y != undefined && y.effectList.find(z => z.name === "SpiritLink") != null && y.id != _hero.id);
+        if (anotherHero != null)
+            availableAP += anotherHero.ap;
+    }
+
     _hero.skillList.forEach(skill => {
         if (i > 4)
             return;
@@ -36,14 +44,15 @@ function feelSpells(_hero) {
         if (skill.skillType == 1) {
             spell.setAttribute("class", "spell passive");
         }
-        if (skill.coolDownNow > 0) {
+        else if (skill.coolDownNow > 0) {
             spell.setAttribute("class", "spell cooldawn");
             spellDiv.setAttribute("onclick", "");
             cdInfo.innerText = skill.coolDownNow;
         }
-        else if (skill.requireAP > _hero.ap || _hero.effectList.find(x => x.name === "Silence") != null) {
+        else if (skill.requireAP > availableAP || _hero.effectList.find(x => x.effectTags.find(y => y == 1)) != null) {
             spell.setAttribute("class", "spell cooldawn");
             spellDiv.setAttribute("onclick", "");
+            cdInfo.innerText = "";
         }
         else if (skill.skillType == 0) {
             spell.setAttribute("class", "spell");
@@ -123,10 +132,11 @@ function feelAP(_ap) {
         itemDiv.classList.add("level" + item.level);
         itemDiv.title = item.description;
 
-        if (item.skill.coolDownNow > 0) {
+        if (item.skill.coolDownNow > 0 || _hero.effectList.find(x => x.effectTags.find(y => y == 20))) {
             itemDiv.classList.add("cooldawn");
             const cdItem = document.getElementById("cdItem" + cnt);
-            cdItem.innerText = item.skill.coolDownNow;
+            if (item.skill.coolDownNow > 0)
+                cdItem.innerText = item.skill.coolDownNow;
         }
         cnt++;
     });
@@ -408,7 +418,13 @@ function fillEffectsOnHex(_hex, _hero)
     let i = 0;
     let k = 0;
 
+    var _effects = [];
     _hero.effectList.forEach(ef => {
+        if (_effects.find(x => x.name === ef.name) == null)
+            _effects.push(ef);
+    });
+
+    _effects.forEach(ef => {
         let pl = 2 + k * 20;
         let pt = i > 5 ? (26 + (10 - i) * 16 - (4 - k) * 5) : (26 + i * 16 - k * 5);
 
@@ -445,6 +461,8 @@ function showSpellInfo(_spell, _spellBox, _heroFlag)
     var spell = heroInfo.skillList[_spell];
     if (_heroFlag == 0)
         spell = heroes[idActiveHero].skillList[_spell];
+    else if (_heroFlag == 2)
+        spell = hero.skillList[_spell];
 
     var skillInfoName = document.getElementById("skillInfoName");
     skillInfoName.innerText = spell.name;
@@ -503,14 +521,14 @@ function showSpellInfo(_spell, _spellBox, _heroFlag)
     var skillInfo = document.getElementById("skillInfo");
 
     skillInfo.setAttribute("class", "skillInfo skillInfoShow");
-    skillInfo.setAttribute("style", "top: " + (coordBox.top + globalThis.scrollY) + "px; left: " + (coordBox.left + globalThis.scrollX - 230) + "px;");
+    skillInfo.setAttribute("style", "z-index: 99; top: " + (coordBox.top + globalThis.scrollY) + "px; left: " + (coordBox.left + globalThis.scrollX - 230) + "px;");
 }
 
 function hideSpellInfo()
 {
     var skillInfo = document.getElementById("skillInfo");
     skillInfo.setAttribute("class", "skillInfo skillInfoHide");
-    skillInfo.setAttribute("style", "top: -100px; left: -100px;");
+    skillInfo.setAttribute("style", "z-index: -99; top: 0; left: 0; visibility: collapsed;");
 }
 
 function getHexesDirections() {

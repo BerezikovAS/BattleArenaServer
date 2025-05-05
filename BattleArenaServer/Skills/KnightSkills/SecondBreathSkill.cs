@@ -31,7 +31,7 @@ namespace BattleArenaServer.Skills.Knight
 
             if (requestData.Caster != null)
             {
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 requestData.Caster.Heal(heal);
                 coolDownNow = coolDown;
 

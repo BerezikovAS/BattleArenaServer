@@ -25,7 +25,7 @@ namespace BattleArenaServer.Services
                 if(activeHero != null)
                     GameData.idActiveHero = activeHero.Id;
                 else
-                    GameData.idActiveHero = GameData._heroes.FirstOrDefault(x => x.HP > 0).Id;
+                    GameData.idActiveHero = GameData._heroes.FirstOrDefault(x => x.HP > 0)?.Id ?? -1;
             }
             return GameData.idActiveHero;
         }
@@ -118,11 +118,13 @@ namespace BattleArenaServer.Services
             foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam))
             {
                 AttackService.StartTurnAuraAction(hero);
+                StartTurnStatusApplyEffect(hero);
             }
             // Также пробегаемся по объектам, которые тоже могут иметь ауры
             foreach (var hero in GameData._solidObstacles.Where(x => x.Team == GameData.activeTeam))
             {
                 AttackService.StartTurnAuraAction(hero);
+                StartTurnStatusApplyEffect(hero);
             }
 
             return GameData.idActiveHero;
@@ -306,12 +308,29 @@ namespace BattleArenaServer.Services
         {
             if (hero.HP > 0)
             {
+                List<Effect> appliedEffects = new List<Effect>();
+
                 hero.EffectList = hero.EffectList.OrderBy(x => x.type).ToList();
-                foreach (var effect in hero.EffectList)
+                Effect[] effects = hero.EffectList.ToArray();
+                for (int i = 0; i < effects.Count(); i++)
                 {
-                    if (effect.effectType == Consts.EffectType.EndTurn)
-                        effect.ApplyEffect(hero);
+                    int effectsCount = effects.Count();
+                    if (effects[i].effectType == Consts.EffectType.EndTurn && !appliedEffects.Contains(effects[i])) // Дважды один эффект не отрабатываем
+                    {
+                        appliedEffects.Add(effects[i]);
+                        effects[i].ApplyEffect(hero);
+                    }
+
+                    if (effectsCount != effects.Count()) // Если из коллекции удалили элемент, пробегаемся по новой
+                        i = 0;
                 }
+
+                //hero.EffectList = hero.EffectList.OrderBy(x => x.type).ToList();
+                //foreach (var effect in hero.EffectList)
+                //{
+                //    if (effect.effectType == Consts.EffectType.EndTurn)
+                //        effect.ApplyEffect(hero);
+                //}
             }
             if (hero.HP <= 0)
             {
@@ -325,11 +344,21 @@ namespace BattleArenaServer.Services
         {
             if (hero.HP > 0)
             {
+                List<Effect> appliedEffects = new List<Effect>();
+
                 hero.EffectList = hero.EffectList.OrderBy(x => x.type).ToList();
-                foreach (var effect in hero.EffectList)
+                Effect[] effects = hero.EffectList.ToArray();
+                for (int i = 0; i < effects.Count(); i++)
                 {
-                    if (effect.effectType == Consts.EffectType.StartTurn)
-                        effect.ApplyEffect(hero);
+                    int effectsCount = effects.Count();
+                    if (effects[i].effectType == Consts.EffectType.StartTurn && !appliedEffects.Contains(effects[i])) // Дважды один эффект не отрабатываем
+                    {
+                        appliedEffects.Add(effects[i]);
+                        effects[i].ApplyEffect(hero);
+                    }
+
+                    if (effectsCount != effects.Count()) // Если из коллекции удалили элемент, пробегаемся по новой
+                        i = 0;
                 }
             }
         }
