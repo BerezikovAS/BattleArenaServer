@@ -11,6 +11,7 @@ namespace BattleArenaServer.Models
         List<FillableObstacle> Surfaces { get; set; } = new List<FillableObstacle>();
         int _vp = 0;
         string _teamRespawn { get; set; } = "";
+        string _teamShop { get; set; } = "";
 
         public Hex(int[] coord)
         {
@@ -19,13 +20,14 @@ namespace BattleArenaServer.Models
             _id = 0;
         }
 
-        public Hex(int coordX, int coordY, int coordZ, int id, int vp, string teamRespawn = "")
+        public Hex(int coordX, int coordY, int coordZ, int id, int vp, string teamRespawn = "", string teamShop = "")
         {
             _coord = new int[3] { coordX, coordY, coordZ };
             Hero = null;
             _id = id;
             _vp = vp;
             _teamRespawn = teamRespawn;
+            _teamShop = teamShop;
         }
 
         public int[] COORD { get { return _coord; } }
@@ -41,6 +43,8 @@ namespace BattleArenaServer.Models
         public int VP { get { return _vp; } }
 
         public string TeamRespawn { get { return _teamRespawn; } }
+
+        public string TeamShop { get { return _teamShop; } }
 
         public void SetHero(Hero hero)
         {

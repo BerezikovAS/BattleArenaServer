@@ -44,7 +44,7 @@ namespace BattleArenaServer.Skills.AbominationSkills
                 else
                     requestData.Target.Heal(healDmg);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

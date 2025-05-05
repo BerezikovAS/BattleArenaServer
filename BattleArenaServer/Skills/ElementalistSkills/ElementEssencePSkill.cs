@@ -4,13 +4,13 @@ namespace BattleArenaServer.Skills.ElementalistSkills
 {
     public class ElementEssencePSkill : PassiveSkill
     {
-        private int extraDmg = 5;
+        private int extraDmg = 6;
         public ElementEssencePSkill(Hero hero) : base(hero)
         {
             name = "Element Essence";
             title = $"Каждое применение заклинания увеличивает урон от атак на {extraDmg}";
             titleUpg = "Урон увеличивается на 9";
-            hero.beforeSpellCast += ElementEssence;
+            hero.afterSpellCast += ElementEssence;
         }
 
         public override bool Cast(RequestData requestData)

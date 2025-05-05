@@ -12,7 +12,7 @@ namespace BattleArenaServer.Skills.AeroturgSkills
         public ThunderWaveSkill()
         {
             name = "Thunder Wave";
-            dmg = 100;
+            dmg = 120;
             title = $"Расталкивает врагов вокруг себя, нанося им {dmg} магического урона. Враги получают немоту.";
             titleUpg = $"Также снижает сопротивление врагов на {resistReduction}";
             coolDown = 4;
@@ -56,7 +56,7 @@ namespace BattleArenaServer.Skills.AeroturgSkills
                     }
                 }
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

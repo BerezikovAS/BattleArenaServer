@@ -40,7 +40,7 @@ namespace BattleArenaServer.Skills.SeraphimSkills
                         hex.HERO.AddEffect(guardianAngelBuff);
                     }
                 }
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

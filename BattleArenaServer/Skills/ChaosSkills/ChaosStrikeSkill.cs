@@ -11,7 +11,7 @@ namespace BattleArenaServer.Skills.ChaosSkills
         public ChaosStrikeSkill()
         {
             name = "Chaos Strike";
-            dmg = 165;
+            dmg = 160;
             title = $"Атакуйте врага, нанеся {dmg} урона случайного типа.";
             titleUpg = $"Дополнительный урон от 0 до 80.";
             coolDown = 2;
@@ -46,7 +46,7 @@ namespace BattleArenaServer.Skills.ChaosSkills
                 }
 
                 AttackService.SetDamage(requestData.Caster, requestData.Target, dmg + rnd.Next(0, extraDmg), damageType);
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

@@ -61,7 +61,7 @@ namespace BattleArenaServer.Models.Items.Tier1
                 //Телепортируемся поближе к союзнику
                 AttackService.MoveHero(requestData.Caster, requestData.CasterHex, moveHex);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

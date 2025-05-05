@@ -11,7 +11,7 @@ namespace BattleArenaServer.Skills.KnightSkills
         public RetributionSkill()
         {
             name = "Retribution";
-            dmg = 100;
+            dmg = 110;
             title = $"Мощная размашистая атака, сила которой зависит от процента Вашего недостающего здоровья. ({dmg} + {extraDmg} за каждый 1% потерянного здоровья)";
             titleUpg = "+1 к урону за 1% недостающего здоровья.";
             coolDown = 2;
@@ -40,7 +40,7 @@ namespace BattleArenaServer.Skills.KnightSkills
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                         AttackService.SetDamage(requestData.Caster, n.HERO, dmg + Convert.ToInt32(lostHealthPercent) * extraDmg, dmgType);
                 }
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

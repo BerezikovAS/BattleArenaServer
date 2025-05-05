@@ -8,12 +8,12 @@ namespace BattleArenaServer.Skills.AbominationSkills
     {
         int maxHPreduction = 80;
         int extraDef = 1;
-        int extraDmg = 7;
+        int extraDmg = 5;
         public OssificationSkill()
         {
             name = "Ossification";
             title = $"Уменьшает максимальный запас ХП на {maxHPreduction}, чтобы навсегда получить +{extraDef} к броне и сопротивлению и +{extraDmg} к урону.";
-            titleUpg = "Уменьшает ХП на 140, но даёт двойной бонус к статам.";
+            titleUpg = "Уменьшает ХП на 150, но даёт двойной бонус к статам.";
             coolDown = 1;
             coolDownNow = 0;
             requireAP = 1;
@@ -39,7 +39,7 @@ namespace BattleArenaServer.Skills.AbominationSkills
                 requestData.Caster.Resist += extraDef;
                 requestData.Caster.Dmg += extraDmg;
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -51,9 +51,9 @@ namespace BattleArenaServer.Skills.AbominationSkills
             if (!upgraded)
             {
                 upgraded = true;
-                maxHPreduction += 60;
+                maxHPreduction += 70;
                 extraDef += 1;
-                extraDmg += 7;
+                extraDmg += 5;
                 title = $"Уменьшает максимальный запас ХП на {maxHPreduction}, чтобы навсегда получить +{extraDef} к броне и сопротивлению и +{extraDmg} к урону.";
                 return true;
             }

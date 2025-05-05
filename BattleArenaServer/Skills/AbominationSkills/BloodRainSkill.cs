@@ -48,7 +48,7 @@ namespace BattleArenaServer.Skills.AbominationSkills
                     }
                 }
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

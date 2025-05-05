@@ -1,3 +1,27 @@
+async function banHero() {
+    if (isYourTurn == false)
+        return;
+    const pickBtn = document.getElementById("pickBtn");
+    pickBtn.disabled = true;
+    pickBtn.setAttribute("style", "filter: grayscale(1);");
+    hubConnection.invoke("BanHero", hero.name)
+        .catch(function (err) {
+            return console.error(err.toString());
+        });
+}
+
+async function pickHero() {
+    if (isYourTurn == false)
+        return;
+    const pickBtn = document.getElementById("pickBtn");
+    pickBtn.disabled = true;
+    pickBtn.setAttribute("style", "filter: grayscale(1);");
+    hubConnection.invoke("PickHero", hero.name)
+        .catch(function (err) {
+            return console.error(err.toString());
+        });
+}
+
 async function getShopItems() {
     hubConnection.invoke("GetShopItems")
         .catch(function (err) {
@@ -6,6 +30,8 @@ async function getShopItems() {
 }
 
 async function buyItem(itemName) {
+    if (isYourTurn == false)
+        return;
     hubConnection.invoke("BuyItem", parseInt(hero.id), itemName)
         .catch(function (err) {
             return console.error(err.toString());
@@ -13,6 +39,8 @@ async function buyItem(itemName) {
 }
 
 async function sellItem(itemName) {
+    if (isYourTurn == false)
+        return;
     hubConnection.invoke("SellItem", parseInt(hero.id), itemName)
         .catch(function (err) {
             return console.error(err.toString());
@@ -74,7 +102,25 @@ function recreateGame() {
         .catch(function (err) {
             return console.error(err.toString());
         });
+
+    window.location.href = 'http://localhost:8080';
 }
+
+
+function beginBattle() {
+    hubConnection.invoke("BeginBattle")
+        .catch(function (err) {
+            return console.error(err.toString());
+        });
+}
+
+function beginRandomBattle() {
+    hubConnection.invoke("BeginRandomBattle")
+        .catch(function (err) {
+            return console.error(err.toString());
+        });
+}
+
 
 function getField() {
     hubConnection.invoke("GetField")
@@ -120,8 +166,6 @@ function setRespawnedHero(_idHero, _hexId) {
 
 function castItem(_itemName, _target = -1) {
 
-    console.log("AAAAAA: " + _itemName);
-
     idCastingSpell = -1;
     var _hero = heroes[idActiveHero];
     var item = undefined;
@@ -164,7 +208,14 @@ function castSpell(_spell, _target = -1)
     nameCastingItem = "";
     var _hero = heroes[idActiveHero];
 
-    if (_hero.skillList[_spell].requireAP > _hero.ap || isYourTurn == false)
+    var availableAP = _hero.ap;
+    var spLink = _hero.effectList.find(x => x.name === "SpiritLink");
+    if (spLink != null) {
+        var anotherHero = heroes.find(y => y != undefined && y.effectList.find(z => z.name === "SpiritLink") != null && y.id != _hero.id);
+        if (anotherHero != null)
+            availableAP += anotherHero.ap;
+    }
+    if (_hero.skillList[_spell].requireAP > availableAP || isYourTurn == false)
         return;
 
     if (idCastingSpell != _spell & !_hero.skillList[_spell].nonTarget) {

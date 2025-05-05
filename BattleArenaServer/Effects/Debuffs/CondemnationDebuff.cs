@@ -24,7 +24,7 @@ namespace BattleArenaServer.Effects.Debuffs
             hero.modifierAppliedDamage -= Condemnation;
         }
 
-        private int Condemnation(Hero attacker, Hero defender, int dmg)
+        private int Condemnation(Hero? attacker, Hero defender, int dmg, Consts.DamageType dmgType)
         {
             double extraDamage = dmg * value * 0.01;
             return (int)Math.Round(extraDamage);

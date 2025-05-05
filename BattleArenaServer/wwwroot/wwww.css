@@ -5,6 +5,12 @@
     --m: 1px; /* margin */
     --f: calc(1.732 * var(--s) + 4 * var(--m) - 1px);
 }
+
+.mainPick {
+    width: 825px;
+    height: 500px;
+    display: flex;
+}
   
   
 
@@ -33,6 +39,14 @@
 
 .TwoVP {
     background: rgba(184, 208, 85, 0.86);
+}
+
+.RedShopHex {
+    background: rgb(217, 143, 105, 0.86);
+}
+
+.BlueShopHex {
+    background: rgb(69, 146, 180, 0.86);
 }
 
 .Victory {
@@ -75,6 +89,10 @@
     z-index: -6;
     justify-content: center; /* Горизонтальное выравнивание по центру */
     align-items: flex-end;
+}
+
+.Turn.PickBan {
+    top: -60px;
 }
 
 .VPDiv {
@@ -125,6 +143,7 @@ button.item {
     border-radius: 40%;
     background-size: cover;
     position: relative;
+    -webkit-text-stroke: 1px #FFFFFF;
 }
     button.item.level1 {
         background-color: lightgreen;
@@ -184,14 +203,14 @@ div.statusbaritem {
     font-weight: 600;
   }
 
-  button.spell.cooldawn {
-    width: 100px;
-    height: 100px;
-    background-color: lightgray;
-    border: 3px solid rgb(1, 73, 1);
-    border-radius: 10px;
-    font-weight: 600;
-  }
+    button.spell.cooldawn {
+        width: 100px;
+        height: 100px;
+        background-color: lightgray;
+        border: 3px solid rgb(1, 73, 1);
+        border-radius: 10px;
+        font-weight: 600;
+    }
 
 button.upgrade {
     width: 100px;
@@ -215,21 +234,24 @@ button.cancel {
     background-size: unset ;
 }
 
-  div.cooldawn {
+div.cooldawn {
     position: absolute;
     width: 100px;
     height: 100px;
     text-align: center;
     vertical-align: middle;
-  }
+    filter: grayscale(1);
+}
 
-  p.cooldawn {
+p.cooldawn {
     line-height: 0px;
-    font-size: 48px;
+    font-size: 68px;
     font-weight: bolder;
-    text-shadow: 0px 0px 10px black;
+    text-shadow: 1px 1px 10px black;
     color: black;
-  }
+    margin-top: 50px;
+    -webkit-text-stroke: 1px white; /* Толщина и цвет обводки */
+}
 
   
  
@@ -350,6 +372,29 @@ button.TeamPick {
         background-color: rgb(0, 99, 248);
     }
 
+div.HeroPick {
+    display: inline-block;
+    background-color: lightgreen;
+    margin: 4px;
+    padding: 4px;
+    border: 4px solid rgb(1, 73, 1);
+    border-radius: 10px;
+    width: 100px;
+    height: 100px;
+}
+    div.HeroPick.Banned {
+        filter: grayscale(1);
+    }
+
+    div.HeroPick.Pickedred {
+        background-color: red;
+        border: 4px solid darkred;
+    }
+
+    div.HeroPick.Pickedblue {
+        background-color: rgb(0, 99, 248);
+        border: 4px solid blue;
+    }
 
 div.ShopItem {
     display: inline-block;
@@ -423,4 +468,16 @@ div.Shop {
     position: absolute;
     top: 8px;
     left: 8px;
+}
+
+.StartBattle {
+    width: 340px;
+    height: 100px;
+    background-color: yellow;
+    margin-left: 10px;
+    margin-top: 10px;
+    border: 5px solid rgb(196, 196, 4);
+    border-radius: 50px;
+    font-size: 20px;
+    font-weight: bold;
 }

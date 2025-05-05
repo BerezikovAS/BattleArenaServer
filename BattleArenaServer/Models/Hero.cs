@@ -13,6 +13,7 @@ namespace BattleArenaServer.Models
             this.Team = Team;
             this.Heal += BaseHeal;
             this.AddEffect += BaseAddEffect;
+            this.SpendAP += BaseSpendAP;
         }
 
         public int Id { get; set; }
@@ -123,15 +124,15 @@ namespace BattleArenaServer.Models
         public delegate bool AfterReceivedAttack(Hero attacker, Hero defender, int dmg);
         public AfterReceivedAttack afterReceivedAttack = delegate { return false; };
 
-        public delegate int ModifierAppliedDamage(Hero? attacker, Hero defender, int dmg);
+        public delegate int ModifierAppliedDamage(Hero? attacker, Hero defender, int dmg, Consts.DamageType dmgType);
         public ModifierAppliedDamage modifierAppliedDamage = delegate { return 0; };
 
-        public int GetModifierAppliedDamage(Hero? attacker, Hero defender, int dmg)
+        public int GetModifierAppliedDamage(Hero? attacker, Hero defender, int dmg, Consts.DamageType dmgType)
         {
             int value = 0;
             var invocationList = modifierAppliedDamage.GetInvocationList();
             foreach (var invocation in invocationList)
-                value += ((ModifierAppliedDamage)invocation)(attacker, defender, dmg);
+                value += ((ModifierAppliedDamage)invocation)(attacker, defender, dmg, dmgType);
             return value;
         }
 
@@ -152,6 +153,9 @@ namespace BattleArenaServer.Models
 
         public delegate void AddEffectDelegate(Effect effect);
         public AddEffectDelegate AddEffect = delegate { };
+
+        public delegate void SpendAPDelegate(int spendAP);
+        public SpendAPDelegate SpendAP = delegate { };
         #endregion
 
         public virtual void Respawn()
@@ -186,6 +190,31 @@ namespace BattleArenaServer.Models
             EffectList.Add(effect);
             if (effect.effectType == Consts.EffectType.Instant)
                 effect.ApplyEffect(this);
+        }
+
+        public void BaseSpendAP(int apCount)
+        {
+            AP -= apCount;
+            if (AP < 0)
+                AP = 0;
+        }
+
+        public void SpiritLinkSpendAP(int apCount)
+        {
+            AP -= apCount;
+            if (AP < 0)
+            {
+                Effect? spiritLink = EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.SpiritLink));
+                if (spiritLink != null)
+                {
+                    Hero? anotherHero = GameData._heroes.FirstOrDefault(x => x.Id == spiritLink.idCaster);
+                    if (anotherHero != null)
+                    {
+                        anotherHero.SpendAP(AP * -1);
+                    }
+                }
+                AP = 0;
+            }
         }
 
         public List<Skill> SkillList { get; set; } = new List<Skill> { new EmptySkill(), new EmptySkill(), new EmptySkill(), new EmptySkill(), new EmptySkill() };

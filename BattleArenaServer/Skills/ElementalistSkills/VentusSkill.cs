@@ -8,7 +8,6 @@ namespace BattleArenaServer.Skills.ElementalistSkills
 {
     public class VentusSkill : Skill
     {
-        int decreaseArmor = 2;
         public VentusSkill()
         {
             name = "Ventus";
@@ -40,7 +39,7 @@ namespace BattleArenaServer.Skills.ElementalistSkills
                             n.HERO.AddEffect(hasteBuff);
                         }
                     }
-                    requestData.Caster.AP -= requireAP;
+                    requestData.Caster.SpendAP(requireAP);
                     coolDownNow = coolDown;
                     return true;
                 }

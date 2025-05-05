@@ -13,7 +13,7 @@ namespace BattleArenaServer.Skills.ElementalistSkills
         public IgnisSkill()
         {
             name = "Ignis";
-            dmg = 100;
+            dmg = 120;
             title = $"Огненное дыхание наносит {dmg} магического урона врагам в конусе и поджигает их.\n" +
                 $"Горение наносит дополнительный урон в размере {percentLoss}% от максимального запаса ХП при получении любого урона.";
             titleUpg = "Горение действует на 1 ход дольше.";
@@ -47,7 +47,7 @@ namespace BattleArenaServer.Skills.ElementalistSkills
                         AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
                     }
                 }
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

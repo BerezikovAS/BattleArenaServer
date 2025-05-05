@@ -65,7 +65,7 @@ namespace BattleArenaServer.Models.Items.Tier4
                             n.HERO.AddEffect(dmgShieldBuff);
                         }
                     }
-                    requestData.Caster.AP -= requireAP;
+                    requestData.Caster.SpendAP(requireAP);
                     coolDownNow = coolDown;
                     return true;
                 }

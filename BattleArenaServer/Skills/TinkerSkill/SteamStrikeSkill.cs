@@ -12,7 +12,7 @@ namespace BattleArenaServer.Skills.TinkerSkill
         public SteamStrikeSkill()
         {
             name = "Steam Strike";
-            dmg = 100;
+            dmg = 125;
             title = $"Паровой удар наносит врагам вокруг {dmg} магического урона и ошпаривает их, отчего те по окончании действия эффекта получат еще "
                 + $"{percentDmg}% маг. урона от потерянного ХП.";
             titleUpg = $"+15% к урону от потерянного ХП.";
@@ -47,7 +47,7 @@ namespace BattleArenaServer.Skills.TinkerSkill
                     }
                 }
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

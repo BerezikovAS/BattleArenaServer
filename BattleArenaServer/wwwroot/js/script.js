@@ -22,8 +22,15 @@ hubConnection.on("SetShopItems", function (_items) {
     fillShop(shopItems);
 });
 
+hubConnection.on("BeginBattle", function () {
+    window.location.href = 'http://localhost:8080/Battle.html';
+});
+
+hubConnection.on("RecreateGame", function () {
+    window.location.href = 'http://localhost:8080';
+});
+
 hubConnection.on("GetUsersBindings", (_bindings) => {
-    console.log("Receive bindings");
 
     var redTeam = document.getElementById("redTeam");
     var blueTeam = document.getElementById("blueTeam");
@@ -31,42 +38,60 @@ hubConnection.on("GetUsersBindings", (_bindings) => {
     var vp_line = document.getElementById("vp_line");
     var vp_line = document.getElementById("vp_line");
     var turn = document.getElementById("turn");
+    let isPickBan = vp_line == null;
+    let addClass = isPickBan ? "PickBan" : "";
+    let addStyle = isPickBan ? "margin-top: -100px; margin-left: 20px;" : "";
 
     activeTeam = _bindings.activeTeamStr;
+    
     if (_bindings.activeTeam == userId) {
         isYourTurn = true;
         turn.innerText = "YOUR TURN";
         if (activeTeam == "red")
-            turn.setAttribute("class", "Turn VictoryRed");
+            turn.setAttribute("class", "Turn " + addClass + " VictoryRed");
         else
-            turn.setAttribute("class", "Turn VictoryBlue");
+            turn.setAttribute("class", "Turn " + addClass + " VictoryBlue");
     }
     else {
         isYourTurn = false;
-        turn.setAttribute("class", "Turn Gray");
+        turn.setAttribute("class", "Turn " + addClass + " Gray");
         turn.innerText = "OPPONENT TURN";
     }
+    
+    if (isPickBan) {
+        if (_bindings.redTeam != "")
+            redTeam.setAttribute("style", "visibility: hidden;");
+        else
+            redTeam.setAttribute("style", "visibility: visible;");
+    
+        if (_bindings.blueTeam != "")
+            blueTeam.setAttribute("style", "visibility: hidden; margin-left: 100px;");
+        else
+            blueTeam.setAttribute("style", "visibility: visible; margin-left: 100px;");
 
-
-    if (_bindings.redTeam != "")
-        redTeam.setAttribute("style", "visibility: hidden;");
-    else
-        redTeam.setAttribute("style", "visibility: visible;");
-
-    if (_bindings.blueTeam != "")
-        blueTeam.setAttribute("style", "visibility: hidden; margin-left: 100px;");
-    else
-        blueTeam.setAttribute("style", "visibility: visible; margin-left: 100px;");
+        var startRandomBattle = document.getElementById("startRandomBattleBtn");
+        
+        if (_bindings.redTeam != "" && _bindings.blueTeam != "") {
+            startRandomBattle.removeAttribute("style");
+            startRandomBattle.disabled = false;
+        }
+        else {
+            startRandomBattle.setAttribute("style", "filter: grayscale(1);");
+            startRandomBattle.disabled = true;
+        }
+    }
 
     if (_bindings.redTeam != "" && _bindings.blueTeam != "") {
-        teams.setAttribute("style", "visibility: collapse; height: 10px;");
-        vp_line.setAttribute("style", "width: 860px; display: inline-block;");
+        teams.setAttribute("style", "visibility: collapse; height: 10px; " + addStyle);
         turn.removeAttribute("style");
+        if (!isPickBan)
+            vp_line.setAttribute("style", "width: 860px; display: inline-block;");
     }
     else {
-        teams.removeAttribute("style");
-        vp_line.setAttribute("style", "width: 860px; display: inline-block; visibility: collapse;");
+        teams.setAttribute("style", "" + addStyle);
         turn.setAttribute("style", "visibility: collapse;");
+        if (!isPickBan)
+            vp_line.setAttribute("style", "width: 860px; display: inline-block; visibility: collapse;");
     }
 
     //showVP(_bindings);
@@ -112,7 +137,7 @@ window.onload = async function () {
         setUserCookie();
         userId = getCookie("user_id");
     }
-    console.log("user_id: " + userId);
+    //console.log("user_id: " + userId);
 
     await hubConnection.start();
 
@@ -193,8 +218,14 @@ async function feelField(_field) {
             hex.setAttribute("class", "VP");
         else if (element.vp == 2)
             hex.setAttribute("class", "TwoVP");
+        else if (element.teamShop == "red")
+            hex.setAttribute("class", "RedShopHex");
+        else if (element.teamShop == "blue")
+            hex.setAttribute("class", "BlueShopHex");
         else
             hex.setAttribute("class", "NonVP");
+
+        
 
 
         if(element.hero != null) {

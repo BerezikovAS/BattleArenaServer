@@ -51,7 +51,7 @@ namespace BattleArenaServer.Skills.Priest
 
                 requestData.Target.Heal(heal);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

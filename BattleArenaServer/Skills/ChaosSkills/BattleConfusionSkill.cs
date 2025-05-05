@@ -60,7 +60,7 @@ namespace BattleArenaServer.Skills.ChaosSkills
                     requestData.Caster.AddEffect(resistBuff);
                 }
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

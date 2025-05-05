@@ -68,7 +68,7 @@ namespace BattleArenaServer.Skills.ChaosSkills
                     AttackService.MoveHero(hero, null, hex);
                 }
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

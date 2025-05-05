@@ -34,7 +34,7 @@ namespace BattleArenaServer.Skills.PriestSkills
                 CondemnationDebuff condemnationDebuff = new CondemnationDebuff(requestData.Caster.Id, extraDmgPercent, 2);
                 requestData.Target.AddEffect(condemnationDebuff);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

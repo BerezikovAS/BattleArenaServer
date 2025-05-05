@@ -41,7 +41,7 @@ namespace BattleArenaServer.Skills.Priest
                         totalDmg += extraDmg;
                 }
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 AttackService.SetDamage(requestData.Caster, requestData.Target, totalDmg, dmgType);
                 coolDownNow = coolDown;
                 return true;

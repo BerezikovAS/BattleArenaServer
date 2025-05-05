@@ -33,7 +33,7 @@ namespace BattleArenaServer.Skills.ShadowSkills
             {
                 AttackService.MoveHero(requestData.Caster, requestData.CasterHex, requestData.TargetHex);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

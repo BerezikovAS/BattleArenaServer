@@ -14,7 +14,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
         public StalaktiteSkill()
         {
             name = "Stalaktite";
-            dmg = 60;
+            dmg = 65;
             title = $"Из-под земли вырывается каменный шпиль, нанося {dmg} магического урона врагам вокруг. Шпиль блокирует перемещение, имеет {stalaktiteHP} ХП и существует {lifeTime - 1} хода.";
             titleUpg = "+20 к урону, +40 к ХП.";
             coolDown = 1;
@@ -52,7 +52,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
                 //Обновим ауры
                 AttackService.ContinuousAuraAction();
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

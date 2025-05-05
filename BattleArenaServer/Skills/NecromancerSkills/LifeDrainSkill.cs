@@ -46,7 +46,7 @@ namespace BattleArenaServer.Skills.NecromancerSkills
                 int heal = Convert.ToInt32(Convert.ToDouble(requestData.Caster.DamageDealed * percentHeal) / 100);
                 requestData.Caster.Heal(heal);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

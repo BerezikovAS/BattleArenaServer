@@ -5,14 +5,16 @@ namespace BattleArenaServer.Effects.Buffs
 {
     public class BloodRageBuff : Effect
     {
-        public BloodRageBuff(int _idCaster, int _value, int _duration)
+        int hpLoss;
+        public BloodRageBuff(int _idCaster, int _value, int _duration, int _hpLoss)
         {
             Name = "BloodRage";
             type = Consts.StatusEffect.Buff;
             idCaster = _idCaster;
             value = _value;
             duration = _duration;
-            description = "Атаки стоят 1 ОД, но каждая отнимает 35 ХП у атакующего.";
+            hpLoss = _hpLoss;
+            description = $"Атаки стоят 1 ОД, но каждая отнимает {hpLoss} ХП у атакующего.";
             if (value > 0)
                 description += "\nУрон увеличен на " + value;
         }
@@ -33,7 +35,7 @@ namespace BattleArenaServer.Effects.Buffs
 
         private bool AfterAttackDelegate(Hero attacker, Hero defender, int dmg, Consts.DamageType dmgType)
         {
-            return AttackService.ApplyDamage(attacker, attacker, 35, dmgType);
+            return AttackService.ApplyDamage(attacker, attacker, hpLoss, dmgType);
         }
     }
 }

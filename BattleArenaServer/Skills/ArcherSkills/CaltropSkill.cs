@@ -57,7 +57,7 @@ namespace BattleArenaServer.Skills.Crossbowman
                             }
                     }
 
-                    requestData.Caster.AP -= requireAP;
+                    requestData.Caster.SpendAP(requireAP);
                     coolDownNow = coolDown;
                     return true;
                 }
@@ -85,7 +85,7 @@ namespace BattleArenaServer.Skills.Crossbowman
                             }
                     }
 
-                    requestData.Caster.AP -= requireAP;
+                    requestData.Caster.SpendAP(requireAP);
                     coolDownNow = coolDown;
                     return true;
                 }

@@ -20,6 +20,7 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
             nonTarget = false;
             area = Consts.SpellArea.EnemyTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
+            dmgType = Consts.DamageType.Magic;
         }
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
@@ -34,7 +35,7 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
                 VoodooPuppetDebuff voodooPuppetDebuff = new VoodooPuppetDebuff(requestData.Caster.Id, dmg, 1);
                 requestData.Target.AddEffect(voodooPuppetDebuff);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

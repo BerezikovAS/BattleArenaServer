@@ -23,7 +23,9 @@
             HeroTarget,
             HeroNotSelfTarget,
             SmallConus,
-            WideLine
+            WideLine,
+            Circle,
+            Lines
         }
 
         public enum DamageType
@@ -90,7 +92,13 @@
             Slow,
             GreateJudgement,
             GuardianAngel,
-            Bubble
+            Bubble,
+            SpiritLink,
+            Fear,
+            Dizziness,
+            Taunt,
+            NonItem,
+            MicrobialSamples
         }
     }
 }

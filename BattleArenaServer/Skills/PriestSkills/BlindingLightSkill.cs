@@ -10,7 +10,7 @@ namespace BattleArenaServer.Skills.Priest
     {
         public BlindingLightSkill()
         {
-            name = "BlindingLight";
+            name = "Blinding Light";
             dmg = 100;
             title = $"Враги в области действия теряют {dmg} ХП и получают ослепление";
             titleUpg = "+40 к урону, +1 к дальности";
@@ -44,7 +44,7 @@ namespace BattleArenaServer.Skills.Priest
                         AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
                     }
                 }
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

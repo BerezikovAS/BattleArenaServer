@@ -53,7 +53,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
                         AttackService.SetDamage(requestData.Caster, hex.HERO, dmg + extraDmg * freeHexCount, dmgType);
                     }
                 }
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

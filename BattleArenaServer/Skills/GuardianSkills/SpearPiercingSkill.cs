@@ -11,7 +11,7 @@ namespace BattleArenaServer.Skills.GuardianSkills
         public SpearPiercingSkill()
         {
             name = "Spear Piercing";
-            dmg = 120;
+            dmg = 140;
             title = $"Проведите атаку по врагам по прямой на 2 клетки. Эта атака игнорирует до {armorPiercing} брони и наносит {dmg} физ. урона.";
             titleUpg = "+2 к игнорированию брони, -1 к перезарядке";
             coolDown = 3;
@@ -40,7 +40,7 @@ namespace BattleArenaServer.Skills.GuardianSkills
                         AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
                 }
                 requestData.Caster.armorPiercing -= ArmorPiercing;
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

@@ -10,8 +10,8 @@ namespace BattleArenaServer.Skills.GuardianSkills
         public OnslaughtSkill()
         {
             name = "Onslaught";
-            dmg = 70;
-            title = $"Мощный натиск отбрасывает врага назад и наносит {dmg} физ. урона, а Вы становитесь на его место.";
+            dmg = 90;
+            title = $"Мощный натиск отбрасывает врага назад и наносит {dmg} маг. урона, а Вы становитесь на его место.";
             titleUpg = "-1 к перезарядке, +20 к урону";
             coolDown = 3;
             coolDownNow = 0;
@@ -20,7 +20,7 @@ namespace BattleArenaServer.Skills.GuardianSkills
             range = 1;
             area = Consts.SpellArea.EnemyTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
-            dmgType = Consts.DamageType.Physical;
+            dmgType = Consts.DamageType.Magic;
         }
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
@@ -41,7 +41,7 @@ namespace BattleArenaServer.Skills.GuardianSkills
 
                 AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

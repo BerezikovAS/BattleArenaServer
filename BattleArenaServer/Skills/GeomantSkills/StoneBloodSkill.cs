@@ -46,7 +46,7 @@ namespace BattleArenaServer.Skills.GeomantSkills
                 RegenerationBuff regenerationBuff = new RegenerationBuff(requestData.Caster.Id, freeHexCount * extraRegen, 3);
                 requestData.Caster.AddEffect(regenerationBuff);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

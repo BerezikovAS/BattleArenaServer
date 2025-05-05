@@ -44,7 +44,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
                             n.HERO.AddEffect(armorDebuff);
                         }
                     }
-                    requestData.Caster.AP -= requireAP;
+                    requestData.Caster.SpendAP(requireAP);
                     coolDownNow = coolDown;
                     return true;
                 }

@@ -24,6 +24,7 @@ namespace BattleArenaServer.Models.Items.Tier1
         public override void CastItem(RequestData requestData)
         {
             Skill.Cast(requestData);
+            Description = $"Когда Вы используете действие перемещения, перо получает 1 заряд. Используйте перо, чтобы восстановить {heal} ХП за заряд. (Макс: {maxCharges} зарядов)";
         }
 
         public override void ApplyEffect(Hero hero)
@@ -35,15 +36,14 @@ namespace BattleArenaServer.Models.Items.Tier1
         {
             (Skill as FeatherSkill).charges = 0;
             hero.afterMove -= AfterMove;
-            Description = $"Когда Вы используете действие перемещения, перо получает 1 заряд. Используйте перо, чтобы восстановить {heal} ХП за заряд. (Макс: 10 зарядов)";
-
+            Description = $"Когда Вы используете действие перемещения, перо получает 1 заряд. Используйте перо, чтобы восстановить {heal} ХП за заряд. (Макс: {maxCharges} зарядов)";
         }
 
         private void AfterMove(Hero hero, Hex? currentHex, Hex targetHex)
         {
             FeatherSkill feather = Skill as FeatherSkill;
             feather.AddCharge();
-            Description = $"Когда Вы используете действие перемещения, перо получает 1 заряд. Используйте перо, чтобы восстановить {heal} ХП за заряд. (Макс: 10 зарядов)" +
+            Description = $"Когда Вы используете действие перемещения, перо получает 1 заряд. Используйте перо, чтобы восстановить {heal} ХП за заряд. (Макс: {maxCharges} зарядов)" +
                 $"\nНакоплено {feather.charges} зарядов.";
         }
     }
@@ -78,7 +78,7 @@ namespace BattleArenaServer.Models.Items.Tier1
                     requestData.Caster.Heal(heal * charges);
                     charges = 0;
 
-                    requestData.Caster.AP -= requireAP;
+                    requestData.Caster.SpendAP(requireAP);
                     coolDownNow = coolDown;
                     return true;
                 }

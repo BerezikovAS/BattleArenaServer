@@ -1,5 +1,4 @@
 ﻿using BattleArenaServer.Effects.Buffs;
-using BattleArenaServer.Effects.Unique;
 using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.SkillCastRequests;
@@ -35,7 +34,7 @@ namespace BattleArenaServer.Skills.DruidSkills
                 PrimalFuryBuff primalFuryBuff = new PrimalFuryBuff(requestData.Caster.Id, dmg, 3);
                 requestData.Target.AddEffect(primalFuryBuff);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

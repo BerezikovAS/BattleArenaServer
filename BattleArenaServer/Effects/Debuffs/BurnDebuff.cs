@@ -24,7 +24,7 @@ namespace BattleArenaServer.Effects.Debuffs
             hero.modifierAppliedDamage -= Burn;
         }
 
-        private int Burn(Hero attacker, Hero defender, int dmg)
+        private int Burn(Hero? attacker, Hero defender, int dmg, Consts.DamageType dmgType)
         {
             double extraDamage = defender.MaxHP * value * 0.01;
             return (int)Math.Round(extraDamage);

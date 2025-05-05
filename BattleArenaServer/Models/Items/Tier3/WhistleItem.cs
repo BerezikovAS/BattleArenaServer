@@ -64,7 +64,7 @@ namespace BattleArenaServer.Models.Items.Tier3
                 //Обновим ауры
                 AttackService.ContinuousAuraAction();
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

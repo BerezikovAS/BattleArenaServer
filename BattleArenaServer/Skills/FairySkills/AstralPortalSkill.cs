@@ -37,7 +37,7 @@ namespace BattleArenaServer.Skills.FairySkills
                 AstralPortalObstacle astralPortalObstacle = new AstralPortalObstacle(requestData.Caster.Id, requestData.TargetHex.ID, duration, requestData.Caster.Team, dmg);
                 requestData.TargetHex.SetObstacle(astralPortalObstacle);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

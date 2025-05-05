@@ -11,7 +11,7 @@ namespace BattleArenaServer.Skills.NecromancerSkills
         public GraveHandsSkill()
         {
             name = "Grave Hands";
-            dmg = 125;
+            dmg = 145;
             title = $"Руки мертвецов пробиваются из-под земли и хватают врагов на пути. Все враги получают {dmg} магического урона и замедляются.";
             titleUpg = "+1 к дальности, -1 к перезарядке";
             coolDown = 4;
@@ -43,7 +43,7 @@ namespace BattleArenaServer.Skills.NecromancerSkills
                         AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
                     }
                 }
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

@@ -61,7 +61,7 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
                         }
                     }
                 }
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

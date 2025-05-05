@@ -59,7 +59,7 @@ namespace BattleArenaServer.Models.Items.Tier2
                     RegenerationBuff regenerationBuff = new RegenerationBuff(requestData.Caster.Id, regen, 2);
                     requestData.Caster.AddEffect(regenerationBuff);
 
-                    requestData.Caster.AP -= requireAP;
+                    requestData.Caster.SpendAP(requireAP);
                     coolDownNow = coolDown;
                     return true;
                 }

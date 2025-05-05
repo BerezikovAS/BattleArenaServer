@@ -1,4 +1,5 @@
-﻿using BattleArenaServer.Interfaces;
+﻿using BattleArenaServer.Effects;
+using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 
 namespace BattleArenaServer.CastCheckers

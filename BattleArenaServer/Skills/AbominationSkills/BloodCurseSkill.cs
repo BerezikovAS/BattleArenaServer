@@ -39,7 +39,7 @@ namespace BattleArenaServer.Skills.AbominationSkills
 
                 AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

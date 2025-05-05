@@ -16,7 +16,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             titleUpg = "+60 к урону";
             coolDown = 4;
             coolDownNow = 0;
-            requireAP = 3;
+            requireAP = 2;
             nonTarget = false;
             range = 1;
             area = Consts.SpellArea.EnemyTarget;
@@ -38,7 +38,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
                 
                 AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
                 
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
                 return true;
             }

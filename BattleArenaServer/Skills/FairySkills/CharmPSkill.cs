@@ -70,7 +70,7 @@ namespace BattleArenaServer.Skills.FairySkills
             return true;
         }
 
-        private int ModifierAppliedDmg(Hero? attacker, Hero defender, int dmg)
+        private int ModifierAppliedDmg(Hero? attacker, Hero defender, int dmg, Consts.DamageType dmgType)
         {
             return (int)(-1 * Convert.ToDouble(dmg) * Convert.ToDouble(percentDecrease) / 100);
         }

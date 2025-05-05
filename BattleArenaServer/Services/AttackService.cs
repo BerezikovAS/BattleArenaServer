@@ -142,7 +142,7 @@ namespace BattleArenaServer.Services
         public static bool ApplyDamage(Hero? attacker, Hero defender, int dmg, DamageType damageType)
         {
             // Добавляем модификатор получаемого урона
-            dmg += defender.GetModifierAppliedDamage(attacker, defender, dmg);
+            dmg += defender.GetModifierAppliedDamage(attacker, defender, dmg, damageType);
             dmg = dmg < 0 ? 0 : dmg;
 
             defender.HP -= dmg;

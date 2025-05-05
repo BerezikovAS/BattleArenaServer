@@ -35,7 +35,7 @@ namespace BattleArenaServer.Skills.Knight
 
             if (requestData.Target != null && requestData.Caster != null)
             {
-                requestData.Caster.AP -= requireAP;
+                requestData.Caster.SpendAP(requireAP);
                 requestData.Target.AP -= loseAP;
                 AttackService.SetDamage(requestData.Caster, requestData.Target, dmg + extraDmg * requestData.Caster.Armor, dmgType);
                 coolDownNow = coolDown;
