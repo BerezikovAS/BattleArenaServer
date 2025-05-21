@@ -6,6 +6,8 @@ namespace BattleArenaServer.Models
     {
         public static int idActiveHero;
 
+        public static int turn = 1;
+
         public static string activeTeam = "red";
 
         public static UserTeamBindings userTeamBindings = new UserTeamBindings();

@@ -1,5 +1,6 @@
 const hubConnection = new signalR.HubConnectionBuilder()
     .withUrl("http://localhost:8080/fieldhub", { withCredentials: false, mode: 'no-cors' })
+    //.withUrl("http://10.80.3.105:8080/fieldhub", { withCredentials: false, mode: 'no-cors' })
     //.withUrl("http://130.193.45.251:8080/fieldhub", { withCredentials: false, mode: 'no-cors' }) //ip виртуалки
     .build();
 

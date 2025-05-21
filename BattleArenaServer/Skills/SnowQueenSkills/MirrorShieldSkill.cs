@@ -1,17 +1,18 @@
-﻿using BattleArenaServer.Effects.Unique;
+﻿using BattleArenaServer.Effects.Buffs;
 using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.SkillCastRequests;
 
-namespace BattleArenaServer.Skills.GuardianSkills
+namespace BattleArenaServer.Skills.SnowQueenSkills
 {
-    public class BattleOrderSkill : Skill
+    public class MirrorShieldSkill : Skill
     {
-        public BattleOrderSkill()
+        int extraResist = 2;
+        public MirrorShieldSkill()
         {
-            name = "Battle Order";
-            title = $"Боевой приказ заставляет Вас или союзника сражаться не обращая внимания на недуги. Защищает от негативных эффектов.";
-            titleUpg = "Не требует ОД";
+            name = "Mirror Shield";
+            title = $"Защищает себя или союзника зеркальным щитом, который даёт +{extraResist} сопротивления и отражает накладываемые негативные эффекты обратно во врага.";
+            titleUpg = "+2 к сопротивлению";
             coolDown = 4;
             coolDownNow = 0;
             requireAP = 1;
@@ -30,8 +31,8 @@ namespace BattleArenaServer.Skills.GuardianSkills
                 if (!request.startRequest(requestData, this))
                     return false;
 
-                ImmunUnique immunUnique = new ImmunUnique(requestData.Caster.Id, 0, 3);
-                requestData.Target.AddEffect(immunUnique);
+                MirrorShieldBuff mirrorShieldBuff = new MirrorShieldBuff(requestData.Caster.Id, extraResist, 2);
+                requestData.Target.AddEffect(mirrorShieldBuff);
 
                 requestData.Caster.SpendAP(requireAP);
                 coolDownNow = coolDown;
@@ -45,8 +46,8 @@ namespace BattleArenaServer.Skills.GuardianSkills
             if (!upgraded)
             {
                 upgraded = true;
-                requireAP = 0;
-                title = $"Боевой приказ заставляет Вас или союзника сражаться не обращая внимания на недуги. Защищает от негативных эффектов и даёт ускорение.";
+                extraResist += 2;
+                title = $"Защищает себя или союзника зеркальным щитом, который даёт +{extraResist} сопротивления и отражает накладываемые негативные эффекты обратно во врага.";
                 return true;
             }
             return false;

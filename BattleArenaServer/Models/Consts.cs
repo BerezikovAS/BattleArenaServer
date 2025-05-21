@@ -48,6 +48,17 @@
             EndTurn,
             StartTurn
         }
+        public enum EffectDurationType
+        {
+            EndTurn,
+            StartTurn
+        }
+
+        public enum ObstacleLifeTimeDecrease
+        {
+            StartTurn,
+            EndTurn
+        }
 
         public enum HeroType
         {
@@ -98,7 +109,9 @@
             Dizziness,
             Taunt,
             NonItem,
-            MicrobialSamples
+            MicrobialSamples,
+            DebuffImmun,
+            MirrorShield
         }
     }
 }

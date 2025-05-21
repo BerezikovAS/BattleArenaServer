@@ -424,6 +424,7 @@ function fillEffectsOnHex(_hex, _hero)
             _effects.push(ef);
     });
 
+
     _effects.forEach(ef => {
         let pl = 2 + k * 20;
         let pt = i > 5 ? (26 + (10 - i) * 16 - (4 - k) * 5) : (26 + i * 16 - k * 5);
@@ -435,6 +436,29 @@ function fillEffectsOnHex(_hex, _hero)
         i++;
         if (i > 3 && i <= 7)
             k++;
+
+        let color = "";
+        switch (ef.name) {
+            case "Paralysis":
+                color = "rgba(45, 0, 255, 0.5);"
+                break;
+            case "Smoke":
+                color = "rgba(0, 0, 0, 0.3);"
+                break;
+            case "GuardianAngel":
+                color = "rgba(255, 255, 255, 0.2);"
+                break;
+            case "DeepFreeze":
+                color = "rgba(39, 234, 245, 0.4);"
+                break;
+            default:
+                break;
+        }
+        if (color != "") {
+            const eff = document.createElement("div");
+            eff.setAttribute("style", "position: absolute; width: 102px; height: 117px; background-color: " + color + " margin-left: -2px; margin-top: -1px; opacity 0.3;");
+            _hex.appendChild(eff);
+        }
     });    
 }
 

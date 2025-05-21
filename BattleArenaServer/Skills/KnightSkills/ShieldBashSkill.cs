@@ -6,7 +6,7 @@ using static BattleArenaServer.Models.Consts;
 
 namespace BattleArenaServer.Skills.Knight
 {
-    public class ShieldBashSkill : BodyGuardSkill
+    public class ShieldBashSkill : Skill
     {
         int extraDmg = 16;
         int loseAP = 1;
@@ -35,10 +35,13 @@ namespace BattleArenaServer.Skills.Knight
 
             if (requestData.Target != null && requestData.Caster != null)
             {
-                requestData.Caster.SpendAP(requireAP);
                 requestData.Target.AP -= loseAP;
+                if (requestData.Target.AP < 0)
+                    requestData.Target.AP = 0;
                 AttackService.SetDamage(requestData.Caster, requestData.Target, dmg + extraDmg * requestData.Caster.Armor, dmgType);
+
                 coolDownNow = coolDown;
+                requestData.Caster.SpendAP(requireAP);
 
                 return true;
             }

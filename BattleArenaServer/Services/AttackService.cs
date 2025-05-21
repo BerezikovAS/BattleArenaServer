@@ -63,10 +63,25 @@ namespace BattleArenaServer.Services
 
                 int range = attacker.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Blind)) == null ? attacker.AttackRadius + attacker.StatsEffect.AttackRadius : 1;
 
-                if (requestData.CasterHex.Distance(requestData.TargetHex) > range || attacker.AP < attacker.APtoAttack)
+                int availableAP = requestData.Caster.AP;
+
+                Effect? taunt = requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Taunt));
+                if (taunt != null && taunt.idCaster != defender.Id) // Если атакующий под таунтом, то он может атаковать только заклинателя
                     return false;
 
-                attacker.AP -= attacker.APtoAttack;
+                // Спиритическая связь объединяет ОД двух героев, поэтому доступные ОД - это ОД кастера + ОД связанного героя
+                Effect? spiritLink = requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.SpiritLink));
+                if (spiritLink != null)
+                {
+                    Hero? anotherHero = GameData._heroes.FirstOrDefault(x => x.Id == spiritLink.idCaster);
+                    if (anotherHero != null)
+                        availableAP += anotherHero.AP;
+                }
+
+                if (requestData.CasterHex.Distance(requestData.TargetHex) > range || availableAP < attacker.APtoAttack)
+                    return false;
+
+                attacker.SpendAP(attacker.APtoAttack);
                 // К урону добавляем дополнительный от пассивок и эффектов
                 int dmg = (int)((attacker.Dmg + attacker.GetPassiveAttackDamage(attacker, defender)) * attacker.StatsEffect.DmgMultiplier);
 
@@ -74,7 +89,7 @@ namespace BattleArenaServer.Services
                 attacker.beforeAttack(attacker, defender, dmg);
                 defender.beforeReceivedAttack(attacker, defender, dmg);
                 // Сама атака с нанесением урона
-                AttackService.SetDamage(attacker, defender, dmg, Consts.DamageType.Physical);
+                SetDamage(attacker, defender, dmg, Consts.DamageType.Physical);
                 // Эффекты после атаки
                 attacker.afterAttack(attacker, defender, dmg, Consts.DamageType.Physical);
                 defender.afterReceivedAttack(attacker, defender, dmg);
@@ -147,7 +162,12 @@ namespace BattleArenaServer.Services
 
             defender.HP -= dmg;
             if (attacker != null)
-                attacker.DamageDealed += dmg;
+            {
+                int dmgReducer = 1;
+                if (defender.EffectList.FirstOrDefault(x => x.Name == "ShadowTwin") != null)
+                    dmgReducer = 5;
+                attacker.DamageDealed += (int)(Convert.ToDouble(dmg) / dmgReducer);
+            }
 
             defender.afterReceiveDmg(defender, attacker, dmg, damageType);
 
@@ -168,15 +188,17 @@ namespace BattleArenaServer.Services
             Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == defender.HexId);
             if (hex != null && hex.HERO != null)
             {
-                if (hex.HERO is SolidObstacle)
+                Hero killedHero = hex.HERO;
+                killedHero.HexId = -1;
+                hex.RemoveHero();
+                ContinuousAuraAction();
+
+                if (killedHero is SolidObstacle)
                 {
-                    SolidObstacle obstacle = (SolidObstacle)hex.HERO;
+                    SolidObstacle obstacle = (SolidObstacle)killedHero;
                     obstacle.endLifeEffect(hex);
                     GameData._solidObstacles.Remove(obstacle);
                 }
-                hex.HERO.HexId = -1;
-                hex.RemoveHero();
-                ContinuousAuraAction();
             }
             if (defender.Team == "red")
             {

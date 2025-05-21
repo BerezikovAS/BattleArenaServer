@@ -37,7 +37,7 @@ namespace BattleArenaServer.Services
                 try
                 {
                     // Сначала применим все эффекты в конце хода каждого героя команды
-                    foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam))
+                    foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam).OrderBy(y => y.Id))
                     {
                         AttackService.EndTurnAuraAction(hero);
                         EndTurnStatusApplyEffect(hero);
@@ -60,22 +60,11 @@ namespace BattleArenaServer.Services
                 foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam))
                 {
                     hero.AP = 4;
-                    try
-                    {
-                        DecreaseSkillCooldawn(hero);
-                        DecreaseItemCooldawn(hero);
-                    }
-                    catch (Exception ex) { Console.WriteLine(ex.Message); }
-                    try
-                    {
-                        DecreaseLifeTimeObstacle(hero);
-                    }
-                    catch (Exception ex) { Console.WriteLine(ex.Message); }
-                    try
-                    {
-                        DecreaseStatusDuration(hero.Id);
-                    }
-                    catch (Exception ex) { Console.WriteLine(ex.Message); }
+
+                    DecreaseSkillCooldawn(hero);
+                    DecreaseItemCooldawn(hero);
+                    DecreaseLifeTimeObstacle(hero, Consts.ObstacleLifeTimeDecrease.EndTurn);
+                    DecreaseStatusDuration(hero.Id, Consts.EffectDurationType.EndTurn);
                 }
             }
             catch (Exception ex) { Console.WriteLine(ex.Message); }
@@ -86,6 +75,7 @@ namespace BattleArenaServer.Services
                 DecreaseLifeTimeSummons(GameData.activeTeam);
 
                 AddUpgradePoints(++turn);
+                GameData.turn = turn;
                 if (GameData.activeTeam == "blue")
                 {
                     GameData.activeTeam = "red";
@@ -114,9 +104,12 @@ namespace BattleArenaServer.Services
             }
             catch (Exception ex) { Console.WriteLine(ex.Message); }
 
+
             // Сначала применим все эффекты в начале хода каждого героя команды
             foreach (var hero in GameData._heroes.Where(x => x.Team == GameData.activeTeam))
             {
+                DecreaseStatusDuration(hero.Id, Consts.EffectDurationType.StartTurn);
+                DecreaseLifeTimeObstacle(hero, Consts.ObstacleLifeTimeDecrease.StartTurn);
                 AttackService.StartTurnAuraAction(hero);
                 StartTurnStatusApplyEffect(hero);
             }
@@ -167,12 +160,12 @@ namespace BattleArenaServer.Services
                 (hero.SkillList[0] as PassiveSkill).refreshEffect();
         }
 
-        public void DecreaseStatusDuration(int heroId)
+        public void DecreaseStatusDuration(int heroId, Consts.EffectDurationType durationType)
         {
             foreach (var hero in GameData._heroes)
             {
                 List<Effect> removeEffects = new List<Effect>();
-                foreach (var effect in hero.EffectList)
+                foreach (var effect in hero.EffectList.FindAll(x => x.durationType == durationType))
                 {
                     if (effect.idCaster == heroId && effect.duration > 1)
                         effect.duration--;
@@ -208,65 +201,68 @@ namespace BattleArenaServer.Services
             }
         }
 
-        public void DecreaseLifeTimeObstacle(Hero hero)
+        public void DecreaseLifeTimeObstacle(Hero hero, Consts.ObstacleLifeTimeDecrease obstacleLifeTime)
         {
-            // Пробегаемся по обычным преградам
-            List<Obstacle> removeHexObst = new List<Obstacle>();
-            foreach (var obst in GameData._obstacles)
+            if (obstacleLifeTime == Consts.ObstacleLifeTimeDecrease.EndTurn)
             {
-                if (obst.CasterId == hero.Id)
+                // Пробегаемся по обычным преградам
+                List<Obstacle> removeHexObst = new List<Obstacle>();
+                foreach (var obst in GameData._obstacles)
                 {
-                    if (--obst.LifeTime <= 0)
+                    if (obst.CasterId == hero.Id)
                     {
-                        Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == obst.HexId);
-                        if (hex != null)
+                        if (--obst.LifeTime <= 0)
                         {
-                            removeHexObst.Add(obst);
-                            hex.RemoveObstacle();
+                            Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == obst.HexId);
+                            if (hex != null)
+                            {
+                                removeHexObst.Add(obst);
+                                hex.RemoveObstacle();
+                            }
+                            obst.HexId = -1;
+                            AttackService.ContinuousAuraAction();
                         }
-                        obst.HexId = -1;
-                        AttackService.ContinuousAuraAction();
                     }
                 }
-            }
-            // Удалем то что уже протухло
-            foreach (var obst in removeHexObst)
-                GameData._obstacles.Remove(obst);
+                // Удалем то что уже протухло
+                foreach (var obst in removeHexObst)
+                    GameData._obstacles.Remove(obst);
 
-            // Также по поверхностям
-            List<FillableObstacle> removeSurf = new List<FillableObstacle>();
-            foreach (var surface in GameData._surfaces)
-            {
-                if (surface.CasterId == hero.Id)
+                // Также по поверхностям
+                List<FillableObstacle> removeSurf = new List<FillableObstacle>();
+                foreach (var surface in GameData._surfaces)
                 {
-                    if (--surface.LifeTime <= 0)
+                    if (surface.CasterId == hero.Id)
                     {
-                        Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == surface.HexId);
-                        if (hex != null)
-                            hex.RemoveSurface(surface);
-                        surface.HexId = -1;
-                        AttackService.ContinuousAuraAction();
-                        removeSurf.Add(surface);
+                        if (--surface.LifeTime <= 0)
+                        {
+                            Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == surface.HexId);
+                            if (hex != null)
+                                hex.RemoveSurface(surface);
+                            surface.HexId = -1;
+                            AttackService.ContinuousAuraAction();
+                            removeSurf.Add(surface);
+                        }
                     }
                 }
+                // Удалем то что уже протухло
+                foreach (var surface in removeSurf)
+                    GameData._surfaces.Remove(surface);
             }
-            // Удалем то что уже протухло
-            foreach (var surface in removeSurf)
-                GameData._surfaces.Remove(surface);
 
             // Теперь по блокирующим перемещение
             List<SolidObstacle> removeObst = new List<SolidObstacle>();
             foreach (var obst in GameData._solidObstacles)
             {
-                if (obst.casterId == hero.Id)
+                if (obst.casterId == hero.Id && obst.obstacleLifeTimeDecrease == obstacleLifeTime)
                 {
                     if (--obst.lifeTime <= 0)
                     {
                         Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == obst.HexId);
                         if (hex != null)
                         {
-                            obst.endLifeEffect(hex);
                             hex.RemoveHero();
+                            obst.endLifeEffect(hex);
                         }
                         obst.HexId = -1;
 
@@ -324,13 +320,6 @@ namespace BattleArenaServer.Services
                     if (effectsCount != effects.Count()) // Если из коллекции удалили элемент, пробегаемся по новой
                         i = 0;
                 }
-
-                //hero.EffectList = hero.EffectList.OrderBy(x => x.type).ToList();
-                //foreach (var effect in hero.EffectList)
-                //{
-                //    if (effect.effectType == Consts.EffectType.EndTurn)
-                //        effect.ApplyEffect(hero);
-                //}
             }
             if (hero.HP <= 0)
             {

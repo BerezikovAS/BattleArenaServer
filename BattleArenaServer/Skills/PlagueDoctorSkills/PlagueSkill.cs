@@ -39,7 +39,7 @@ namespace BattleArenaServer.Skills.PlagueDoctorSkills
                 Effect? effect = requestData.Target.EffectList.FirstOrDefault(x => x.Name == "Plague");
                 if (effect == null)
                 {
-                    PlagueDebuff plagueDebuff = new PlagueDebuff(requestData.Caster.Id, resistReduction, 2);
+                    PlagueDebuff plagueDebuff = new PlagueDebuff(requestData.Caster.Id, resistReduction, 2, GameData.turn - 1);
                     requestData.Target.AddEffect(plagueDebuff);
                 }
 

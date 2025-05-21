@@ -43,7 +43,6 @@ namespace BattleArenaServer.Hubs
             heroes.Add(new PriestHero(0, ""));
             heroes.Add(new AeroturgHero(0, ""));
             heroes.Add(new GeomantHero(0, ""));
-            heroes.Add(new AbominationHero(0, ""));
             heroes.Add(new ElementalistHero(0, ""));
             heroes.Add(new CultistHero(0, ""));
             heroes.Add(new NecromancerHero(0, ""));
@@ -56,10 +55,14 @@ namespace BattleArenaServer.Hubs
             heroes.Add(new DruidHero(0, ""));
             heroes.Add(new GhostHero(0, ""));
             heroes.Add(new MusketeerHero(0, ""));
+            heroes.Add(new AbominationHero(0, ""));
             heroes.Add(new DwarfHero(0, ""));
             heroes.Add(new FallenKingHero(0, ""));
             heroes.Add(new GolemHero(0, ""));
             heroes.Add(new PlagueDoctorHero(0, ""));
+            heroes.Add(new VampireHero(0, ""));
+            heroes.Add(new SnowQueenHero(0, ""));
+            
 
             string team = "red";
             Random rnd = new Random();
@@ -273,46 +276,7 @@ namespace BattleArenaServer.Hubs
         {
             RequestData requestData = new RequestData(cur_pos, targer_pos);
 
-            if (requestData.CasterHex != null && requestData.TargetHex != null && requestData.Caster != null && requestData.Target != null &&
-                requestData.Target.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.NonTargetable)) == null && // Цель должна быть доступна для выбора
-                requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Disarm)) == null) // Атакующий не должен быть обезоружен
-            {
-                Hero attacker = requestData.Caster;
-                Hero defender = requestData.Target;
-
-                int range = attacker.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Blind)) == null ? attacker.AttackRadius + attacker.StatsEffect.AttackRadius : 1;
-
-                int availableAP = requestData.Caster.AP;
-
-                Effect? taunt = requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Taunt));
-                if (taunt != null && taunt.idCaster != defender.Id) // Если атакующий под таунтом, то он может атаковать только заклинателя
-                    return;
-
-                // Спиритическая связь объединяет ОД двух героев, поэтому доступные ОД - это ОД кастера + ОД связанного героя
-                Effect? spiritLink = requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.SpiritLink));
-                if (spiritLink != null)
-                {
-                    Hero? anotherHero = GameData._heroes.FirstOrDefault(x => x.Id == spiritLink.idCaster);
-                    if (anotherHero != null)
-                        availableAP += anotherHero.AP;
-                }
-
-                if (requestData.CasterHex.Distance(requestData.TargetHex) > range || availableAP < attacker.APtoAttack)
-                    return;
-
-                attacker.SpendAP(attacker.APtoAttack);
-                // К урону добавляем дополнительный от пассивок и эффектов
-                int dmg = (int)((attacker.Dmg + attacker.GetPassiveAttackDamage(attacker, defender)) * attacker.StatsEffect.DmgMultiplier);
-
-                // Эффекты перед атакой
-                attacker.beforeAttack(attacker, defender, dmg);
-                defender.beforeReceivedAttack(attacker, defender, dmg);
-                // Сама атака с нанесением урона
-                AttackService.SetDamage(attacker, defender, dmg, Consts.DamageType.Physical);
-                // Эффекты после атаки
-                attacker.afterAttack(attacker, defender, dmg, Consts.DamageType.Physical);
-                defender.afterReceivedAttack(attacker, defender, dmg);
-            }
+            AttackService.AttackHero(requestData);
 
             try {
                 await SendAllInfo();
@@ -522,6 +486,12 @@ namespace BattleArenaServer.Hubs
             try
             {
                 CreateHeroList();
+                foreach (Hero hero in GameData._heroes.Where(x => x.Team == "blue"))
+                {
+                    HasteBuff hasteBuff = new HasteBuff(hero.Id, 0, 1);
+                    hero.AddEffect(hasteBuff);
+                }
+
                 await this.Clients.All.SendAsync("BeginBattle");
                 await GetUsersBindings();
             }

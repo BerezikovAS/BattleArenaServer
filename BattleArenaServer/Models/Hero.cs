@@ -177,12 +177,28 @@ namespace BattleArenaServer.Models
 
         public void BaseAddEffect(Effect effect)
         {
+            Effect? MirrorShield = EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.MirrorShield)); //Отражение дебафов
+            if (effect.type == Consts.StatusEffect.Debuff && MirrorShield != null)
+            {
+                Hero? caster = GameData._heroes.FirstOrDefault(x => x.Id == effect.idCaster);
+                if (caster != null)
+                {
+                    effect.idCaster = Id;
+                    caster.AddEffect(effect);
+                }
+                return;
+            }    
+
+            Effect? Immun = EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.DebuffImmun)); //Невосприимчивость к дебафам
+            if (effect.type == Consts.StatusEffect.Debuff && Immun != null)
+                return;
+
             EffectList.Add(effect);
             if (effect.effectType == Consts.EffectType.Instant)
                 effect.ApplyEffect(this);
         }
 
-        public void ImmunAddEffect(Effect effect)
+        /*public void ImmunAddEffect(Effect effect)
         {
             if (effect.type == Consts.StatusEffect.Debuff)
                 return;
@@ -190,7 +206,7 @@ namespace BattleArenaServer.Models
             EffectList.Add(effect);
             if (effect.effectType == Consts.EffectType.Instant)
                 effect.ApplyEffect(this);
-        }
+        }*/
 
         public void BaseSpendAP(int apCount)
         {

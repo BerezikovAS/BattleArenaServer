@@ -1,4 +1,5 @@
-﻿using BattleArenaServer.Models;
+﻿using BattleArenaServer.Effects.Buffs;
+using BattleArenaServer.Models;
 using BattleArenaServer.Models.Heroes;
 
 namespace BattleArenaServer.Services
@@ -46,7 +47,9 @@ namespace BattleArenaServer.Services
             heroes.Add(new PriestHero(0, ""));
             heroes.Add(new SeraphimHero(0, ""));
             heroes.Add(new ShadowHero(0, ""));
+            heroes.Add(new SnowQueenHero(0, ""));
             heroes.Add(new TinkerHero(0, ""));
+            heroes.Add(new VampireHero(0, ""));
             heroes.Add(new WitchDoctorHero(0, ""));
         }
 
@@ -128,6 +131,9 @@ namespace BattleArenaServer.Services
                     rndCoords = rnd.Next(blueCoords.Count);
                     hero.HexId = blueCoords[rndCoords];
                     blueCoords.Remove(blueCoords[rndCoords]);
+
+                    HasteBuff hasteBuff = new HasteBuff(hero.Id, 0, 1);
+                    hero.AddEffect(hasteBuff);
                 }
                 GameData._hexes[hero.HexId].SetHero(hero);
                 GameData._heroes.Add(hero);
