@@ -26,8 +26,6 @@ namespace BattleArenaServer.Skills._CommonSkills
 
         public override bool Cast(RequestData requestData)
         {
-            bool isHaste = false;
-
             //Проверка на Fear (Можно перемещаться только в направлении ОТ заклинателя. Т.е. дистанция должна увеличиваться)
             Effect? fear = requestData.Caster?.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Fear));
             if (fear != null)
@@ -45,11 +43,7 @@ namespace BattleArenaServer.Skills._CommonSkills
             //Проверка на Haste (Перемещение не требует ОД, но сам бафф действует на одно перемещение)
             Effect? haste = requestData.Caster?.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Haste));
             if (haste != null)
-            {
-                isHaste = true;
-                requestData.Caster.EffectList.Remove(haste);
                 requireAP = 0;
-            }
 
             //Проверка на Dizziness (Перемещение совершается на случайную клетку по направлению движения)
             Effect? dizziness = requestData.Caster?.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Dizziness));
@@ -68,8 +62,10 @@ namespace BattleArenaServer.Skills._CommonSkills
 
             if (requestData.Caster != null && requestData.CasterHex != null && requestData.TargetHex != null)
             {
-                if (!isHaste)
+                if (haste == null)
                     requestData.Caster.SpendAP(requireAP);
+                else
+                    requestData.Caster.EffectList.Remove(haste);
 
                 requireAP = 1;
                 AttackService.MoveHero(requestData.Caster, requestData.CasterHex, requestData.TargetHex);

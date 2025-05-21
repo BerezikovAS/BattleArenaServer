@@ -4,7 +4,6 @@ namespace BattleArenaServer.Effects.Buffs
 {
     public class AirFormBuff : Effect
     {
-        // Тот кого забафали и ему срезаем входящий дамаг
         public AirFormBuff(int _idCaster, int _value, int _duration)
         {
             Name = "AirForm";

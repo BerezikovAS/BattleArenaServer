@@ -20,7 +20,7 @@ namespace BattleArenaServer.Skills.GeomantSkills.Auras
             stalaktiteCount = 0;
             foreach (var n in UtilityService.GetHexesRadius(hexSource, radius))
             {
-                if (n.HERO != null && n.HERO.Name == "Stalaktite")
+                if (n.HERO != null && n.HERO.Name == "Stalaktite" && n.HERO.Team == heroSource.Team)
                 {
                     stalaktiteCount++;
                     if (upgraded && hexSource.Distance(n) == 1)

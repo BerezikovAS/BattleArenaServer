@@ -12,16 +12,15 @@ namespace BattleArenaServer.Effects.Unique
             value = _value;
             duration = _duration;
             description = $"Персонаж невосприимчив к негативным эффектам.";
+            effectTags.Add(Consts.EffectTag.DebuffImmun);
         }
 
         public override void ApplyEffect(Hero _hero)
         {
-            _hero.AddEffect = _hero.ImmunAddEffect;
         }
 
         public override void RemoveEffect(Hero _hero)
         {
-            _hero.AddEffect = _hero.BaseAddEffect;
         }
     }
 }

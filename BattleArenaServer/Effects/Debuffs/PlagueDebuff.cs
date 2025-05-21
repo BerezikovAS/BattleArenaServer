@@ -6,7 +6,7 @@ namespace BattleArenaServer.Effects.Debuffs
     public class PlagueDebuff : Effect
     {
         PlagueAura plagueAura;
-        public PlagueDebuff(int _idCaster, int _value, int _duration)
+        public PlagueDebuff(int _idCaster, int _value, int _duration, int _turn)
         {
             Name = "Plague";
             type = Consts.StatusEffect.Debuff;
@@ -14,7 +14,7 @@ namespace BattleArenaServer.Effects.Debuffs
             value = _value;
             duration = _duration;
             description = $"Сопротивление уменьшено на {value}. В конце хода Вы заразите своих союзников.";
-            plagueAura = new PlagueAura(value);
+            plagueAura = new PlagueAura(value, _turn);
         }
 
         public override void ApplyEffect(Hero _hero)
@@ -29,7 +29,5 @@ namespace BattleArenaServer.Effects.Debuffs
             _hero.AuraList.Remove(plagueAura);
 
         }
-
-
     }
 }
