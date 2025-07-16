@@ -17,8 +17,10 @@ namespace BattleArenaServer.Models.Heroes
             SkillList[4] = new FearSkill();
         }
 
-        public override void Respawn()
+        public override void Respawn(GameData? gameData = null)
         {
+            base.Respawn(gameData);
+
             MaxHP = HP = 700;
             Armor = 0;
             Resist = 4;
@@ -28,7 +30,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 2;
             Dmg = 100;
 
-            base.Respawn();
+            ApplyItems(gameData);
         }
     }
 }

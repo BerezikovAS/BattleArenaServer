@@ -15,24 +15,24 @@ namespace BattleArenaServer.Skills.SnowQueenSkills.Auras
             this.dmg_reduce = dmg_reduce;
         }
 
-        public override void SetEffect(Hero heroSource, Hex hexSource)
+        public override void SetEffect(Hero heroSource, Hex hexSource, GameData gameData)
         {
-            foreach (var n in UtilityService.GetHexesRadius(hexSource, radius))
+            foreach (var n in UtilityService.GetHexesRadius(hexSource, radius, gameData))
             {
                 if (n.HERO != null && n.HERO.Team != heroSource.Team)
                 {
-                    ApplyEffect(heroSource, n.HERO);
+                    ApplyEffect(heroSource, n.HERO, gameData);
                 }
             }
         }
 
-        public override void ApplyEffect(Hero source, Hero target)
+        public override void ApplyEffect(Hero source, Hero target, GameData gameData)
         {
             target.StatsEffect.DmgMultiplier -= Convert.ToDouble(dmg_reduce) / 100;
             affectedHeroes.Add(target);
         }
 
-        public override void CancelEffect(Hero source)
+        public override void CancelEffect(Hero source, GameData gameData)
         {
             foreach (var hero in affectedHeroes)
             {

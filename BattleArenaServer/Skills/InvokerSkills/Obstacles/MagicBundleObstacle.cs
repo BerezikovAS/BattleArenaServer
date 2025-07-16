@@ -22,13 +22,13 @@ namespace BattleArenaServer.Skills.InvokerSkills.Obstacles
             this.AddEffect -= this.BaseAddEffect;
         }
 
-        public void EndLifeMagicBundle(Hex currentHex)
+        public void EndLifeMagicBundle(Hex currentHex, GameData gameData)
         {
             if (HP > 0) // Истекло время действия, а не уничтожили
-                foreach (var hex in UtilityService.GetHexesRadius(currentHex, 1))
+                foreach (var hex in UtilityService.GetHexesRadius(currentHex, 1, gameData))
                 {
                     if (hex.HERO != null && hex.HERO.Team != this.Team)
-                        AttackService.SetDamage(this, hex.HERO, Dmg, Consts.DamageType.Magic);
+                        AttackService.SetDamage(this, hex.HERO, Dmg, Consts.DamageType.Magic, gameData);
                 }
         }
     }

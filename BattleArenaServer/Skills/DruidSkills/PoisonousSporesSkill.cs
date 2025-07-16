@@ -30,24 +30,24 @@ namespace BattleArenaServer.Skills.DruidSkills
 
         public new ISkillCastRequest request => new LineCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null && requestData.CasterHex != null)
             {
-                foreach (var n in UtilityService.GetHexesWideLine(requestData.CasterHex, requestData.TargetHex, radius))
+                foreach (var n in UtilityService.GetHexesWideLine(requestData.CasterHex, requestData.TargetHex, radius, gameData))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                     {
                         PoisonDebuff poisonDebuff = new PoisonDebuff(requestData.Caster.Id, percentHPLoss, poisonDuration + 1);
-                        n.HERO.AddEffect(poisonDebuff);
+                        n.HERO.AddEffect(poisonDebuff, gameData);
 
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType, gameData);
                     }
                 }
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -55,7 +55,7 @@ namespace BattleArenaServer.Skills.DruidSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

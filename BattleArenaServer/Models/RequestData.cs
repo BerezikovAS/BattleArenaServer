@@ -2,13 +2,13 @@
 {
     public class RequestData
     {
-        public RequestData(int? casterPosId, int? targetPosId)
+        public RequestData(int? casterPosId, int? targetPosId, GameData gameData)
         {
             CasterPositionId = casterPosId;
             TargetPositionId = targetPosId;
 
-            CasterHex = GameData._hexes.FirstOrDefault(x => x.ID == CasterPositionId);
-            TargetHex = GameData._hexes.FirstOrDefault(x => x.ID == TargetPositionId);
+            CasterHex = gameData._hexes.FirstOrDefault(x => x.ID == CasterPositionId);
+            TargetHex = gameData._hexes.FirstOrDefault(x => x.ID == TargetPositionId);
 
             Caster = CasterHex?.HERO;
             Target = TargetHex?.HERO;

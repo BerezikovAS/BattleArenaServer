@@ -103,7 +103,7 @@ function recreateGame() {
             return console.error(err.toString());
         });
 
-    window.location.href = 'http://localhost:8080';
+    //window.location.href = 'http://10.80.3.137:8080/Pick.html';
 }
 
 
@@ -119,6 +119,10 @@ function beginRandomBattle() {
         .catch(function (err) {
             return console.error(err.toString());
         });
+}
+
+function leaveLobby() {
+    window.location.href = "http://10.80.3.137:8080";
 }
 
 
@@ -164,6 +168,22 @@ function setRespawnedHero(_idHero, _hexId) {
         });
 }
 
+hubConnection.on("TransferTo", function (to) {
+
+    isGameStarted = to;
+
+    if (to == 1)
+        window.location.href = "http://10.80.3.137:8080/Battle.html";
+    else if (to == 0)
+        window.location.href = "http://10.80.3.137:8080/Pick.html";
+    else
+        window.location.href = "http://10.80.3.137:8080";
+});
+
+hubConnection.on("SetGameMode", function (mode) {
+    isGameStarted = mode;
+});
+
 function castItem(_itemName, _target = -1) {
 
     idCastingSpell = -1;
@@ -186,6 +206,7 @@ function castItem(_itemName, _target = -1) {
 
         nameCastingItem = _itemName;
         fillSpellAreaHovers(-1, _itemName);
+        fillActiveHeroItems();
         //feelSpells(_hero);
         //disableSpells(_spell);
 
@@ -239,6 +260,12 @@ function castSpell(_spell, _target = -1)
         });
 }
 
+
+
+
+
+
+
 // Установка cookie при первом посещении
 function setUserCookie() {
     const userId = generateUniqueId(); // Генерируем уникальный ID
@@ -246,6 +273,8 @@ function setUserCookie() {
     expires.setFullYear(expires.getFullYear() + 1); // Cookie на 1 год
 
     document.cookie = `user_id=${userId}; expires=${expires.toUTCString()}; path=/`;
+    document.cookie = `lobbyId=${0}; expires=${expires.toUTCString()}; path=/`;
+
     return userId;
 }
 

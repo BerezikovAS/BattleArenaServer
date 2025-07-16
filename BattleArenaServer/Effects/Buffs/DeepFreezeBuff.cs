@@ -21,14 +21,14 @@ namespace BattleArenaServer.Effects.Buffs
             effectTags.Add(Consts.EffectTag.NonItem);
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             if (!isApplied)
                 _hero.modifierAppliedDamage += ModifierAppliedDamageDelegate;
             isApplied = true;
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             _hero.modifierAppliedDamage -= ModifierAppliedDamageDelegate;
         }

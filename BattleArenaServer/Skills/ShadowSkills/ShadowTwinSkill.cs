@@ -28,41 +28,41 @@ namespace BattleArenaServer.Skills.ShadowSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null && requestData.TargetHex != null)
             {
                 //Находим рандомную свободную клетку рядом с целью
-                Hex? spawnHex = UtilityService.GetRandomAdjacentHex(requestData.TargetHex);
+                Hex? spawnHex = UtilityService.GetRandomAdjacentHex(requestData.TargetHex, gameData);
                 if (spawnHex == null)
                     return false; //Если таковой нет, то выходим без применения эффектов
 
                 //Создаем копию цели
-                int Id = GameData._heroes.Max(x => x.Id) + 1;
+                int Id = gameData._heroes.Max(x => x.Id) + 1;
                 ShadowTwinSummon doppelganger = new ShadowTwinSummon(Id, requestData.Caster.Team, requestData.Caster.Id, lifeTime, requestData.Target);
 
                 //Вешаем на неё уникальный эффект
                 ShadowTwinUnique shadowTwinUnique = new ShadowTwinUnique(requestData.Caster.Id, 0, 99);
-                doppelganger.AddEffect(shadowTwinUnique);
+                doppelganger.AddEffect(shadowTwinUnique, gameData);
 
                 //Спавним копию на поле
                 spawnHex.SetHero(doppelganger);
-                GameData._heroes.Add(doppelganger);
+                gameData._heroes.Add(doppelganger);
 
                 //Обновим ауры
-                AttackService.ContinuousAuraAction();
+                AttackService.ContinuousAuraAction(gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

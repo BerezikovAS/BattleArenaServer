@@ -33,32 +33,32 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
 
         public new ISkillCastRequest request => new HexTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null && requestData.TargetHex.OBSTACLE == null)
             {
                 //Ставим тотем
-                int Id = GameData._heroes.Max(x => x.Id) + 1;
+                int Id = gameData._heroes.Max(x => x.Id) + 1;
                 WitchTotemObstacle witchTotemObstacle = 
                     new WitchTotemObstacle(Id, requestData.Caster.Id, requestData.TargetHex.ID, totemHP, requestData.Caster.Team, lifeTime, 2, baseDmg, chargeDmg);
                 requestData.TargetHex.SetHero(witchTotemObstacle);
-                GameData._solidObstacles.Add(witchTotemObstacle);
+                gameData._solidObstacles.Add(witchTotemObstacle);
 
                 // Добавляем ауру нашему тотему
                 WitchTotemAura witchTotemAura = new WitchTotemAura(dmg);
                 witchTotemObstacle.AuraList.Add(witchTotemAura);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

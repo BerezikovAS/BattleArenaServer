@@ -18,27 +18,27 @@ namespace BattleArenaServer.Skills.FallenKingSkills
             hero.AuraList.Add(Aura);
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
                 upgraded = true;
                 radius += 1;
                 dmg += 10;
-                Aura.CancelEffect(hero);
+                Aura.CancelEffect(hero, gameData);
                 hero.AuraList.Remove(Aura);
                 Aura = new ManaBaneAura(dmg, radius, hero);
                 hero.AuraList.Add(Aura);
-                AttackService.ContinuousAuraAction();
+                AttackService.ContinuousAuraAction(gameData);
                 title = $"Враги в радиусе {radius} клеток получают {dmg} магического урона, когда используют заклинание.";
                 return true;
             }

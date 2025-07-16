@@ -24,24 +24,24 @@ namespace BattleArenaServer.Skills.ElementalistSkills
 
         public new ISkillCastRequest request => new AllyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             if (requestData.Target != null && requestData.Caster != null)
             {
-                if (!request.startRequest(requestData, this))
+                if (!request.startRequest(requestData, this, gameData))
                     return false;
 
                 PhysShieldBuff physShieldBuff = new PhysShieldBuff(requestData.Caster.Id, shieldDurability, 3);
-                requestData.Target.AddEffect(physShieldBuff);
+                requestData.Target.AddEffect(physShieldBuff, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

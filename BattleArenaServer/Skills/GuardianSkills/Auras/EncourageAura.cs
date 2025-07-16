@@ -16,7 +16,7 @@ namespace BattleArenaServer.Skills.GuardianSkills.Auras
             extraDmg = _extraDmg;
         }
 
-        public override void ApplyEffect(Hero source, Hero target)
+        public override void ApplyEffect(Hero source, Hero target, GameData gameData)
         {
             if (source.Team == target.Team)
             {
@@ -25,23 +25,23 @@ namespace BattleArenaServer.Skills.GuardianSkills.Auras
             }
         }
 
-        public override void CancelEffect(Hero source)
+        public override void CancelEffect(Hero source, GameData gameData)
         {
-            foreach (var hero in GameData._heroes)
+            foreach (var hero in gameData._heroes)
             {
                 hero.passiveArmor -= EncourageArmor;
                 hero.passiveAttackDamage -= EncourageDmg;
             }
         }
 
-        private int EncourageArmor(Hero? attacker, Hero defender)
+        private int EncourageArmor(Hero? attacker, Hero defender, GameData gameData)
         {
             int addArmor = 0;
-            Hex? defenderHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == defender.Id);
+            Hex? defenderHex = gameData._hexes.FirstOrDefault(x => x.HERO?.Id == defender.Id);
             if (defenderHex == null)
                 return 0;
 
-            foreach (var hex in UtilityService.GetHexesRadius(defenderHex, 1))
+            foreach (var hex in UtilityService.GetHexesRadius(defenderHex, 1, gameData))
             {
                 if (hex.HERO != null && hex.HERO.Team != defender.Team)
                     addArmor++;
@@ -50,14 +50,14 @@ namespace BattleArenaServer.Skills.GuardianSkills.Auras
             return extraArmor * addArmor;
         }
 
-        private int EncourageDmg(Hero attacker, Hero? defender)
+        private int EncourageDmg(Hero attacker, Hero? defender, GameData gameData)
         {
             int addDmg = 0;
-            Hex? attackerHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == attacker.Id);
+            Hex? attackerHex = gameData._hexes.FirstOrDefault(x => x.HERO?.Id == attacker.Id);
             if (attackerHex == null)
                 return 0;
 
-            foreach (var hex in UtilityService.GetHexesRadius(attackerHex, 1))
+            foreach (var hex in UtilityService.GetHexesRadius(attackerHex, 1, gameData))
             {
                 if (hex.HERO != null && hex.HERO.Team != attacker.Team)
                     addDmg++;

@@ -15,16 +15,16 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
             hero.afterReceiveDmg += AfterReceiveDmgDelegate;
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             upgraded = true;
             hero.afterReceiveDmg -= AfterReceiveDmgDelegate;
@@ -34,12 +34,12 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
             return true;
         }
 
-        private void AfterReceiveDmgDelegate(Hero defender, Hero? attacker, int dmg, Consts.DamageType dmgType)
+        private void AfterReceiveDmgDelegate(Hero defender, Hero? attacker, int dmg, Consts.DamageType dmgType, GameData gameData)
         {
-            Hex? defenderHex = GameData._hexes.FirstOrDefault(x => x.ID == defender.HexId);
+            Hex? defenderHex = gameData._hexes.FirstOrDefault(x => x.ID == defender.HexId);
             if (defenderHex != null)
             {
-                foreach (var hex in UtilityService.GetHexesRadius(defenderHex, 1))
+                foreach (var hex in UtilityService.GetHexesRadius(defenderHex, 1, gameData))
                     if (hex.HERO != null && hex.HERO.Team == defender.Team && hex.HERO.Id != defender.Id)
                         hex.HERO.Heal((int)(Convert.ToDouble(dmg) * Convert.ToDouble(percentHeal) / 100));
             }

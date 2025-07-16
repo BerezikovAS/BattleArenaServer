@@ -20,7 +20,7 @@ namespace BattleArenaServer.Skills.VampireSkills.Obstacles
             obstacleLifeTimeDecrease = Consts.ObstacleLifeTimeDecrease.StartTurn;
         }
 
-        public void EndLifeCoffin(Hex currentHex)
+        public void EndLifeCoffin(Hex currentHex, GameData gameData)
         {
             if (HP > 0) // Истекло время действия, а не уничтожили
                 hero.Heal(heal);

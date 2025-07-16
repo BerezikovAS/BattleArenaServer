@@ -19,16 +19,16 @@ namespace BattleArenaServer.Models.Items.Tier3
             aura = new BattleBannerAura(armorResist, dmg, 2);
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             hero.AuraList.Add(aura);
-            AttackService.ContinuousAuraAction();
+            AttackService.ContinuousAuraAction(gameData);
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
             hero.AuraList.Remove(aura);
-            AttackService.ContinuousAuraAction();
+            AttackService.ContinuousAuraAction(gameData);
         }
     }
 }

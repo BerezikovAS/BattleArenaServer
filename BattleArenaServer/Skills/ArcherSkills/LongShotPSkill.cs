@@ -13,16 +13,16 @@ namespace BattleArenaServer.Skills.Crossbowman
             hero.passiveAttackDamage += LongShot;
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
@@ -35,13 +35,13 @@ namespace BattleArenaServer.Skills.Crossbowman
             }
             return false;
         }
-        private int LongShot(Hero attacker, Hero? defender)
+        private int LongShot(Hero attacker, Hero? defender, GameData gameData)
         {
             if (defender == null)
                 return 0;
 
-            Hex? attackerHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == attacker.Id);
-            Hex? defenderHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == defender.Id);
+            Hex? attackerHex = gameData._hexes.FirstOrDefault(x => x.HERO?.Id == attacker.Id);
+            Hex? defenderHex = gameData._hexes.FirstOrDefault(x => x.HERO?.Id == defender.Id);
 
             if (attackerHex != null && defenderHex != null)
             {

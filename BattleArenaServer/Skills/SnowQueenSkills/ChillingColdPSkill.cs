@@ -18,26 +18,26 @@ namespace BattleArenaServer.Skills.SnowQueenSkills
             hero.AuraList.Add(Aura);
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
                 upgraded = true;
-                Aura.CancelEffect(hero);
+                Aura.CancelEffect(hero, gameData);
                 hero.AuraList.Remove(Aura);
                 dmg_reduce += 10;
                 Aura = new ChillingColdAura(false, dmg_reduce, radius);
                 hero.AuraList.Add(Aura);
-                AttackService.ContinuousAuraAction();
+                AttackService.ContinuousAuraAction(gameData);
                 title = $"Морозная аура снижает урон от атак врагов в радиусе 2-х клеток на {dmg_reduce}%";
                 return true;
             }

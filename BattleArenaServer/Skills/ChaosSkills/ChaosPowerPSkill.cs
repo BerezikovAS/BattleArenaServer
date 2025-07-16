@@ -15,23 +15,23 @@ namespace BattleArenaServer.Skills.ChaosSkills
             titleUpg = "Увеличивает количество очков хаоса на 5.";
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
             if (hero.EffectList.Contains(chaosPowerUnique))
             {
-                chaosPowerUnique.RemoveEffect(hero);
+                chaosPowerUnique.RemoveEffect(hero, gameData);
                 hero.EffectList.Remove(chaosPowerUnique);
             }
             chaosPowerUnique = new ChaosPowerUnique(hero.Id, chaosPoints, 99);
-            hero.AddEffect(chaosPowerUnique);
+            hero.AddEffect(chaosPowerUnique, gameData);
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             upgraded = true;
             chaosPoints += 5;

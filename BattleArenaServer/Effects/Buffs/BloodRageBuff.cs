@@ -19,23 +19,23 @@ namespace BattleArenaServer.Effects.Buffs
                 description += "\nУрон увеличен на " + value;
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             _hero.Dmg += value;
             _hero.APtoAttack = 1;
             _hero.afterAttack += AfterAttackDelegate;
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             _hero.Dmg -= value;
             _hero.APtoAttack = 2;
             _hero.afterAttack -= AfterAttackDelegate;
         }
 
-        private bool AfterAttackDelegate(Hero attacker, Hero defender, int dmg, Consts.DamageType dmgType)
+        private bool AfterAttackDelegate(Hero attacker, Hero defender, int dmg, Consts.DamageType dmgType, GameData gameData)
         {
-            return AttackService.ApplyDamage(attacker, attacker, hpLoss, dmgType);
+            return AttackService.ApplyDamage(attacker, attacker, hpLoss, dmgType, gameData);
         }
     }
 }

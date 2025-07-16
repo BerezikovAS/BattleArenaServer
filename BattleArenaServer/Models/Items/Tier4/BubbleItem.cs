@@ -18,18 +18,18 @@ namespace BattleArenaServer.Models.Items.Tier4
             aura = new BubbleAura();
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             hero.Resist += armorResist;
             hero.Armor += armorResist;
 
             BubbleBuff bubbleBuff = new BubbleBuff(hero.Id, 0, 99);
-            hero.AddEffect(bubbleBuff);
+            hero.AddEffect(bubbleBuff, gameData);
 
             hero.AuraList.Add(aura);
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
             hero.Resist -= armorResist;
             hero.Armor -= armorResist;

@@ -7,8 +7,8 @@ namespace BattleArenaServer.Skills.PlagueDoctorSkills
 {
     public class VaccineSkill : Skill
     {
-        int heal = 20;
-        int extraHeal = 8;
+        int heal = 30;
+        int extraHeal = 10;
         public VaccineSkill()
         {
             name = "Vaccine";
@@ -26,24 +26,24 @@ namespace BattleArenaServer.Skills.PlagueDoctorSkills
 
         public new ISkillCastRequest request => new AllyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             if (requestData.Target != null && requestData.Caster != null)
             {
-                if (!request.startRequest(requestData, this))
+                if (!request.startRequest(requestData, this, gameData))
                     return false;
 
                 VaccineBuff vaccineBuff = new VaccineBuff(requestData.Caster.Id, heal, 3, extraHeal);
-                requestData.Target.AddEffect(vaccineBuff);
+                requestData.Target.AddEffect(vaccineBuff, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

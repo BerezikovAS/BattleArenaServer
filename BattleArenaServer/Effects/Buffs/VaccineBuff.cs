@@ -17,7 +17,7 @@ namespace BattleArenaServer.Effects.Buffs
             description = $"Восстанавливает {value} ХП + {extraHeal} ХП за каждый дебафф в начале своего хода. Также убирает один случайный дебафф.";
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             List<Effect> effects = new List<Effect>();
             effects = hero.EffectList.FindAll(x => x.type == Consts.StatusEffect.Debuff);
@@ -31,13 +31,13 @@ namespace BattleArenaServer.Effects.Buffs
                 Effect? effect = effects[rnd.Next(effects.Count)];
                 if (effect != null)
                 {
-                    effect.RemoveEffect(hero);
+                    effect.RemoveEffect(hero, gameData);
                     hero.EffectList.Remove(effect);
                 }
             }
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
 
         }

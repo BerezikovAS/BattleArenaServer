@@ -17,20 +17,20 @@ namespace BattleArenaServer.Skills.PlagueDoctorSkills.Auras
             appliedTurn = _appliedTurn;
         }
 
-        public override void ApplyEffect(Hero source, Hero target)
+        public override void ApplyEffect(Hero source, Hero target, GameData gameData)
         {
-            if (source.Team == target.Team && source.Id != target.Id && target.type != Consts.HeroType.Obstacle && GameData.turn > appliedTurn)
+            if (source.Team == target.Team && source.Id != target.Id && target.type != Consts.HeroType.Obstacle && gameData.turn > appliedTurn)
             {
                 Effect? effect = target.EffectList.FirstOrDefault(x => x.Name == "Plague");
                 if (effect == null)
                 {
-                    PlagueDebuff plagueDebuff = new PlagueDebuff(source.Id, resistReduction, 2, GameData.turn);
-                    target.AddEffect(plagueDebuff);
+                    PlagueDebuff plagueDebuff = new PlagueDebuff(source.Id, resistReduction, 2, gameData.turn);
+                    target.AddEffect(plagueDebuff, gameData);
                 }
             }
         }
 
-        public override void CancelEffect(Hero source)
+        public override void CancelEffect(Hero source, GameData gameData)
         {
 
         }

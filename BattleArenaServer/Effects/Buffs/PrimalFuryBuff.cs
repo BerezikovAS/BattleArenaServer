@@ -1,5 +1,4 @@
 ﻿using BattleArenaServer.Models;
-using static BattleArenaServer.Models.Hero;
 
 namespace BattleArenaServer.Effects.Buffs
 {
@@ -15,19 +14,19 @@ namespace BattleArenaServer.Effects.Buffs
             description = $"Следующая атака нанесёт +{value} урона.";
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             _hero.passiveAttackDamage += PassiveAttackDamage;
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             _hero.passiveAttackDamage -= PassiveAttackDamage;
         }
 
-        private int PassiveAttackDamage(Hero attacker, Hero? defender)
+        private int PassiveAttackDamage(Hero attacker, Hero? defender, GameData gameData)
         {
-            this.RemoveEffect(attacker);
+            this.RemoveEffect(attacker, gameData);
             attacker.EffectList.Remove(this);
             return value;
         }

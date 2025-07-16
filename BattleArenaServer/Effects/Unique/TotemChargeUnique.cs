@@ -16,13 +16,13 @@ namespace BattleArenaServer.Effects.Unique
             effectTags.Add(Consts.EffectTag.TotemCharge);
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             value++;
             description = $"{value} зарядов.";
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
 
         }

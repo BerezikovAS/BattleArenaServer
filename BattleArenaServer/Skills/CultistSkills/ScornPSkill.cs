@@ -4,8 +4,6 @@ namespace BattleArenaServer.Skills.CultistSkills
 {
     public class ScornPSkill : PassiveSkill
     {
-        int cntEnemiesPenalty = 1;
-        string skillDesc = ", кроме первого";
         public ScornPSkill(Hero hero) : base(hero)
         {
             name = "Scorn";
@@ -16,16 +14,16 @@ namespace BattleArenaServer.Skills.CultistSkills
             hero.passiveAttackDamage += Scorn;
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
@@ -39,7 +37,7 @@ namespace BattleArenaServer.Skills.CultistSkills
             return false;
         }
 
-        private int Scorn(Hero attacker, Hero? defender)
+        private int Scorn(Hero attacker, Hero? defender, GameData gameData)
         {
             int extraDmg = 0;
             foreach (var effect in defender.EffectList)

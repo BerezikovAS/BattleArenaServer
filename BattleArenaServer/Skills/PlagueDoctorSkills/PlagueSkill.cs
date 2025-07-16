@@ -29,9 +29,9 @@ namespace BattleArenaServer.Skills.PlagueDoctorSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null)
@@ -39,20 +39,20 @@ namespace BattleArenaServer.Skills.PlagueDoctorSkills
                 Effect? effect = requestData.Target.EffectList.FirstOrDefault(x => x.Name == "Plague");
                 if (effect == null)
                 {
-                    PlagueDebuff plagueDebuff = new PlagueDebuff(requestData.Caster.Id, resistReduction, 2, GameData.turn - 1);
-                    requestData.Target.AddEffect(plagueDebuff);
+                    PlagueDebuff plagueDebuff = new PlagueDebuff(requestData.Caster.Id, resistReduction, 2, gameData.turn - 1);
+                    requestData.Target.AddEffect(plagueDebuff, gameData);
                 }
 
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

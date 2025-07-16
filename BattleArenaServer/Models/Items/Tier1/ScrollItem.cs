@@ -19,9 +19,9 @@ namespace BattleArenaServer.Models.Items.Tier1
             Skill = new ScrollSkill();
         }
 
-        public override void CastItem(RequestData requestData)
+        public override void CastItem(RequestData requestData, GameData gameData)
         {
-            Skill.Cast(requestData);
+            Skill.Cast(requestData, gameData);
         }
     }
 
@@ -41,14 +41,14 @@ namespace BattleArenaServer.Models.Items.Tier1
 
         public new ISkillCastRequest request => new FriendTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.CasterHex != null && requestData.Target != null && requestData.TargetHex != null)
             {
-                List<Hex> emptyHexes = UtilityService.GetHexesRadius(requestData.TargetHex, 1).Where(x => x.IsFree()).ToList();
+                List<Hex> emptyHexes = UtilityService.GetHexesRadius(requestData.TargetHex, 1, gameData).Where(x => x.IsFree()).ToList();
                 if (emptyHexes.Count == 0)
                     return false;
 
@@ -59,9 +59,9 @@ namespace BattleArenaServer.Models.Items.Tier1
                 Hex moveHex = nearestHexes[rnd.Next(nearestHexes.Count)];
 
                 //Телепортируемся поближе к союзнику
-                AttackService.MoveHero(requestData.Caster, requestData.CasterHex, moveHex);
+                AttackService.MoveHero(requestData.Caster, requestData.CasterHex, moveHex, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }

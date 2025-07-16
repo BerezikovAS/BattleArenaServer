@@ -12,12 +12,12 @@
             SellCost = 5;
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             hero.Dmg += dmg;
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
             hero.Dmg -= dmg;
         }

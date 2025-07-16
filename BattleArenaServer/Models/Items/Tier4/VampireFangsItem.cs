@@ -2,7 +2,7 @@
 {
     public class VampireFangsItem : Item
     {
-        int extraHP = 100;
+        int extraHP = 125;
         int percentLifeSteal = 80;
         public VampireFangsItem()
         {
@@ -14,7 +14,7 @@
             SellCost = 40;
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             hero.MaxHP += extraHP;
             hero.HP += extraHP;
@@ -22,7 +22,7 @@
             hero.afterAttack += AfterAttackDelegate;
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
             hero.MaxHP -= extraHP;
             hero.HP -= extraHP;
@@ -34,13 +34,13 @@
             hero.afterAttack -= AfterAttackDelegate;
         }
 
-        private bool BeforeAttackDelegate(Hero attacker, Hero defender, int dmg)
+        private bool BeforeAttackDelegate(Hero attacker, Hero defender, int dmg, GameData gameData)
         {
             attacker.DamageDealed = 0;
             return true;
         }
 
-        private bool AfterAttackDelegate(Hero attacker, Hero defender, int dmg, Consts.DamageType dmgType)
+        private bool AfterAttackDelegate(Hero attacker, Hero defender, int dmg, Consts.DamageType dmgType, GameData gameData)
         {
             if (attacker.HP <= 0)
                 return false;

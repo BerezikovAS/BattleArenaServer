@@ -27,16 +27,16 @@ namespace BattleArenaServer.Skills.ChaosSkills
 
         public new ISkillCastRequest request => new RangeAoECastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null)
             {
                 List<Hero> heroes = new List<Hero>();
                 List<Hex> hexes = new List<Hex>();
-                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
+                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius, gameData))
                 {
                     hexes.Add(n);
                     if (n.HERO != null)
@@ -56,19 +56,19 @@ namespace BattleArenaServer.Skills.ChaosSkills
                         hex = hexes.FirstOrDefault(x => x.ID == hexes[rnd.Next(0, hexes.Count)].ID && x.IsFree());
                     }
 
-                    if (hero.Team != requestData.Caster.Team)
+                    AttackService.MoveHero(hero, null, hex, gameData);
+
+                    if (hero.HP > 0 && hero.Team != requestData.Caster.Team)
                     {
                         SlowDebuff slowDebuff = new SlowDebuff(requestData.Caster.Id, 0, 2);
-                        hero.AddEffect(slowDebuff);
+                        hero.AddEffect(slowDebuff, gameData);
 
                         if (upgraded)
-                            AttackService.SetDamage(requestData.Caster, hero, dmg, dmgType);
+                            AttackService.SetDamage(requestData.Caster, hero, dmg, dmgType, gameData);
                     }
-
-                    AttackService.MoveHero(hero, null, hex);
                 }
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -76,7 +76,7 @@ namespace BattleArenaServer.Skills.ChaosSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

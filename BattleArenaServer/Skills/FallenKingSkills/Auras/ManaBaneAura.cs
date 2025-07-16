@@ -16,33 +16,33 @@ namespace BattleArenaServer.Skills.FallenKingSkills.Auras
             this.source = source;
         }
 
-        public override void SetEffect(Hero heroSource, Hex hexSource)
+        public override void SetEffect(Hero heroSource, Hex hexSource, GameData gameData)
         {
-            foreach (var n in UtilityService.GetHexesRadius(hexSource, radius))
+            foreach (var n in UtilityService.GetHexesRadius(hexSource, radius, gameData))
             {
                 if (n.HERO != null && n.HERO.Team != heroSource.Team)
                 {
-                    ApplyEffect(heroSource, n.HERO);
+                    ApplyEffect(heroSource, n.HERO, gameData);
                 }
             }
         }
 
-        public override void ApplyEffect(Hero source, Hero target)
+        public override void ApplyEffect(Hero source, Hero target, GameData gameData)
         {
             target.afterSpellCast += AfterSpellCastDelegate;
         }
 
-        public override void CancelEffect(Hero source)
+        public override void CancelEffect(Hero source, GameData gameData)
         {
-            foreach (var hero in GameData._heroes)
+            foreach (var hero in gameData._heroes)
             {
                 hero.afterSpellCast -= AfterSpellCastDelegate;
             }
         }
 
-        private void AfterSpellCastDelegate(Hero attacker, Hero? defender, Skill skill)
+        private void AfterSpellCastDelegate(Hero attacker, Hero? defender, Skill skill, GameData gameData)
         {
-            AttackService.SetDamage(source, attacker, dmg, Consts.DamageType.Magic);
+            AttackService.SetDamage(source, attacker, dmg, Consts.DamageType.Magic, gameData);
         }
     }
 }

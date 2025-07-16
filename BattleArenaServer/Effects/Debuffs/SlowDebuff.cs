@@ -15,12 +15,12 @@ namespace BattleArenaServer.Effects.Debuffs
             effectTags.Add(Consts.EffectTag.Slow);
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
 
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
 
         }

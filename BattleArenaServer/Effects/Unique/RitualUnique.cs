@@ -16,13 +16,13 @@ namespace BattleArenaServer.Effects.Buffs
             effectTags.Add(Consts.EffectTag.Ritual);
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             value++;
             description = $"{value} очков ритуала.";
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
 
         }

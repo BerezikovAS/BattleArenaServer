@@ -24,19 +24,19 @@ namespace BattleArenaServer.Skills.Knight
 
         public new ISkillCastRequest request => new NontargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null)
             {
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 requestData.Caster.Heal(heal);
                 coolDownNow = coolDown;
 
                 ArmorBuff buffArmor = new ArmorBuff(requestData.Caster.Id, armor, 2);
-                requestData.Caster.AddEffect(buffArmor);
+                requestData.Caster.AddEffect(buffArmor, gameData);
 
                 return true;
             }
@@ -44,7 +44,7 @@ namespace BattleArenaServer.Skills.Knight
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

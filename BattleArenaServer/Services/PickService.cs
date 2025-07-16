@@ -1,14 +1,21 @@
 ﻿using BattleArenaServer.Effects.Buffs;
+using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.Models.Heroes;
 
 namespace BattleArenaServer.Services
 {
-    public class PickService
+    public class PickService : IPick
     {
         public List<Hero> heroes = new List<Hero>();
         public int order = 1;
         public PickBan pickBanTurn = PickBan.Ban;
+        GameData gameData;
+
+        public PickService(GameData gameData)
+        {
+            this.gameData = gameData;
+        }
 
         public enum PickBan
         {
@@ -26,6 +33,7 @@ namespace BattleArenaServer.Services
             heroes.Add(new AbominationHero(0, ""));
             heroes.Add(new AeroturgHero(0, ""));
             heroes.Add(new ArcherHero(0, ""));
+            heroes.Add(new ArtistHero(0, ""));
             heroes.Add(new AssassinHero(0, ""));
             heroes.Add(new BerserkerHero(0, ""));
             heroes.Add(new ChaosHero(0, ""));
@@ -69,17 +77,17 @@ namespace BattleArenaServer.Services
 
             int newId = heroes.FindAll(h => h.Id != 0).Count() + 1;
             hero.Id = newId;
-            hero.Team = GameData.activeTeam;
+            hero.Team = gameData.activeTeam;
 
-            if (GameData.activeTeam == "blue")
+            if (gameData.activeTeam == "blue")
             {
-                GameData.activeTeam = "red";
-                GameData.userTeamBindings.ActiveTeam = GameData.userTeamBindings.RedTeam;
+                gameData.activeTeam = "red";
+                gameData.userTeamBindings.ActiveTeam = gameData.userTeamBindings.RedTeam;
             }
             else
             {
-                GameData.activeTeam = "blue";
-                GameData.userTeamBindings.ActiveTeam = GameData.userTeamBindings.BlueTeam;
+                gameData.activeTeam = "blue";
+                gameData.userTeamBindings.ActiveTeam = gameData.userTeamBindings.BlueTeam;
             }
             ChangePickBanStage();
             return true;
@@ -96,15 +104,15 @@ namespace BattleArenaServer.Services
 
             hero.Id = -1;
 
-            if (GameData.activeTeam == "blue")
+            if (gameData.activeTeam == "blue")
             {
-                GameData.activeTeam = "red";
-                GameData.userTeamBindings.ActiveTeam = GameData.userTeamBindings.RedTeam;
+                gameData.activeTeam = "red";
+                gameData.userTeamBindings.ActiveTeam = gameData.userTeamBindings.RedTeam;
             }
             else
             {
-                GameData.activeTeam = "blue";
-                GameData.userTeamBindings.ActiveTeam = GameData.userTeamBindings.BlueTeam;
+                gameData.activeTeam = "blue";
+                gameData.userTeamBindings.ActiveTeam = gameData.userTeamBindings.BlueTeam;
             }
             ChangePickBanStage();
             return true;
@@ -133,10 +141,10 @@ namespace BattleArenaServer.Services
                     blueCoords.Remove(blueCoords[rndCoords]);
 
                     HasteBuff hasteBuff = new HasteBuff(hero.Id, 0, 1);
-                    hero.AddEffect(hasteBuff);
+                    hero.AddEffect(hasteBuff, gameData);
                 }
-                GameData._hexes[hero.HexId].SetHero(hero);
-                GameData._heroes.Add(hero);
+                gameData._hexes[hero.HexId].SetHero(hero);
+                gameData._heroes.Add(hero);
             }
         }
 

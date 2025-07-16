@@ -10,9 +10,9 @@ namespace BattleArenaServer.Skills.PlagueDoctorSkills
         public AcidSplashSkill()
         {
             name = "Acid Splash";
-            dmg = 125;
+            dmg = 135;
             title = $"Выплескивает едкую кислоту на врагов, которая наносит {dmg} урона. Тип урона определяется по меньшему параметру брони и сопротивления.";
-            titleUpg = "+20 к урону";
+            titleUpg = "+40 к урону";
             coolDown = 3;
             coolDownNow = 0;
             requireAP = 2;
@@ -26,24 +26,24 @@ namespace BattleArenaServer.Skills.PlagueDoctorSkills
 
         public new ISkillCastRequest request => new LineCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null && requestData.CasterHex != null)
             {
                 AttackService.dealedDmg = 0;
-                foreach (var n in UtilityService.GetHexesSmallCone(requestData.CasterHex, requestData.TargetHex, radius))
+                foreach (var n in UtilityService.GetHexesSmallCone(requestData.CasterHex, requestData.TargetHex, radius, gameData))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                     {
                         Consts.DamageType damageType = n.HERO.Armor < n.HERO.Resist ? Consts.DamageType.Physical : Consts.DamageType.Magic;
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, damageType);
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, damageType, gameData);
                     }
                 }
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -51,7 +51,7 @@ namespace BattleArenaServer.Skills.PlagueDoctorSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

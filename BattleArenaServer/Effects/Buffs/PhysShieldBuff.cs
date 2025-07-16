@@ -16,12 +16,12 @@ namespace BattleArenaServer.Effects.Buffs
             effectTags.Add(Consts.EffectTag.PhysShield);
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
 
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
 
         }

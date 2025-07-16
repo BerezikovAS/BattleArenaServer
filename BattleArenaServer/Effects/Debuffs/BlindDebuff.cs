@@ -16,12 +16,12 @@ namespace BattleArenaServer.Effects.Debuffs
             effectTags.Add(Consts.EffectTag.Blind);
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
 
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
 
         }

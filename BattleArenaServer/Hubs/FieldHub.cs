@@ -1,7 +1,7 @@
-﻿using BattleArenaServer.Effects;
-using BattleArenaServer.Effects.Buffs;
+﻿using BattleArenaServer.Effects.Buffs;
 using BattleArenaServer.Models;
 using BattleArenaServer.Models.Heroes;
+using BattleArenaServer.Models.Lobbies;
 using BattleArenaServer.Models.Obstacles;
 using BattleArenaServer.Services;
 using Microsoft.AspNetCore.SignalR;
@@ -10,25 +10,106 @@ namespace BattleArenaServer.Hubs
 {
     public class FieldHub : Hub
     {
-        TimingService timingService = new TimingService();
-        PickService pickService = new PickService();
-
         public FieldHub()
         {
-            CreateGameField();
-            //CreateHeroList();
-            ShopService.FillItems();
-            pickService.FillHeroesList();
+
         }
 
-        private static void CreateHeroList()
+        public override async Task OnConnectedAsync()
+        {
+            try
+            {
+                Lobby? lobby = GetLobby();
+                if (lobby == null)
+                    return;
+
+                if (lobby.gameData.userTeamBindings.BlueTeam == GetCookieByName("user_id"))
+                    lobby.countUsers++;
+                if (lobby.gameData.userTeamBindings.RedTeam == GetCookieByName("user_id"))
+                    lobby.countUsers++;
+
+                lobby.connectionIds.Add(Context.ConnectionId);
+            }
+            catch { }
+
+            await base.OnConnectedAsync();
+        }
+
+        public override async Task OnDisconnectedAsync(Exception? ex)
+        {
+            try
+            {
+                Lobby? lobby = GetLobby();
+                if (lobby == null)
+                    return;
+
+                if (lobby.gameData.userTeamBindings.BlueTeam == GetCookieByName("user_id"))
+                {
+                    lobby.countUsers--;
+                    if (lobby.isStarted == false)
+                        lobby.gameData.userTeamBindings.BlueTeam = "";
+                }
+                if (lobby.gameData.userTeamBindings.RedTeam == GetCookieByName("user_id"))
+                {
+                    lobby.countUsers--;
+                    if (lobby.isStarted == false)
+                        lobby.gameData.userTeamBindings.RedTeam = "";
+                }
+
+                lobby.connectionIds.Remove(Context.ConnectionId);
+                await this.Clients.Clients(lobby.connectionIds).SendAsync("GetUsersBindings", lobby.gameData.userTeamBindings);
+            }
+            catch { }
+
+            await base.OnDisconnectedAsync(ex);
+        }
+
+        private string GetCookieByName(string key)
+        {
+            var context = Context.GetHttpContext();
+
+            if (context is not null)
+                if (context.Request.Cookies.ContainsKey(key))
+                    if (context.Request.Cookies.TryGetValue(key, out var coockie))
+                        return coockie;
+            return "";
+        }
+
+        private Lobby? GetLobby()
+        {
+            try
+            {
+                Guid.TryParse(GetCookieByName("lobbyId"), out Guid id);
+                return LobbyMaster.lobbies.FirstOrDefault(x => x.Id == id);
+            }
+            catch
+            {
+
+            }
+            return null;
+        }
+
+        private GameData? GetGameData()
+        {
+            try
+            {
+                return GetLobby()?.gameData;
+            }
+            catch
+            {
+
+            }
+            return null;
+        }
+
+        private void CreateHeroList()
         {
             SetRandomCommands();
             // Применяем эффекты постоянных аур сразу
-            AttackService.ContinuousAuraAction();
+            AttackService.ContinuousAuraAction(GetGameData());
         }
 
-        private static void SetRandomCommands()
+        private void SetRandomCommands()
         {
             List<Hero> heroes = new List<Hero>();
             List<int> redCoords = [7, 22, 37];
@@ -62,7 +143,10 @@ namespace BattleArenaServer.Hubs
             heroes.Add(new PlagueDoctorHero(0, ""));
             heroes.Add(new VampireHero(0, ""));
             heroes.Add(new SnowQueenHero(0, ""));
+            heroes.Add(new ArtistHero(0, ""));
             
+
+
 
             string team = "red";
             Random rnd = new Random();
@@ -89,12 +173,13 @@ namespace BattleArenaServer.Hubs
                     blueCoords.Remove(blueCoords[rndCoords]);
                     team = "red";
                 }
-                GameData._hexes[hero.HexId].SetHero(hero);
-                GameData._heroes.Add(hero);
+                GameData? gameData = GetGameData();
+                gameData._hexes[hero.HexId].SetHero(hero);
+                gameData._heroes.Add(hero);
             }
         }
 
-        private static Hero GetRandomHero(List<Hero> heroes)
+        private Hero GetRandomHero(List<Hero> heroes)
         {
             Random rnd = new Random();
             Hero hero = heroes[rnd.Next(0, heroes.Count)];
@@ -103,96 +188,56 @@ namespace BattleArenaServer.Hubs
             return hero;
         }
 
-        private void CreateGameField()
+
+
+
+
+
+
+
+
+
+
+
+
+        public async Task IsGameStarted(int mode)
         {
-            // Создание поля
-            int[] _start = [-1, -3, 4];
-            for (int i = 0; i < 52; i++)
+            int result = -1;
+            Lobby? lobby = GetLobby();
+            if (lobby != null)
             {
-                //Устанавливаем победные очки за контроль гекса
-                int vp = 0;
-                switch (i)
-                {
-                    case 10: case 11: case 17: case 19: case 24: case 27: case 32: case 34: case 40: case 41: vp = 1; break;
-                    case 18: case 25: case 26: case 33: vp = 2; break;
-                    default: vp = 0; break;
-                }
-
-                //Устанавливаем точки респавна для каждой из команд
-                string teamRespawn = "";
-                switch (i)
-                {
-                    case 0: case 7: case 37: case 45: teamRespawn = "red"; break;
-                    case 6: case 14: case 44: case 51: teamRespawn = "blue"; break;
-                    default: teamRespawn = ""; break;
-                }
-
-                //Устанавливаем зоны покупок предметов для команд
-                string teamShop = "";
-                switch (i)
-                {
-                    case 0: case 1: case 7: case 8: case 15: case 22: case 30: case 37: case 38: case 45: case 46: teamShop = "red"; break;
-                    case 5: case 6: case 13: case 14: case 21: case 29: case 36: case 43: case 44: case 50: case 51: teamShop = "blue"; break;
-                    default: teamShop = ""; break;
-                }
-
-                Hex hex = new Hex(_start[0], _start[1], _start[2], i, vp, teamRespawn, teamShop);
-                GameData._hexes.Add(hex);
-
-                //Поскольку мы добавляем гексы слева направо, то при достижении определенных значений, нужно "спуститься" на новую строку
-                switch (i)
-                {
-                    case 6: _start = [-2, -2, 4]; break;
-                    case 14: _start = [-2, -1, 3]; break;
-                    case 21: _start = [-3, 0, 3]; break;
-                    case 29: _start = [-3, 1, 2]; break;
-                    case 36: _start = [-4, 2, 2]; break;
-                    case 44: _start = [-4, 3, 1]; break;
-                    default:
-                        {
-                            _start[0] += Consts.directions[1].COORD[0];
-                            _start[1] += Consts.directions[1].COORD[1];
-                            _start[2] += Consts.directions[1].COORD[2];
-                            break;
-                        }
-                }
+                result = lobby.isStarted ? 1 : 0;
+                if (mode != result)
+                    await Clients.Clients(lobby.connectionIds).SendAsync("TransferTo", result);
+                else
+                    await Clients.Clients(lobby.connectionIds).SendAsync("SetGameMode", result);
+                return;
             }
+            await Clients.Client(Context.ConnectionId).SendAsync("TransferTo", result);
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         public async Task RecreateGame()
         {
-            try
+            Lobby? lobby = GetLobby();
+            if (lobby != null)
             {
-                GameData.ClearAllObjects();
-                GameData.activeTeam = "red";
-                CreateGameField();
-                //CreateHeroList();
-                ShopService.FillItems();
-                timingService = new TimingService();
-                GameData.userTeamBindings.ClearBindings();
-                pickService.FillHeroesList(); // Обновляется список героев для пика
-                await SetActiveHero(GameData.idActiveHero);
-                await GetUsersBindings();
+                try
+                {
+                    lobby.gameData.RecreateGame();
 
-                await this.Clients.All.SendAsync("RecreateGame");
-                //await SendAllInfo();
-            }
-            catch
-            {
-                Console.WriteLine("Error in RecreateGame()");
+                    lobby.isStarted = false;
+                    lobby.countUsers = 0;
+
+                    await SetActiveHero(lobby.gameData.idActiveHero);
+                    await GetUsersBindings();
+
+                    await this.Clients.Clients(lobby.connectionIds).SendAsync("RecreateGame");
+                }
+                catch
+                {
+                    Console.WriteLine("Error in RecreateGame()");
+                }
             }
         }
 
@@ -206,11 +251,12 @@ namespace BattleArenaServer.Hubs
 
         public async Task UpgradeSkill(int cur_pos, int skill)
         {
-            Hero? hero = GameData._hexes.FirstOrDefault(x => x.ID == cur_pos)?.HERO;
+            GameData? gameData = GetGameData();
+            Hero? hero = gameData._hexes.FirstOrDefault(x => x.ID == cur_pos)?.HERO;
             if (hero != null)
             {
                 // Пытаемся прокачать скилл
-                if (hero.SkillList[skill].UpgradeSkill())
+                if (hero.SkillList[skill].UpgradeSkill(gameData))
                 {
                     hero.UpgradePoints--;
                     try {
@@ -223,14 +269,15 @@ namespace BattleArenaServer.Hubs
 
         public async Task StepHero(int cur_pos, int targer_pos)
         {
-            RequestData requestData = new RequestData(cur_pos, targer_pos);
+            GameData? gameData = GetGameData();
+            RequestData requestData = new RequestData(cur_pos, targer_pos, gameData);
             if (requestData.Caster != null)
             {
                 if (requestData.Target == null && requestData.TargetHex != null && requestData.TargetHex.OBSTACLE != null
                     && requestData.TargetHex.OBSTACLE.Name == "AstralPortal")
-                    AttackService.MoveHero(requestData.Caster, requestData.CasterHex, requestData.TargetHex);
+                    AttackService.MoveHero(requestData.Caster, requestData.CasterHex, requestData.TargetHex, gameData);
                 else
-                    requestData.Caster.MoveSkill.Cast(requestData);
+                    requestData.Caster.MoveSkill.Cast(requestData, gameData);
             }
 
             try { 
@@ -241,13 +288,14 @@ namespace BattleArenaServer.Hubs
 
         public async Task SpellCast(int targer_pos, int cur_pos, int skill)
         {
-            RequestData requestData = new RequestData(cur_pos, targer_pos);
+            GameData? gameData = GetGameData();
+            RequestData requestData = new RequestData(cur_pos, targer_pos, gameData);
             if (requestData.Caster != null && requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Silence)) == null)
             {
-                requestData.Caster.beforeSpellCast(requestData.Caster, requestData.Target, requestData.Caster.SkillList[skill]);
+                requestData.Caster.beforeSpellCast(requestData.Caster, requestData.Target, requestData.Caster.SkillList[skill], gameData);
                 // Кастуем))
-                if (requestData.Caster.SkillList[skill].Cast(requestData))
-                    requestData.Caster.afterSpellCast(requestData.Caster, requestData.Target, requestData.Caster.SkillList[skill]);
+                if (requestData.Caster.SkillList[skill].Cast(requestData, gameData))
+                    requestData.Caster.afterSpellCast(requestData.Caster, requestData.Target, requestData.Caster.SkillList[skill], gameData);
 
                 try {
                     await SendAllInfo();
@@ -258,12 +306,13 @@ namespace BattleArenaServer.Hubs
 
         public async Task ItemCast(int targer_pos, int cur_pos, string itemName)
         {
-            RequestData requestData = new RequestData(cur_pos, targer_pos);
+            GameData? gameData = GetGameData();
+            RequestData requestData = new RequestData(cur_pos, targer_pos, gameData);
             if (requestData.Caster != null)
             {
                 Item? item = requestData.Caster.Items.FirstOrDefault(x => x.Name == itemName && x.ItemType == Consts.ItemType.Active);
                 if (item != null)
-                    item.Skill.Cast(requestData);
+                    item.Skill.Cast(requestData, gameData);
                 try
                 {
                     await SendAllInfo();
@@ -274,9 +323,10 @@ namespace BattleArenaServer.Hubs
 
         public async Task AttackHero(int cur_pos, int targer_pos)
         {
-            RequestData requestData = new RequestData(cur_pos, targer_pos);
+            GameData? gameData = GetGameData();
+            RequestData requestData = new RequestData(cur_pos, targer_pos, gameData);
 
-            AttackService.AttackHero(requestData);
+            AttackService.AttackHero(requestData, gameData);
 
             try {
                 await SendAllInfo();
@@ -286,33 +336,49 @@ namespace BattleArenaServer.Hubs
 
         public async Task SendSpellArea(int target, int caster, int spell, string itemName = "")
         {
-            try { 
-                await this.Clients.All.SendAsync("DrawSpellArea", GetSpellArea(target, caster, spell, itemName));
+            Lobby? lobby = GetLobby();
+            if (lobby != null)
+            {
+                try { 
+                    await this.Clients.Clients(lobby.connectionIds).SendAsync("DrawSpellArea", GetSpellArea(target, caster, spell, itemName));
+                }
+                catch { Console.WriteLine("Error in SendSpellArea()"); }
             }
-            catch { Console.WriteLine("Error in SendSpellArea()"); }
         }
 
         public async Task SendRespawnArea(int heroId)
         {
-            try { await this.Clients.All.SendAsync("DrawSpellArea", GetRespawnArea(heroId)); }
-            catch { Console.WriteLine("Error in SendRespawnArea()"); }
+            Lobby? lobby = GetLobby();
+            if (lobby != null)
+            {
+                try { await this.Clients.Clients(lobby.connectionIds).SendAsync("DrawSpellArea", GetRespawnArea(heroId)); }
+                catch { Console.WriteLine("Error in SendRespawnArea()"); }
+            }
         }
 
         public async Task SetActiveHero(int idActiveHero)
         {
-            Hero? hero = GameData._heroes.FirstOrDefault(x => x.Id == idActiveHero);
-            if (hero != null && hero is not SolidObstacle)
-                GameData.idActiveHero = idActiveHero;
+            Lobby? lobby = GetLobby();
+            if (lobby != null)
+            {
+                Hero? hero = lobby.gameData._heroes.FirstOrDefault(x => x.Id == idActiveHero);
+                if (hero != null && hero is not SolidObstacle)
+                    lobby.gameData.idActiveHero = idActiveHero;
 
-            try { await this.Clients.All.SendAsync("GetActiveHero", GameData.idActiveHero); }
-            catch { Console.WriteLine("Error in SetActiveHero()"); }
+                try { await this.Clients.Clients(lobby.connectionIds).SendAsync("GetActiveHero", lobby.gameData.idActiveHero); }
+                catch { Console.WriteLine("Error in SetActiveHero()"); }
+            }
         }
 
         public async Task SendActiveHero()
         {
-            try { 
-                await this.Clients.All.SendAsync("GetActiveHero", timingService.GetActiveHero());
-                await GetShopItems();
+            try {
+                Lobby? lobby = GetLobby();
+                if (lobby != null)
+                {
+                    await this.Clients.Clients(lobby.connectionIds).SendAsync("GetActiveHero", lobby.gameData.timingService.GetActiveHero());
+                    await GetShopItems(lobby);
+                }
             }
             catch { Console.WriteLine("Error in SendActiveHero()"); }
         }
@@ -321,7 +387,7 @@ namespace BattleArenaServer.Hubs
         {
             try
             {
-                timingService.EndTurn();
+                GetGameData().timingService.EndTurn();
                 await GetUsersBindings();
                 await SendAllInfo();
             }
@@ -330,38 +396,59 @@ namespace BattleArenaServer.Hubs
 
         public async Task SendAllInfo()
         {
-            await this.Clients.All.SendAsync("GetField", GameData._hexes);
-            await this.Clients.All.SendAsync("GetVP", GameData.userTeamBindings);
-            await this.Clients.All.SendAsync("GetBanchHeroes", UtilityService.GetBanchHeroes());
-            await GetShopItems();
+            Lobby? lobby = GetLobby();
+            if (lobby != null)
+            {
+                await this.Clients.Clients(lobby.connectionIds).SendAsync("GetField", lobby.gameData._hexes);
+                await this.Clients.Clients(lobby.connectionIds).SendAsync("GetVP", lobby.gameData.userTeamBindings);
+                await this.Clients.Clients(lobby.connectionIds).SendAsync("GetBanchHeroes", UtilityService.GetBanchHeroes(lobby.gameData));
+                await GetShopItems(lobby);
+            }
         }
 
         public async Task BindingUserToTeam(string userId, string team)
         {
+            GameData? gameData = GetGameData();
             if (team == "red")
-                GameData.userTeamBindings.RedTeam = userId;
+                gameData.userTeamBindings.RedTeam = userId;
             else
-                GameData.userTeamBindings.BlueTeam = userId;
+                gameData.userTeamBindings.BlueTeam = userId;
 
-            if (GameData.userTeamBindings.RedTeam != "" && GameData.userTeamBindings.BlueTeam != "") // Выбраны обе команды, можно начинать сражение
-                GameData.userTeamBindings.ActiveTeam = GameData.userTeamBindings.RedTeam;
+            if (gameData.userTeamBindings.RedTeam != "" && gameData.userTeamBindings.BlueTeam != "") // Выбраны обе команды, можно начинать сражение
+                gameData.userTeamBindings.ActiveTeam = gameData.userTeamBindings.RedTeam;
+
+            Lobby? lobby = GetLobby();
+            if (lobby != null)
+            {
+                lobby.countUsers = 0;
+                if (lobby.gameData.userTeamBindings.BlueTeam == GetCookieByName("user_id"))
+                    lobby.countUsers++;
+                if (lobby.gameData.userTeamBindings.RedTeam == GetCookieByName("user_id"))
+                    lobby.countUsers++;
+            }
 
             await GetUsersBindings();
         }
 
         public async Task RespawnHero(int heroId, int hexId)
         {
-            Hero? hero = GameData._heroes.FirstOrDefault(x => x.Id == heroId);
-            Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == hexId && x.IsFree());
+            GameData? gameData = GetGameData();
+            Hero? hero = gameData._heroes.FirstOrDefault(x => x.Id == heroId);
+            Hex? hex = gameData._hexes.FirstOrDefault(x => x.ID == hexId && x.IsFree());
 
             if (hero != null && hex != null && hex.TeamRespawn == hero.Team)
             {
+                if (hero.HP < 0)
+                    hero.HP += 0;
+
+                hero.Respawn(gameData);
+
                 hex.SetHero(hero);
                 hero.HexId = hexId;
                 hero.RespawnTime = 0;
 
                 HasteBuff hasteBuff = new HasteBuff(hero.Id, 0, 1);
-                hero.AddEffect(hasteBuff);
+                hero.AddEffect(hasteBuff, gameData);
             }
 
             await SendAllInfo();
@@ -369,18 +456,23 @@ namespace BattleArenaServer.Hubs
 
         public async Task GetUsersBindings()
         {
-            try {
-                GameData.userTeamBindings.ActiveTeamStr = GameData.activeTeam;
-                await this.Clients.All.SendAsync("GetUsersBindings", GameData.userTeamBindings);
+            Lobby? lobby = GetLobby();
+            if (lobby != null)
+            {
+                try {
+                    GameData? gameData = GetGameData();
+                    gameData.userTeamBindings.ActiveTeamStr = gameData.activeTeam;
+                    await this.Clients.Clients(lobby.connectionIds).SendAsync("GetUsersBindings", gameData.userTeamBindings);
+                }
+                catch { Console.WriteLine("Error in GetUsersBindings()"); }
             }
-            catch { Console.WriteLine("Error in GetUsersBindings()"); }
         }
 
-        public async Task GetShopItems()
+        public async Task GetShopItems(Lobby lobby)
         {
             try
             {
-                await this.Clients.All.SendAsync("SetShopItems", ShopService.GetShopItems());
+                await this.Clients.Clients(lobby.connectionIds).SendAsync("SetShopItems", lobby.gameData.shopService.GetShopItems());
             }
             catch { Console.WriteLine("Error in GetShopItems()"); }
         }
@@ -389,24 +481,25 @@ namespace BattleArenaServer.Hubs
         {
             try
             {
-                Hero? hero = GameData._heroes.FirstOrDefault(h => h.Id == idHero && h.IsMainHero);
+                GameData? gameData = GetGameData();
+                Hero? hero = gameData._heroes.FirstOrDefault(h => h.Id == idHero && h.IsMainHero);
                 if (hero == null)
                     return;
 
                 Item? item;
                 if (hero.Team == "red")
-                    item = GameData._redShop.FirstOrDefault(x => x.Name == itemName);
+                    item = gameData._redShop.FirstOrDefault(x => x.Name == itemName);
                 else
-                    item = GameData._blueShop.FirstOrDefault(x => x.Name == itemName);
+                    item = gameData._blueShop.FirstOrDefault(x => x.Name == itemName);
 
                 if (item == null)
                     return;
 
-                Hex? hex = GameData._hexes.FirstOrDefault(x => x.HERO != null && x.HERO.Id == idHero);
+                Hex? hex = gameData._hexes.FirstOrDefault(x => x.HERO != null && x.HERO.Id == idHero);
                 if (hex == null || hex.TeamShop != hero.Team)
                     return;
 
-                ShopService.BuyItem(hero, item);
+                gameData.shopService.BuyItem(hero, item);
 
                 await SendAllInfo();
             }
@@ -417,7 +510,8 @@ namespace BattleArenaServer.Hubs
         {
             try
             {
-                Hero? hero = GameData._heroes.FirstOrDefault(h => h.Id == idHero);
+                GameData? gameData = GetGameData();
+                Hero? hero = gameData._heroes.FirstOrDefault(h => h.Id == idHero);
                 if (hero == null)
                     return;
 
@@ -426,11 +520,11 @@ namespace BattleArenaServer.Hubs
                 if (item == null)
                     return;
 
-                Hex? hex = GameData._hexes.FirstOrDefault(x => x.HERO != null && x.HERO.Id == idHero);
+                Hex? hex = gameData._hexes.FirstOrDefault(x => x.HERO != null && x.HERO.Id == idHero);
                 if (hex == null || hex.TeamShop != hero.Team)
                     return;
 
-                ShopService.SellItem(hero, item);
+                gameData.shopService.SellItem(hero, item);
 
                 await SendAllInfo();
             }
@@ -439,68 +533,113 @@ namespace BattleArenaServer.Hubs
 
         public async Task GetHeroList()
         {
-            try
+            Lobby? lobby = GetLobby();
+            if (lobby != null)
             {
-                await this.Clients.All.SendAsync("DrawPickedHeroes", pickService.GetHeroes(), pickService.pickBanTurn);
+                try
+                {
+                    await this.Clients.Clients(lobby.connectionIds).SendAsync("DrawPickedHeroes", lobby.gameData.pickService.GetHeroes(), lobby.gameData.pickService.pickBanTurn);
+                }
+                catch { Console.WriteLine("Error in GetHeroList()"); }
             }
-            catch { Console.WriteLine("Error in GetHeroList()"); }
         }
 
         public async Task BanHero(string heroName)
         {
-            try
+            Lobby? lobby = GetLobby();
+            if (lobby != null)
             {
-                pickService.BanHero(heroName);
-                await this.Clients.All.SendAsync("DrawPickedHeroes", pickService.GetHeroes(), pickService.pickBanTurn);
-                await GetUsersBindings();
+                try
+                {
+                    lobby.gameData.pickService.BanHero(heroName);
+                    await this.Clients.Clients(lobby.connectionIds).SendAsync("DrawPickedHeroes", lobby.gameData.pickService.GetHeroes(), lobby.gameData.pickService.pickBanTurn);
+                    await GetUsersBindings();
+                }
+                catch { Console.WriteLine("Error in BanHero()"); }
             }
-            catch { Console.WriteLine("Error in BanHero()"); }
         }
 
         public async Task PickHero(string heroName)
         {
-            try
+            Lobby? lobby = GetLobby();
+            if (lobby != null)
             {
-                pickService.PickHero(heroName);
-                await this.Clients.All.SendAsync("DrawPickedHeroes", pickService.GetHeroes(), pickService.pickBanTurn);
-                await GetUsersBindings();
+                try
+                {
+                    lobby.gameData.pickService.PickHero(heroName);
+                    await this.Clients.Clients(lobby.connectionIds).SendAsync("DrawPickedHeroes", lobby.gameData.pickService.GetHeroes(), lobby.gameData.pickService.pickBanTurn);
+                    await GetUsersBindings();
+                }
+                catch { Console.WriteLine("Error in PickHero()"); }
             }
-            catch { Console.WriteLine("Error in PickHero()"); }
         }
 
         public async Task BeginBattle()
         {
-            try
+            Lobby? lobby = GetLobby();
+            if (lobby != null)
             {
-                if (GameData._heroes.Count() == 6)
+                try
                 {
-                    await this.Clients.All.SendAsync("BeginBattle");
-                    await GetUsersBindings();
+                    if (lobby.gameData._heroes.Count() == 6)
+                    {
+                        lobby.isStarted = true;
+
+                        await this.Clients.Clients(lobby.connectionIds).SendAsync("BeginBattle");
+                        await GetUsersBindings();
+                    }
                 }
+                catch { Console.WriteLine("Error in BeginBattle()"); }
             }
-            catch { Console.WriteLine("Error in BeginBattle()"); }
         }
 
         public async Task BeginRandomBattle()
         {
-            try
+            Lobby? lobby = GetLobby();
+            if (lobby != null)
             {
-                CreateHeroList();
-                foreach (Hero hero in GameData._heroes.Where(x => x.Team == "blue"))
+                try
                 {
-                    HasteBuff hasteBuff = new HasteBuff(hero.Id, 0, 1);
-                    hero.AddEffect(hasteBuff);
-                }
+                    CreateHeroList();
+                    foreach (Hero hero in lobby.gameData._heroes.Where(x => x.Team == "blue"))
+                    {
+                        HasteBuff hasteBuff = new HasteBuff(hero.Id, 0, 1);
+                        hero.AddEffect(hasteBuff, lobby.gameData);
+                    }
 
-                await this.Clients.All.SendAsync("BeginBattle");
-                await GetUsersBindings();
+                    lobby.isStarted = true;
+
+                    lobby.gameData.activeTeam = "red";
+
+                    await this.Clients.Clients(lobby.connectionIds).SendAsync("BeginBattle");
+                    await GetUsersBindings();
+                }
+                catch { Console.WriteLine("Error in BeginBattle()"); }
             }
-            catch { Console.WriteLine("Error in BeginBattle()"); }
+        }
+
+        public async Task SendChatMessage(string message)
+        {
+            Lobby? lobby = GetLobby();
+            if (lobby != null)
+            {
+                try
+                {
+                    if (message != "")
+                    {
+                        ChatMessage chatMessage = new ChatMessage(GetCookieByName("user_id"), GetCookieByName("nickname"), message);
+                        lobby.gameData.messages.Add(chatMessage);
+                    }
+                    await this.Clients.Clients(lobby.connectionIds).SendAsync("ReceiveChatMessages", lobby.gameData.messages);
+                }
+                catch { Console.WriteLine("Error in SendChatMessage()"); }
+            }
         }
 
         private int[] GetSpellArea(int target, int caster, int spell, string itemName = "")
         {
-            Hero? casterHero = GameData._hexes[caster].HERO;
+            GameData? gameData = GetGameData();
+            Hero? casterHero = gameData._hexes[caster].HERO;
             Skill skill;
             List<int> spellArea = new List<int>();
 
@@ -516,91 +655,91 @@ namespace BattleArenaServer.Hubs
             if (casterHero.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Blind)) != null && spellRange > 1)
                 spellRange = 1;
 
-            int dist = GameData._hexes[target].Distance(GameData._hexes[caster]);
+            int dist = gameData._hexes[target].Distance(gameData._hexes[caster]);
 
             switch (skill.area)
             {
                 case Consts.SpellArea.AllyTarget:
                     if (dist <= spellRange)
                     {
-                        if (GameData._hexes[target].HERO != null && GameData._hexes[target].HERO.Team == casterHero.Team)
+                        if (gameData._hexes[target].HERO != null && gameData._hexes[target].HERO.Team == casterHero.Team)
                             spellArea.Add(target);
                     }
                     break;
                 case Consts.SpellArea.EnemyTarget:
                     if (dist <= spellRange)
                     {
-                        if (GameData._hexes[target].HERO != null && GameData._hexes[target].HERO.Team != casterHero.Team &&
-                            GameData._hexes[target].HERO.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.NonTargetable)) == null)
+                        if (gameData._hexes[target].HERO != null && gameData._hexes[target].HERO.Team != casterHero.Team &&
+                            gameData._hexes[target].HERO.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.NonTargetable)) == null)
                             spellArea.Add(target);
                     }
                     break;
                 case Consts.SpellArea.FriendTarget:
                     if (dist <= spellRange && dist > 0)
                     {
-                        if (GameData._hexes[target].HERO != null && GameData._hexes[target].HERO.Team == casterHero.Team)
+                        if (gameData._hexes[target].HERO != null && gameData._hexes[target].HERO.Team == casterHero.Team)
                             spellArea.Add(target);
                     }
                     break;
                 case Consts.SpellArea.Radius:
                     if (dist <= spellRange)
                     {
-                        foreach (var hex in UtilityService.GetHexesRadius(GameData._hexes[target], skill.radius))
+                        foreach (var hex in UtilityService.GetHexesRadius(gameData._hexes[target], skill.radius, gameData))
                             spellArea.Add(hex.ID);
                     }
                     break;
                 case Consts.SpellArea.Line:
-                    foreach (var hex in UtilityService.GetHexesOneLine(GameData._hexes[caster], GameData._hexes[target], skill.radius))
+                    foreach (var hex in UtilityService.GetHexesOneLine(gameData._hexes[caster], gameData._hexes[target], gameData, skill.radius))
                         spellArea.Add(hex.ID);
                     break;
                 case Consts.SpellArea.HeroTarget:
                     if (dist <= spellRange)
                     {
-                        if (GameData._hexes[target].HERO != null &&
-                            (GameData._hexes[target].HERO.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.NonTargetable)) == null || GameData._hexes[target].HERO.Team == casterHero.Team))
+                        if (gameData._hexes[target].HERO != null &&
+                            (gameData._hexes[target].HERO.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.NonTargetable)) == null || gameData._hexes[target].HERO.Team == casterHero.Team))
                             spellArea.Add(target);
                     }
                     break;
                 case Consts.SpellArea.HeroNotSelfTarget:
                     if (dist <= spellRange)
                     {
-                        if (GameData._hexes[target].HERO != null && GameData._hexes[target].HERO.Id != casterHero.Id &&
-                            (GameData._hexes[target].HERO.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.NonTargetable)) == null || GameData._hexes[target].HERO.Team == casterHero.Team))
+                        if (gameData._hexes[target].HERO != null && gameData._hexes[target].HERO.Id != casterHero.Id &&
+                            (gameData._hexes[target].HERO.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.NonTargetable)) == null || gameData._hexes[target].HERO.Team == casterHero.Team))
                             spellArea.Add(target);
                     }
                     break;
                 case Consts.SpellArea.Conus:
                     if (dist <= spellRange)
                     {
-                        foreach (var hex in UtilityService.GetHexesCone(GameData._hexes[caster], GameData._hexes[target], skill.radius))
+                        foreach (var hex in UtilityService.GetHexesCone(gameData._hexes[caster], gameData._hexes[target], skill.radius, gameData))
                             spellArea.Add(hex.ID);
                     }
                     break;
                 case Consts.SpellArea.SmallConus:
                     if (dist <= spellRange)
                     {
-                        foreach (var hex in UtilityService.GetHexesSmallCone(GameData._hexes[caster], GameData._hexes[target], skill.radius))
+                        foreach (var hex in UtilityService.GetHexesSmallCone(gameData._hexes[caster], gameData._hexes[target], skill.radius, gameData))
                             spellArea.Add(hex.ID);
                     }
                     break;
                 case Consts.SpellArea.WideLine:
                     if (dist <= spellRange)
                     {
-                        foreach (var hex in UtilityService.GetHexesWideLine(GameData._hexes[caster], GameData._hexes[target], skill.radius))
+                        foreach (var hex in UtilityService.GetHexesWideLine(gameData._hexes[caster], gameData._hexes[target], skill.radius, gameData))
                             spellArea.Add(hex.ID);
                     }
                     break;
                 case Consts.SpellArea.Circle:
                     if (dist <= spellRange)
                     {
-                        foreach (var hex in UtilityService.GetHexesCircle(GameData._hexes[caster], GameData._hexes[target], skill.radius))
+                        foreach (var hex in UtilityService.GetHexesCircle(gameData._hexes[caster], gameData._hexes[target], skill.radius, gameData))
                             spellArea.Add(hex.ID);
                     }
                     break;
                 case Consts.SpellArea.Lines:
                     if (dist <= spellRange)
                     {
-                        foreach (var hex in UtilityService.GetHexesLines(GameData._hexes[caster], skill.radius))
+                        foreach (var hex in UtilityService.GetHexesLines(gameData._hexes[caster], gameData, skill.radius))
                             spellArea.Add(hex.ID);
                     }
                     break;
@@ -611,13 +750,14 @@ namespace BattleArenaServer.Hubs
 
         private int[] GetRespawnArea(int heroId)
         {
-            Hero? hero = GameData._heroes.FirstOrDefault(x => x.Id == heroId);
+            GameData? gameData = GetGameData();
+            Hero? hero = gameData._heroes.FirstOrDefault(x => x.Id == heroId);
             List<int> respawnArea = new List<int>();
             List<Hex> respawnAreaHexes = new List<Hex>();
 
             if (hero != null)
             {
-                respawnAreaHexes = GameData._hexes.FindAll(x => x.TeamRespawn == hero.Team);
+                respawnAreaHexes = gameData._hexes.FindAll(x => x.TeamRespawn == hero.Team);
                 foreach (var hex in respawnAreaHexes)
                     respawnArea.Add(hex.ID);
             }

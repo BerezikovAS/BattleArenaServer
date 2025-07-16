@@ -13,16 +13,16 @@ namespace BattleArenaServer.Skills.InvokerSkills
             hero.afterAttack += AfterAttackDelegate;
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
@@ -36,7 +36,7 @@ namespace BattleArenaServer.Skills.InvokerSkills
             return false;
         }
 
-        private bool AfterAttackDelegate(Hero attacker, Hero? defender, int dmg, Consts.DamageType dmgType)
+        private bool AfterAttackDelegate(Hero attacker, Hero? defender, int dmg, Consts.DamageType dmgType, GameData gameData)
         {
             foreach (var spell in attacker.SkillList)
             {

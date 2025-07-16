@@ -24,17 +24,17 @@ namespace BattleArenaServer.Skills.DwarfSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null)
             {
                 TauntDebuff tauntDebuff = new TauntDebuff(requestData.Caster.Id, armor, 2, requestData.Caster.Name, upgraded);
-                requestData.Target.AddEffect(tauntDebuff);
+                requestData.Target.AddEffect(tauntDebuff, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -42,7 +42,7 @@ namespace BattleArenaServer.Skills.DwarfSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

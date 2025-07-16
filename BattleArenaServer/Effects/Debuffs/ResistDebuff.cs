@@ -14,12 +14,12 @@ namespace BattleArenaServer.Effects.Debuffs
             description = "Сопротивление уменьшено на " + value;
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             _hero.Resist -= value;
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             _hero.Resist += value;
         }

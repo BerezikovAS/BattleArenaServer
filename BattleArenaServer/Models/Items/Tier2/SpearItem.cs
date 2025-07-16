@@ -13,12 +13,12 @@
             SellCost = 12;
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             hero.armorPiercing += ArmorPiercingDelegate;
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
             hero.armorPiercing -= ArmorPiercingDelegate;
         }

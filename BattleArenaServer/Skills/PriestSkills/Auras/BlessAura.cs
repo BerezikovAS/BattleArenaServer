@@ -15,7 +15,7 @@ namespace BattleArenaServer.Skills.PriestSkills.Auras
             this.extraHeal = extraHeal;
         }
 
-        public override void ApplyEffect(Hero source, Hero target)
+        public override void ApplyEffect(Hero source, Hero target, GameData gameData)
         {
             if (source.Team == target.Team && target.type != Consts.HeroType.Obstacle)
             {
@@ -30,7 +30,7 @@ namespace BattleArenaServer.Skills.PriestSkills.Auras
             }
         }
 
-        public override void CancelEffect(Hero source)
+        public override void CancelEffect(Hero source, GameData gameData)
         {
 
         }

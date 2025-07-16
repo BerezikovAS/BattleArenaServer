@@ -18,13 +18,13 @@ namespace BattleArenaServer.Models.Items.Tier3
             SellCost = 27;
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             hero.resistPiercing += ResistPiercingDelegate;
             hero.afterSpellCast += AfterSpellCast;
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
             hero.resistPiercing -= ResistPiercingDelegate;
             hero.afterSpellCast -= AfterSpellCast;
@@ -35,15 +35,15 @@ namespace BattleArenaServer.Models.Items.Tier3
             return resistPiercing;
         }
 
-        private void AfterSpellCast(Hero caster, Hero? target, Skill skill)
+        private void AfterSpellCast(Hero caster, Hero? target, Skill skill, GameData gameData)
         {
-            Hex? casterHex = GameData._hexes.FirstOrDefault(x => x.HERO != null && x.HERO.Id == caster.Id);
+            Hex? casterHex = gameData._hexes.FirstOrDefault(x => x.HERO != null && x.HERO.Id == caster.Id);
             if (casterHex != null)
             {
-                foreach (var hex in UtilityService.GetHexesRadius(casterHex, 1))
+                foreach (var hex in UtilityService.GetHexesRadius(casterHex, 1, gameData))
                 {
                     if (hex.HERO != null && hex.HERO.Team != caster.Team)
-                        AttackService.SetDamage(caster, hex.HERO, dmg, Consts.DamageType.Magic);
+                        AttackService.SetDamage(caster, hex.HERO, dmg, Consts.DamageType.Magic, gameData);
                 }
             }
         }

@@ -14,7 +14,7 @@
             SellCost = 27;
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             if (hero.AttackRadius > 1)
             {
@@ -23,7 +23,7 @@
             }
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
             if (hero.AttackRadius > 1)
             {
@@ -32,13 +32,13 @@
             }
         }
 
-        private int AttackDelegate(Hero attacker, Hero? defender)
+        private int AttackDelegate(Hero attacker, Hero? defender, GameData gameData)
         {
             if (defender == null)
                 return 0;
 
-            Hex? attackerHex = GameData._hexes.FirstOrDefault(x => x.HERO != null && x.HERO.Id == attacker.Id);
-            Hex? defenderHex = GameData._hexes.FirstOrDefault(x => x.HERO != null && x.HERO.Id == defender.Id);
+            Hex? attackerHex = gameData._hexes.FirstOrDefault(x => x.HERO != null && x.HERO.Id == attacker.Id);
+            Hex? defenderHex = gameData._hexes.FirstOrDefault(x => x.HERO != null && x.HERO.Id == defender.Id);
 
             if (attackerHex != null && defenderHex != null)
             {

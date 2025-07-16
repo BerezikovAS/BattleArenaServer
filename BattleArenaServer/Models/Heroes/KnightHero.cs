@@ -18,8 +18,10 @@ namespace BattleArenaServer.Models.Heroes
             SkillList[4] = new RetributionSkill();
         }
 
-        public override void Respawn()
+        public override void Respawn(GameData? gameData = null)
         {
+            base.Respawn(gameData);
+
             MaxHP = HP = 1000;
             Armor = 6;
             Resist = 3;
@@ -27,9 +29,9 @@ namespace BattleArenaServer.Models.Heroes
             AP = 4;
 
             AttackRadius = 1;
-            Dmg = 110;
+            Dmg = 105;
 
-            base.Respawn();
+            ApplyItems(gameData);
         }
     }
 }

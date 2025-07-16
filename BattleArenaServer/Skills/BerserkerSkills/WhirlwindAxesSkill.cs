@@ -26,19 +26,19 @@ namespace BattleArenaServer.Skills.BerserkerSkills
 
         public new ISkillCastRequest request => new NonTargerAoECastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null)
             {
-                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
+                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius, gameData))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType, gameData);
                 }
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -46,7 +46,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

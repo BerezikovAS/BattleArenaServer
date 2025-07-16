@@ -4,7 +4,7 @@ namespace BattleArenaServer.Models.Items.Tier4
 {
     public class CauldronItem : Item
     {
-        int dmg = 70;
+        int dmg = 80;
         int percentLoss = 10;
         Aura aura;
         public CauldronItem()
@@ -18,12 +18,12 @@ namespace BattleArenaServer.Models.Items.Tier4
             aura = new CauldronAura(dmg, percentLoss);
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             hero.AuraList.Add(aura);
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
             hero.AuraList.Remove(aura);
         }

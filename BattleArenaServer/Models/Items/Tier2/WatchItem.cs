@@ -5,12 +5,14 @@ namespace BattleArenaServer.Models.Items.Tier2
 {
     public class WatchItem : Item
     {
+        int resistPiercing = 1;
         public WatchItem()
         {
             Name = "Watch";
             Amount = 1;
             Cost = 25;
-            Description = $"Уменьшает время перезарядки всех способностей на 1 и уходит на перезаярку равную кол-ву затронутых способностей + 1.";
+            Description = $"Атаки и способности игнорируют {resistPiercing} сопротивления.\n" + 
+                $"Уменьшает время перезарядки всех способностей на 1 и уходит на перезаярку равную кол-ву затронутых способностей + 1.";
             Level = 2;
             SellCost = 12;
 
@@ -18,9 +20,24 @@ namespace BattleArenaServer.Models.Items.Tier2
             Skill = new WatchSkill();
         }
 
-        public override void CastItem(RequestData requestData)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
-            Skill.Cast(requestData);
+            hero.resistPiercing += ResistPiercingDelegate;
+        }
+
+        public override void RemoveEffect(Hero hero, GameData gameData)
+        {
+            hero.resistPiercing -= ResistPiercingDelegate;
+        }
+
+        public override void CastItem(RequestData requestData, GameData gameData)
+        {
+            Skill.Cast(requestData, gameData);
+        }
+
+        private int ResistPiercingDelegate(Hero attacker, Hero defender)
+        {
+            return resistPiercing;
         }
     }
 
@@ -39,9 +56,9 @@ namespace BattleArenaServer.Models.Items.Tier2
 
         public new ISkillCastRequest request => new NontargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (request.startRequest(requestData, this))
+            if (request.startRequest(requestData, this, gameData))
             {
                 if (requestData.Caster != null)
                 {

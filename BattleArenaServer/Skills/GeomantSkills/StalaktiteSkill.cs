@@ -29,37 +29,37 @@ namespace BattleArenaServer.Skills.GeomantSkills
 
         public new ISkillCastRequest request => new HexTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null && requestData.TargetHex.OBSTACLE == null)
             {
                 //Ставим столоктит
-                int Id = GameData._heroes.Max(x => x.Id) + 1;
+                int Id = gameData._heroes.Max(x => x.Id) + 1;
                 StalaktiteObstacle stalaktiteObstacle = new StalaktiteObstacle(Id, requestData.Caster.Id, requestData.TargetHex.ID, stalaktiteHP, requestData.Caster.Team, lifeTime);
                 requestData.TargetHex.SetHero(stalaktiteObstacle);
-                GameData._solidObstacles.Add(stalaktiteObstacle);
+                gameData._solidObstacles.Add(stalaktiteObstacle);
 
                 //Наносим урон врагам вокруг него
-                foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, 1))
+                foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, 1, gameData))
                 {
                     if (hex.HERO != null && hex.HERO.Team != requestData.Caster.Team)
-                        AttackService.SetDamage(requestData.Caster, hex.HERO, dmg, dmgType);
+                        AttackService.SetDamage(requestData.Caster, hex.HERO, dmg, dmgType, gameData);
                 }
 
                 //Обновим ауры
-                AttackService.ContinuousAuraAction();
+                AttackService.ContinuousAuraAction(gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

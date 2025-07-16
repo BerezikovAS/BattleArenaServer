@@ -17,8 +17,10 @@ namespace BattleArenaServer.Models.Heroes
             SkillList[4] = new ShadowTwinSkill();
         }
 
-        public override void Respawn()
+        public override void Respawn(GameData? gameData = null)
         {
+            base.Respawn(gameData);
+
             MaxHP = HP = 900;
             Armor = 5;
             Resist = 3;
@@ -28,7 +30,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 95;
 
-            base.Respawn();
+            ApplyItems(gameData);
         }
     }
 }

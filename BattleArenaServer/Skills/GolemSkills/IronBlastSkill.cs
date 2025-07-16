@@ -28,23 +28,23 @@ namespace BattleArenaServer.Skills.GolemSkills
 
         public new ISkillCastRequest request => new NonTargerAoECastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (request.startRequest(requestData, this))
+            if (request.startRequest(requestData, this, gameData))
             {
                 if (requestData.Caster != null && requestData.CasterHex != null)
                 {
                     int totalDmg = dmg + requestData.Caster.Armor * extraDmg;
                     requestData.Caster.Armor -= armorLoss;
 
-                    foreach (var n in UtilityService.GetHexesRadius(requestData.CasterHex, radius))
+                    foreach (var n in UtilityService.GetHexesRadius(requestData.CasterHex, radius, gameData))
                     {
                         if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                         {
-                            AttackService.SetDamage(requestData.Caster, n.HERO, totalDmg, dmgType);
+                            AttackService.SetDamage(requestData.Caster, n.HERO, totalDmg, dmgType, gameData);
                         }
                     }
-                    requestData.Caster.SpendAP(requireAP);
+                    requestData.Caster.SpendAP(requireAP, gameData);
                     coolDownNow = coolDown;
                     return true;
                 }
@@ -52,7 +52,7 @@ namespace BattleArenaServer.Skills.GolemSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

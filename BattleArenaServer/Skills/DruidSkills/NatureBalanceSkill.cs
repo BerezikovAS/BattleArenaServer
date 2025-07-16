@@ -21,7 +21,7 @@ namespace BattleArenaServer.Skills.DruidSkills
             stats = new SkillStats(coolDown, requireAP, range, radius);
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             if (requestData.Target != null && requestData.Caster != null)
             {
@@ -30,7 +30,7 @@ namespace BattleArenaServer.Skills.DruidSkills
                 else
                     request = new AllyTargetCastRequest();
 
-                if (!request.startRequest(requestData, this) || requestData.Target.IsMainHero == false)
+                if (!request.startRequest(requestData, this, gameData) || requestData.Target.IsMainHero == false)
                     return false;
 
                 double totalHP = requestData.Target.HP + requestData.Caster.HP;
@@ -46,14 +46,14 @@ namespace BattleArenaServer.Skills.DruidSkills
                     requestData.Target.Heal(heal);
                 }
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

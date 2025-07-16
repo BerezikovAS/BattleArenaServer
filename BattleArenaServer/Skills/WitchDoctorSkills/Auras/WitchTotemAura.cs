@@ -16,26 +16,26 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills.Auras
             this.baseDmg = baseDmg;
         }
 
-        public override void ApplyEffect(Hero source, Hero target)
+        public override void ApplyEffect(Hero source, Hero target, GameData gameData)
         {
             if (source.Team != target.Team && target.type != Consts.HeroType.Obstacle)
             {
                 Effect? totemCharges = source.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.TotemCharge));
                 if (totemCharges != null)
                 {
-                    totemCharges.ApplyEffect(target);
-                    AttackService.SetDamage(source, target, baseDmg, Consts.DamageType.Pure);
+                    totemCharges.ApplyEffect(target, gameData);
+                    AttackService.SetDamage(source, target, baseDmg, Consts.DamageType.Pure, gameData);
                 }
                 else
                 {
                     TotemChargeUnique totemChargeUnique = new TotemChargeUnique(source.Id, 1, 99);
-                    source.AddEffect(totemChargeUnique);
-                    AttackService.SetDamage(source, target, baseDmg, Consts.DamageType.Pure);
+                    source.AddEffect(totemChargeUnique, gameData);
+                    AttackService.SetDamage(source, target, baseDmg, Consts.DamageType.Pure, gameData);
                 }
             }
         }
 
-        public override void CancelEffect(Hero source)
+        public override void CancelEffect(Hero source, GameData gameData)
         {
 
         }

@@ -4,12 +4,12 @@ namespace BattleArenaServer.Services
 {
     public static class UtilityService
     {
-        public static List<Hex> GetHexesRadius(Hex targetHex, int radius)
+        public static List<Hex> GetHexesRadius(Hex targetHex, int radius, GameData gameData)
         {
             List<Hex> hexesRadius = new List<Hex>();
             if (targetHex != null)
             {
-                foreach (var n in GameData._hexes)
+                foreach (var n in gameData._hexes)
                 {
                     if (n.Distance(targetHex) <= radius)
                         hexesRadius.Add(n);
@@ -18,13 +18,13 @@ namespace BattleArenaServer.Services
             return hexesRadius;
         }
 
-        public static List<Hex> GetHexesCircle(Hex casterHex, Hex targetHex, int radius)
+        public static List<Hex> GetHexesCircle(Hex casterHex, Hex targetHex, int radius, GameData gameData)
         {
             List<Hex> hexesRadius = new List<Hex>();
             if (casterHex != null && targetHex != null && casterHex.Distance(targetHex) <= radius)
             {
                 int dist = casterHex.Distance(targetHex);
-                foreach (var n in GameData._hexes)
+                foreach (var n in gameData._hexes)
                 {
                     if (n.Distance(casterHex) == dist)
                         hexesRadius.Add(n);
@@ -33,12 +33,12 @@ namespace BattleArenaServer.Services
             return hexesRadius;
         }
 
-        public static List<Hex> GetHexesLines(Hex casterHex, int _radius = 100)
+        public static List<Hex> GetHexesLines(Hex casterHex, GameData gameData, int _radius = 100)
         {
             List<Hex> hexesLines = new List<Hex>();
             if (casterHex != null)
             {
-                foreach (var n in GameData._hexes)
+                foreach (var n in gameData._hexes)
                 {
                     if (n.Distance(casterHex) <= _radius & IsOnLine(casterHex, n))
                         hexesLines.Add(n);
@@ -47,7 +47,7 @@ namespace BattleArenaServer.Services
             return hexesLines;
         }
 
-        public static List<Hex> GetHexesCone(Hex caster, Hex target, int radius)
+        public static List<Hex> GetHexesCone(Hex caster, Hex target, int radius, GameData gameData)
         {
             List<Hex> hexesCone = new List<Hex>();
 
@@ -73,27 +73,27 @@ namespace BattleArenaServer.Services
                 for (int i = 1; i <= radius; i++)
                 {
                     int[] helper = AddDirection(caster.COORD, dirRight.COORD, i);
-                    Hex? hexHelper = GameData._hexes.FirstOrDefault(x => x.IsThisCoord(helper));
+                    Hex? hexHelper = gameData._hexes.FirstOrDefault(x => x.IsThisCoord(helper));
                     if (hexHelper != null)
                         hexesCone.Add(hexHelper);
 
                     //клоквайсы могут не попадать в поле, из-за чего становятся нуллами!!!!
                     int[] helper1 = AddDirection(caster.COORD, dirLeft.COORD, i);
-                    Hex? clocwise1 = GameData._hexes.FirstOrDefault(x => x.IsThisCoord(helper1));
+                    Hex? clocwise1 = gameData._hexes.FirstOrDefault(x => x.IsThisCoord(helper1));
                     if (clocwise1 != null)
                         hexesCone.Add(clocwise1);
 
                     int[] helper2 = AddDirection(caster.COORD, dirFront.COORD, i);
-                    Hex? clocwise2 = GameData._hexes.FirstOrDefault(x => x.IsThisCoord(helper2));
+                    Hex? clocwise2 = gameData._hexes.FirstOrDefault(x => x.IsThisCoord(helper2));
                     if (clocwise2 != null)
                         hexesCone.Add(clocwise2);
 
                     for (int j = 1; j < i; j++)
                     {
-                        Hex? h1 = GameData._hexes.FirstOrDefault(x => x.IsThisCoord(AddDirection(helper1, dirClockwise1.COORD, j)));
+                        Hex? h1 = gameData._hexes.FirstOrDefault(x => x.IsThisCoord(AddDirection(helper1, dirClockwise1.COORD, j)));
                         if (h1 != null)
                             hexesCone.Add(h1);
-                        Hex? h2 = GameData._hexes.FirstOrDefault(x => x.IsThisCoord(AddDirection(helper2, dirClockwise2.COORD, j)));
+                        Hex? h2 = gameData._hexes.FirstOrDefault(x => x.IsThisCoord(AddDirection(helper2, dirClockwise2.COORD, j)));
                         if (h2 != null)
                             hexesCone.Add(h2);
                     }
@@ -103,7 +103,7 @@ namespace BattleArenaServer.Services
             return hexesCone;
         }
 
-        public static List<Hex> GetHexesSmallCone(Hex caster, Hex target, int radius)
+        public static List<Hex> GetHexesSmallCone(Hex caster, Hex target, int radius, GameData gameData)
         {
             List<Hex> hexesCone = new List<Hex>();
 
@@ -123,20 +123,20 @@ namespace BattleArenaServer.Services
                 for (int i = 1; i <= radius; i++)
                 {
                     int[] helper = AddDirection(caster.COORD, dirRight.COORD, i);
-                    Hex? hexHelper = GameData._hexes.FirstOrDefault(x => x.IsThisCoord(helper));
+                    Hex? hexHelper = gameData._hexes.FirstOrDefault(x => x.IsThisCoord(helper));
                     if (hexHelper != null)
                         hexesCone.Add(hexHelper);
 
                     //клоквайсы могут не попадать в поле, из-за чего становятся нуллами!!!!
 
                     int[] helper2 = AddDirection(caster.COORD, dirFront.COORD, i);
-                    Hex? clocwise2 = GameData._hexes.FirstOrDefault(x => x.IsThisCoord(helper2));
+                    Hex? clocwise2 = gameData._hexes.FirstOrDefault(x => x.IsThisCoord(helper2));
                     if (clocwise2 != null)
                         hexesCone.Add(clocwise2);
 
                     for (int j = 1; j < i; j++)
                     {
-                        Hex? h2 = GameData._hexes.FirstOrDefault(x => x.IsThisCoord(AddDirection(helper2, dirClockwise2.COORD, j)));
+                        Hex? h2 = gameData._hexes.FirstOrDefault(x => x.IsThisCoord(AddDirection(helper2, dirClockwise2.COORD, j)));
                         if (h2 != null)
                             hexesCone.Add(h2);
                     }
@@ -146,7 +146,7 @@ namespace BattleArenaServer.Services
             return hexesCone;
         }
 
-        public static List<Hex> GetHexesWideLine(Hex caster, Hex target, int radius)
+        public static List<Hex> GetHexesWideLine(Hex caster, Hex target, int radius, GameData gameData)
         {
             List<Hex> hexesLines = new List<Hex>();
             if (caster != null && target != null)
@@ -156,11 +156,11 @@ namespace BattleArenaServer.Services
                     Hex direction = GetDirection(caster, target);
 
                     //Находим рядомстоящий гекс по прямой и соседние от нас и него. Это будут начала боковых линий
-                    Hex? frontHex = GetOneHexOnDirection(caster, target, 1);
+                    Hex? frontHex = GetOneHexOnDirection(caster, target, 1, gameData);
                     if (frontHex == null)
                         return hexesLines;
 
-                    List<Hex> adjustHexes = GameData._hexes.FindAll(x => x.Distance(frontHex) == 1 && x.Distance(caster) == 1);
+                    List<Hex> adjustHexes = gameData._hexes.FindAll(x => x.Distance(frontHex) == 1 && x.Distance(caster) == 1);
                     adjustHexes.Add(frontHex);
 
                     foreach (Hex hex in adjustHexes)
@@ -170,7 +170,7 @@ namespace BattleArenaServer.Services
 
                         while (counter < radius && !endOfField)
                         {
-                            Hex? findHex = GameData._hexes.FirstOrDefault(x => x.COORD[0] == hex.COORD[0] + direction.COORD[0] * counter
+                            Hex? findHex = gameData._hexes.FirstOrDefault(x => x.COORD[0] == hex.COORD[0] + direction.COORD[0] * counter
                                 & x.COORD[1] == hex.COORD[1] + direction.COORD[1] * counter
                                 & x.COORD[2] == hex.COORD[2] + direction.COORD[2] * counter);
                             if (findHex != null)
@@ -185,11 +185,11 @@ namespace BattleArenaServer.Services
             return hexesLines;
         }
 
-        public static Hex? GetRandomAdjacentHex(Hex targetHex)
+        public static Hex? GetRandomAdjacentHex(Hex targetHex, GameData gameData)
         {
             List<Hex> freeHexes = new List<Hex>();
 
-            foreach (Hex hex in GetHexesRadius(targetHex, 1))
+            foreach (Hex hex in GetHexesRadius(targetHex, 1, gameData))
             {
                 if (hex.IsFree())
                     freeHexes.Add(hex);
@@ -201,7 +201,7 @@ namespace BattleArenaServer.Services
             return freeHexes[rnd.Next(0, freeHexes.Count)];
         }
 
-        public static List<Hex> GetHexesOneLine(Hex caster, Hex target, int radius = 100)
+        public static List<Hex> GetHexesOneLine(Hex caster, Hex target, GameData gameData, int radius = 100)
         {
             List<Hex> hexesLines = new List<Hex>();
             if (caster != null && target != null)
@@ -214,7 +214,7 @@ namespace BattleArenaServer.Services
 
                     while (hexesLines.Count < radius && !endOfField)
                     {
-                        Hex? findHex = GameData._hexes.FirstOrDefault(x => x.COORD[0] == caster.COORD[0] + direction.COORD[0] * counter
+                        Hex? findHex = gameData._hexes.FirstOrDefault(x => x.COORD[0] == caster.COORD[0] + direction.COORD[0] * counter
                             & x.COORD[1] == caster.COORD[1] + direction.COORD[1] * counter
                             & x.COORD[2] == caster.COORD[2] + direction.COORD[2] * counter);
                         if (findHex != null)
@@ -251,7 +251,7 @@ namespace BattleArenaServer.Services
             return direction;
         }
 
-        public static Hex? GetOneHexOnDirection(Hex hex, Hex dirHex, int order, int mode = 0)
+        public static Hex? GetOneHexOnDirection(Hex hex, Hex dirHex, int order, GameData gameData, int mode = 0)
         {
             Hex? direction = null;
             if (mode == 1)
@@ -263,7 +263,7 @@ namespace BattleArenaServer.Services
 
             for (int i = 1; i <= order; i++)
             {
-                findHex = GameData._hexes.FirstOrDefault(x => x.COORD[0] == hex.COORD[0] + direction.COORD[0] * i
+                findHex = gameData._hexes.FirstOrDefault(x => x.COORD[0] == hex.COORD[0] + direction.COORD[0] * i
                                 & x.COORD[1] == hex.COORD[1] + direction.COORD[1] * i
                                 & x.COORD[2] == hex.COORD[2] + direction.COORD[2] * i);
             }
@@ -285,13 +285,13 @@ namespace BattleArenaServer.Services
             return res;
         }
 
-        public static List<Hero> GetBanchHeroes()
+        public static List<Hero> GetBanchHeroes(GameData gameData)
         {
             List<Hero> list = new List<Hero>();
 
-            foreach (var hero in GameData._heroes)
+            foreach (var hero in gameData._heroes)
             {
-                if (hero.IsMainHero && hero.Team == GameData.activeTeam)
+                if (hero.IsMainHero && hero.Team == gameData.activeTeam)
                     list.Add(hero);
             }
 

@@ -17,27 +17,27 @@ namespace BattleArenaServer.Effects.Debuffs
             description = $"Если цель не переместится на {value} клеток, то будет обездвижена и получит {dmg} магического урона.";
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             hero.afterMove += MovementCommited;
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
             hero.afterMove -= MovementCommited;
         }
 
-        public override void ApplyAfterEffect(Hero hero)
+        public override void ApplyAfterEffect(Hero hero, GameData gameData)
         {
-            Hero? attacker = GameData._heroes.FirstOrDefault(x => x.Id == idCaster);
-            AttackService.SetDamage(attacker, hero, dmg, Consts.DamageType.Magic);
+            Hero? attacker = gameData._heroes.FirstOrDefault(x => x.Id == idCaster);
+            AttackService.SetDamage(attacker, hero, dmg, Consts.DamageType.Magic, gameData);
 
             RootDebuff rootDebuff = new RootDebuff(idCaster, 0, 1);
-            rootDebuff.ApplyEffect(hero);
-            hero.AddEffect(rootDebuff);
+            rootDebuff.ApplyEffect(hero, gameData);
+            hero.AddEffect(rootDebuff, gameData);
         }
 
-        private void MovementCommited(Hero hero, Hex? currentHex, Hex targetHex)
+        private void MovementCommited(Hero hero, Hex? currentHex, Hex targetHex, GameData gameData)
         {
             if (currentHex != null)
             {
@@ -46,7 +46,7 @@ namespace BattleArenaServer.Effects.Debuffs
 
                 if (value <= 0)
                 {
-                    RemoveEffect(hero);
+                    RemoveEffect(hero, gameData);
                     hero.EffectList.Remove(this);
                 }
             }

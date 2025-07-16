@@ -17,20 +17,20 @@ namespace BattleArenaServer.Effects.Debuffs
             description = $"Каждое применение способности наносит Вам {value} чистого урона и отнимает 1 ОД.";
         }
 
-        public override void ApplyEffect(Hero defender)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
-            defender.afterSpellCast += AfterSpellCastDelegate;
+            hero.afterSpellCast += AfterSpellCastDelegate;
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
-            _hero.afterSpellCast -= AfterSpellCastDelegate;
+            hero.afterSpellCast -= AfterSpellCastDelegate;
         }
 
-        private void AfterSpellCastDelegate(Hero attacker, Hero? defender, Skill skill)
+        private void AfterSpellCastDelegate(Hero attacker, Hero? defender, Skill skill, GameData gameData)
         {
-            attacker.SpendAP(1);
-            AttackService.SetDamage(caster, attacker, value, Consts.DamageType.Pure);
+            attacker.SpendAP(1, gameData);
+            AttackService.SetDamage(caster, attacker, value, Consts.DamageType.Pure, gameData);
         }
     }
 }

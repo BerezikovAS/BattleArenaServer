@@ -17,13 +17,13 @@ namespace BattleArenaServer.Effects.Debuffs
             plagueAura = new PlagueAura(value, _turn);
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             _hero.Resist -= value;
             _hero.AuraList.Add(plagueAura);
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             _hero.Resist += value;
             _hero.AuraList.Remove(plagueAura);

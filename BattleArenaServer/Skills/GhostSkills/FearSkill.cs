@@ -27,23 +27,23 @@ namespace BattleArenaServer.Skills.GhostSkills
 
         public new ISkillCastRequest request => new NonTargerAoECastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (request.startRequest(requestData, this))
+            if (request.startRequest(requestData, this, gameData))
             {
                 if (requestData.Caster != null && requestData.CasterHex != null)
                 {
-                    foreach (var n in UtilityService.GetHexesRadius(requestData.CasterHex, radius))
+                    foreach (var n in UtilityService.GetHexesRadius(requestData.CasterHex, radius, gameData))
                     {
                         if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                         {
                             FearDebuff fearDebuff = new FearDebuff(requestData.Caster.Id, 0, 2, requestData.Caster.Name);
-                            n.HERO.AddEffect(fearDebuff);
+                            n.HERO.AddEffect(fearDebuff, gameData);
 
-                            AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
+                            AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType, gameData);
                         }
                     }
-                    requestData.Caster.SpendAP(requireAP);
+                    requestData.Caster.SpendAP(requireAP, gameData);
                     coolDownNow = coolDown;
                     return true;
                 }
@@ -51,7 +51,7 @@ namespace BattleArenaServer.Skills.GhostSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

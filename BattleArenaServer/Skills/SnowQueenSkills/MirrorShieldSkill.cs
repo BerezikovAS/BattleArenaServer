@@ -24,24 +24,24 @@ namespace BattleArenaServer.Skills.SnowQueenSkills
 
         public new ISkillCastRequest request => new AllyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             if (requestData.Target != null && requestData.Caster != null)
             {
-                if (!request.startRequest(requestData, this))
+                if (!request.startRequest(requestData, this, gameData))
                     return false;
 
                 MirrorShieldBuff mirrorShieldBuff = new MirrorShieldBuff(requestData.Caster.Id, extraResist, 2);
-                requestData.Target.AddEffect(mirrorShieldBuff);
+                requestData.Target.AddEffect(mirrorShieldBuff, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

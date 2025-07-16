@@ -25,9 +25,9 @@ namespace BattleArenaServer.Skills.MusketeerSKills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null)
@@ -35,9 +35,9 @@ namespace BattleArenaServer.Skills.MusketeerSKills
                 int availableAP = requestData.Caster.AP;
                 int dealDmg = (int)(Convert.ToDouble(percentDmg * availableAP * requestData.Caster.Dmg) / 100);
 
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dealDmg, dmgType);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dealDmg, dmgType, gameData);
 
-                requestData.Caster.SpendAP(availableAP);
+                requestData.Caster.SpendAP(availableAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -45,7 +45,7 @@ namespace BattleArenaServer.Skills.MusketeerSKills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

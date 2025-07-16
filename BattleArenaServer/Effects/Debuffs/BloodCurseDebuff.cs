@@ -14,19 +14,19 @@ namespace BattleArenaServer.Effects.Debuffs
             description = $"{value}% от процента потерянного ХП восстанавливается заклинателю.";
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             _hero.applyDamage += ApplyDamageDelegate;
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             _hero.applyDamage -= ApplyDamageDelegate;
         }
 
-        private bool ApplyDamageDelegate(Hero? attacker, Hero defender, int dmg, Consts.DamageType dmgType)
+        private bool ApplyDamageDelegate(Hero? attacker, Hero defender, int dmg, Consts.DamageType dmgType, GameData gameData)
         {
-            Hero? caster = GameData._heroes.FirstOrDefault(x => x.Id == idCaster && x.HP > 0);
+            Hero? caster = gameData._heroes.FirstOrDefault(x => x.Id == idCaster && x.HP > 0);
             if (defender != null && caster != null)
             {
                 double percentRestore = ((double)dmg / defender.MaxHP) * ((double)value / 100);

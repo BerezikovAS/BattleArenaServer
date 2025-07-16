@@ -1,5 +1,4 @@
-﻿using BattleArenaServer.Effects.Buffs;
-using BattleArenaServer.Interfaces;
+﻿using BattleArenaServer.Interfaces;
 using BattleArenaServer.Models;
 using BattleArenaServer.Services;
 using BattleArenaServer.SkillCastRequests;
@@ -30,9 +29,9 @@ namespace BattleArenaServer.Skills.FallenKingSkills
 
         public new ISkillCastRequest request => new FriendTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null && requestData.CasterHex != null)
@@ -42,13 +41,13 @@ namespace BattleArenaServer.Skills.FallenKingSkills
 
                 requestData.Target.Heal((int)Convert.ToDouble(sacrificedHP * percentHeal) / 100);
 
-                foreach (var n in UtilityService.GetHexesRadius(requestData.CasterHex, radius))
+                foreach (var n in UtilityService.GetHexesRadius(requestData.CasterHex, radius, gameData))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType, gameData);
                 }
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -56,7 +55,7 @@ namespace BattleArenaServer.Skills.FallenKingSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

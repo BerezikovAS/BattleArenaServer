@@ -28,24 +28,24 @@ namespace BattleArenaServer.Skills.ElementalistSkills
 
         public new ISkillCastRequest request => new RangeAoECastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null)
             {
-                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
+                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius, gameData))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                     {
                         ResistDebuff resistDebuff = new ResistDebuff(requestData.Caster.Id, reduceResist, 2);
-                        n.HERO.AddEffect(resistDebuff);
+                        n.HERO.AddEffect(resistDebuff, gameData);
 
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, Consts.DamageType.Magic);
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, Consts.DamageType.Magic, gameData);
                     }
                 }
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -53,7 +53,7 @@ namespace BattleArenaServer.Skills.ElementalistSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

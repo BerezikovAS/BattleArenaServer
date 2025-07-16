@@ -26,29 +26,29 @@ namespace BattleArenaServer.Skills.MusketeerSKills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null && requestData.CasterHex != null && requestData.TargetHex != null)
             {
-                Hex? hex = UtilityService.GetOneHexOnDirection(requestData.CasterHex, requestData.TargetHex, 2);
+                Hex? hex = UtilityService.GetOneHexOnDirection(requestData.CasterHex, requestData.TargetHex, 2, gameData);
                 if (hex != null && hex.IsFree())
                 {
-                    AttackService.MoveHero(requestData.Target, requestData.TargetHex, hex);
+                    AttackService.MoveHero(requestData.Target, requestData.TargetHex, hex, gameData);
                 }
 
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

@@ -11,7 +11,7 @@ namespace BattleArenaServer.Skills.ShadowSkills
         public SuffocationSkill()
         {
             name = "Suffocation";
-            dmg = 130;
+            dmg = 140;
             title = $"Сгустки тени удушают цель, отчего та не может применять заклинания и получает {dmg} магического урона.";
             titleUpg = "+1 к дальности, +30 к урону";
             coolDown = 4;
@@ -26,19 +26,19 @@ namespace BattleArenaServer.Skills.ShadowSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null)
             {
                 SilenceDebuff silenceDebuff = new SilenceDebuff(requestData.Caster.Id, 0, 2);
-                requestData.Target.AddEffect(silenceDebuff);
+                requestData.Target.AddEffect(silenceDebuff, gameData);
                 
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType, gameData);
                 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -46,7 +46,7 @@ namespace BattleArenaServer.Skills.ShadowSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

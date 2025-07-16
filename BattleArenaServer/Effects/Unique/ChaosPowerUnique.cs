@@ -16,7 +16,7 @@ namespace BattleArenaServer.Effects.Unique
             effectType = Consts.EffectType.Instant;
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             removed = false;
             Random rnd = new Random();
@@ -36,7 +36,7 @@ namespace BattleArenaServer.Effects.Unique
             description += chaosPoints[2] > 0 ? $"Сопротивление увеличено на {chaosPoints[2]}" : "";
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             if (!removed)
             {

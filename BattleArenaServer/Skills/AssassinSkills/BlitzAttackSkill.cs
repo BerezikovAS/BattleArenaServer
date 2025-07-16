@@ -25,14 +25,14 @@ namespace BattleArenaServer.Skills.AssassinSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.CasterHex != null && requestData.Target != null && requestData.TargetHex != null)
             {
-                List<Hex> emptyHexes = UtilityService.GetHexesRadius(requestData.TargetHex, 1).Where(x => x.IsFree()).ToList();
+                List<Hex> emptyHexes = UtilityService.GetHexesRadius(requestData.TargetHex, 1, gameData).Where(x => x.IsFree()).ToList();
                 if (emptyHexes.Count == 0)
                     return false;
 
@@ -43,11 +43,11 @@ namespace BattleArenaServer.Skills.AssassinSkills
                 Hex moveHex = nearestHexes[rnd.Next(nearestHexes.Count)];
 
                 //Прыгаем поближе к врагу
-                AttackService.MoveHero(requestData.Caster, requestData.CasterHex, moveHex);
+                AttackService.MoveHero(requestData.Caster, requestData.CasterHex, moveHex, gameData);
 
                 //Атакуем
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
-                requestData.Caster.SpendAP(requireAP);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType, gameData);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -55,7 +55,7 @@ namespace BattleArenaServer.Skills.AssassinSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

@@ -18,17 +18,17 @@ namespace BattleArenaServer.Skills.TinkerSkill
             hero.afterReceiveDmg += AfterReceiveDmgDelegate;
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
             dmgReceived = 0;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
@@ -43,7 +43,7 @@ namespace BattleArenaServer.Skills.TinkerSkill
             return false;
         }
 
-        private void AfterReceiveDmgDelegate(Hero defender, Hero? attacker, int dmg, Consts.DamageType dmgType)
+        private void AfterReceiveDmgDelegate(Hero defender, Hero? attacker, int dmg, Consts.DamageType dmgType, GameData gameData)
         {
             dmgReceived += dmg;
             if (dmgReceived >= dmgTreshhold)
@@ -54,7 +54,7 @@ namespace BattleArenaServer.Skills.TinkerSkill
                     defender.EffectList.Remove(oldShield); // Если уже висел старый щит, уберем его
 
                 DmgShieldBuff dmgShieldBuff = new DmgShieldBuff(defender.Id, shieldDurability, 1);
-                defender.AddEffect(dmgShieldBuff);
+                defender.AddEffect(dmgShieldBuff, gameData);
             }
         }
     }

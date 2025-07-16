@@ -17,16 +17,16 @@ namespace BattleArenaServer.Skills.FairySkills
             hero.afterReceivedAttack += CharmAfterReceivedAttack;
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
@@ -64,7 +64,7 @@ namespace BattleArenaServer.Skills.FairySkills
             return true;
         }
 
-        private bool CharmAfterReceivedAttack(Hero attacker, Hero defender, int dmg)
+        private bool CharmAfterReceivedAttack(Hero attacker, Hero defender, int dmg, GameData gameData)
         {
             defender.modifierAppliedDamage -= ModifierAppliedDmg;
             return true;

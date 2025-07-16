@@ -28,21 +28,21 @@ namespace BattleArenaServer.Skills.GeomantSkills
 
         public new ISkillCastRequest request => new NonTargerAoECastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.CasterHex != null)
             {
                 // Пробегаемся по клеткам в радиусе и ищем врагов
-                foreach (var hex in UtilityService.GetHexesRadius(requestData.CasterHex, radius))
+                foreach (var hex in UtilityService.GetHexesRadius(requestData.CasterHex, radius, gameData))
                 {
                     if (hex.HERO != null && hex.HERO.Team != requestData.Caster.Team)
                     {
                         // Нашли врага, начинаем считать свободные клетки и столоктиты вокруг него
                         int freeHexCount = 0;
-                        foreach (var hexTarget in UtilityService.GetHexesRadius(hex, 1))
+                        foreach (var hexTarget in UtilityService.GetHexesRadius(hex, 1, gameData))
                         {
                             if (hexTarget.IsFree())
                                 freeHexCount += 1;
@@ -50,17 +50,17 @@ namespace BattleArenaServer.Skills.GeomantSkills
                                 freeHexCount += 2;
                         }
                         hex.HERO.AP -= 1;
-                        AttackService.SetDamage(requestData.Caster, hex.HERO, dmg + extraDmg * freeHexCount, dmgType);
+                        AttackService.SetDamage(requestData.Caster, hex.HERO, dmg + extraDmg * freeHexCount, dmgType, gameData);
                     }
                 }
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

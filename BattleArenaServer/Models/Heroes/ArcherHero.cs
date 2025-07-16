@@ -17,8 +17,10 @@ namespace BattleArenaServer.Models.Heroes
             SkillList[4] = new PinDownSkill();
         }
 
-        public override void Respawn()
+        public override void Respawn(GameData? gameData = null)
         {
+            base.Respawn(gameData);
+
             MaxHP = HP = 875;
             Armor = 3;
             Resist = 3;
@@ -28,7 +30,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 3;
             Dmg = 102;
 
-            base.Respawn();
+            ApplyItems(gameData);
         }
     }
 }

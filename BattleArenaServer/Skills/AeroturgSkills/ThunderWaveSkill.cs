@@ -28,42 +28,42 @@ namespace BattleArenaServer.Skills.AeroturgSkills
 
         public new ISkillCastRequest request => new NonTargerAoECastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null)
             {
-                foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, 1))
+                foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, 1, gameData))
                 {
                     if (hex.HERO != null && hex.HERO.Team != requestData.Caster.Team)
                     {
                         SilenceDebuff silenceDebuff = new SilenceDebuff(requestData.Caster.Id, 0, 2);
-                        hex.HERO.AddEffect(silenceDebuff);
+                        hex.HERO.AddEffect(silenceDebuff, gameData);
 
                         if (upgraded)
                         {
                             ResistDebuff resistDebuff = new ResistDebuff(requestData.Caster.Id, resistReduction, 2);
-                            hex.HERO.AddEffect(resistDebuff);
+                            hex.HERO.AddEffect(resistDebuff, gameData);
                         }
 
-                        AttackService.SetDamage(requestData.Caster, hex.HERO, dmg, dmgType);
+                        AttackService.SetDamage(requestData.Caster, hex.HERO, dmg, dmgType, gameData);
 
-                        Hex? moveHex = UtilityService.GetOneHexOnDirection(requestData.TargetHex, hex, 2);
+                        Hex? moveHex = UtilityService.GetOneHexOnDirection(requestData.TargetHex, hex, 2, gameData);
                         if (hex.HERO != null && moveHex != null && moveHex.IsFree())
-                            AttackService.MoveHero(hex.HERO, hex, moveHex);
+                            AttackService.MoveHero(hex.HERO, hex, moveHex, gameData);
                     }
                 }
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

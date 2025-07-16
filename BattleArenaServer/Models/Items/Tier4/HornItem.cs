@@ -23,9 +23,9 @@ namespace BattleArenaServer.Models.Items.Tier4
             Skill = new HornSkill(dmg, percentDmgReduction);
         }
 
-        public override void CastItem(RequestData requestData)
+        public override void CastItem(RequestData requestData, GameData gameData)
         {
-            Skill.Cast(requestData);
+            Skill.Cast(requestData, gameData);
         }
     }
 
@@ -50,29 +50,29 @@ namespace BattleArenaServer.Models.Items.Tier4
 
         public new ISkillCastRequest request => new RangeAoECastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null)
             {
-                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
+                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius, gameData))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                     {
                         WeaknessDebuff weaknessDebuff = new WeaknessDebuff(requestData.Caster.Id, percentDmgReduction, 2);
-                        n.HERO.AddEffect(weaknessDebuff);
+                        n.HERO.AddEffect(weaknessDebuff, gameData);
 
                         n.HERO.AP -= 1;
                         if (n.HERO.AP < 0)
                             n.HERO.AP = 0;
 
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, Consts.DamageType.Magic);
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, Consts.DamageType.Magic, gameData);
                     }
                 }
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }

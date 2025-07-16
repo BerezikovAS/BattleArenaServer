@@ -10,6 +10,6 @@
 
         public Hero hero { get; set; }
 
-        public abstract void refreshEffect();
+        public abstract void refreshEffect(GameData gameData);
     }
 }

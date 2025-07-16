@@ -15,25 +15,25 @@ namespace BattleArenaServer.Effects.Debuffs
             description = $"{value}% полученного урона заклинателем наносится и Вам.";
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
-            Hero? caster = GameData._heroes.FirstOrDefault(x => x.Id == idCaster);
+            Hero? caster = gameData._heroes.FirstOrDefault(x => x.Id == idCaster);
             if (caster != null)
             {
                 ChainOfPainBuff chainOfPainBuff = new ChainOfPainBuff(idCaster, value, duration, _hero.Id);
-                caster.AddEffect(chainOfPainBuff);
+                caster.AddEffect(chainOfPainBuff, gameData);
             }
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
-            Hero? caster = GameData._heroes.FirstOrDefault(x => x.Id == idCaster);
+            Hero? caster = gameData._heroes.FirstOrDefault(x => x.Id == idCaster);
             if (caster != null)
             {
                 Effect? chainOfPainBuff = caster.EffectList.FirstOrDefault(x => x.Name == "ChainOfPain" && x.type == Consts.StatusEffect.Buff);
                 if (chainOfPainBuff != null)
                 {
-                    chainOfPainBuff.RemoveEffect(caster);
+                    chainOfPainBuff.RemoveEffect(caster, gameData);
                     caster.EffectList.Remove(chainOfPainBuff);
                 }
             }

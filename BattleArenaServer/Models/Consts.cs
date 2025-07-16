@@ -111,7 +111,8 @@
             NonItem,
             MicrobialSamples,
             DebuffImmun,
-            MirrorShield
+            MirrorShield,
+            Note
         }
     }
 }

@@ -26,19 +26,19 @@ namespace BattleArenaServer.Skills.SeraphimSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null)
             {
                 GreateJudgementDebuff greateJudgementDebuff = new GreateJudgementDebuff(requestData.Caster.Id, 0, 1);
-                requestData.Target.AddEffect(greateJudgementDebuff);
+                requestData.Target.AddEffect(greateJudgementDebuff, gameData);
                 
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -46,7 +46,7 @@ namespace BattleArenaServer.Skills.SeraphimSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

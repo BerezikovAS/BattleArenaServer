@@ -28,15 +28,15 @@ namespace BattleArenaServer.Skills.FallenKingSkills
 
         public new ISkillCastRequest request => new LineCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null && requestData.CasterHex != null)
             {
                 int countCDSkills = 0;
-                foreach (var n in UtilityService.GetHexesSmallCone(requestData.CasterHex, requestData.TargetHex, radius))
+                foreach (var n in UtilityService.GetHexesSmallCone(requestData.CasterHex, requestData.TargetHex, radius, gameData))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                     {
@@ -45,17 +45,17 @@ namespace BattleArenaServer.Skills.FallenKingSkills
                                 if (skill.coolDownNow > 0)
                                     countCDSkills++;
 
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType, gameData);
                     }
                 }
 
                 if (countCDSkills > 0)
                 {
                     DmgShieldBuff dmgShieldBuff = new DmgShieldBuff(requestData.Caster.Id, countCDSkills * shieldPerSkill, 2);
-                    requestData.Caster.AddEffect(dmgShieldBuff);
+                    requestData.Caster.AddEffect(dmgShieldBuff, gameData);
                 }
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -63,7 +63,7 @@ namespace BattleArenaServer.Skills.FallenKingSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

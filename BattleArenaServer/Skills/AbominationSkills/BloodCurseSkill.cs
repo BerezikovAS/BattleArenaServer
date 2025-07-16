@@ -27,26 +27,26 @@ namespace BattleArenaServer.Skills.AbominationSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null)
             {
                 BloodCurseDebuff bloodCurseDebuff = new BloodCurseDebuff(requestData.Caster.Id, percent, 2);
-                requestData.Target.AddEffect(bloodCurseDebuff);
+                requestData.Target.AddEffect(bloodCurseDebuff, gameData);
 
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

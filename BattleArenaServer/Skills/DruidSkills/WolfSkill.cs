@@ -18,13 +18,13 @@ namespace BattleArenaServer.Skills.DruidSkills
         public WolfSkill()
         {
             name = "Wolf";
-            dmg = 70;
+            dmg = 75;
             title = $"Призывает спутника волка, сражающегося под Вашим контролем.";
-            titleUpg = "Атаки волка снимают случайный положительный эффект с цели.";
+            titleUpg = "+75 ХП волку, атаки волка снимают случайный положительный эффект с цели.";
             coolDown = 5;
             coolDownNow = 0;
             requireAP = 2;
-            range = 1;
+            range = 2;
             nonTarget = false;
             area = Consts.SpellArea.Radius;
             stats = new SkillStats(coolDown, requireAP, range, radius);
@@ -33,44 +33,45 @@ namespace BattleArenaServer.Skills.DruidSkills
 
         public new ISkillCastRequest request => new HexTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null && requestData.TargetHex.OBSTACLE == null)
             {
                 //Вызываем скелета
-                int Id = GameData._heroes.Max(x => x.Id) + 1;
+                int Id = gameData._heroes.Max(x => x.Id) + 1;
                 WolfSummon wolf = new WolfSummon(Id, requestData.Caster.Team, wolfHP, armor, resist, attackRadius, dmg, requestData.Caster.Id, lifeTime);
                 requestData.TargetHex.SetHero(wolf);
-                GameData._heroes.Add(wolf);
+                gameData._heroes.Add(wolf);
 
                 if (upgraded)
                     wolf.afterAttack += AfterAttackDelegate;
 
                 //Обновим ауры
-                AttackService.ContinuousAuraAction();
+                AttackService.ContinuousAuraAction(gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
                 upgraded = true;
+                wolfHP += 75;
                 title = $"Призывает спутника волка, сражающегося под Вашим контролем. Атаки волка снимают случайный положительный эффект с цели.";
                 return true;
             }
             return false;
         }
 
-        private bool AfterAttackDelegate(Hero attacker, Hero? defender, int dmg, Consts.DamageType dmgType)
+        private bool AfterAttackDelegate(Hero attacker, Hero? defender, int dmg, Consts.DamageType dmgType, GameData gameData)
         {
             if (defender != null)
             {
@@ -79,7 +80,7 @@ namespace BattleArenaServer.Skills.DruidSkills
                 {
                     Random rnd = new Random();
                     Effect buff = buffs[rnd.Next(buffs.Count())];
-                    buff.RemoveEffect(defender);
+                    buff.RemoveEffect(defender, gameData);
                     defender.EffectList.Remove(buff);
                 }
             }

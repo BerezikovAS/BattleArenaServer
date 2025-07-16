@@ -17,9 +17,10 @@ namespace BattleArenaServer.Models.Heroes
             Respawn();
         }
 
-        public override void Respawn()
+        public override void Respawn(GameData? gameData = null)
         {
-            (SkillList[0] as PassiveSkill).refreshEffect();
+            (SkillList[0] as PassiveSkill).refreshEffect(gameData);
+            base.Respawn(gameData);
 
             MaxHP = HP = 875;
             Armor = 2;
@@ -30,7 +31,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 3;
             Dmg = 95;
 
-            base.Respawn();
+            ApplyItems(gameData);
         }
     }
 }

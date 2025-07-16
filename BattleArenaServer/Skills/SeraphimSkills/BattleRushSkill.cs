@@ -26,9 +26,9 @@ namespace BattleArenaServer.Skills.SeraphimSkills
 
         public new ISkillCastRequest request => new LineCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.CasterHex != null && requestData.TargetHex != null)
@@ -38,7 +38,7 @@ namespace BattleArenaServer.Skills.SeraphimSkills
                 Hex? endHex = null;
                 while (pos <= radius)
                 {
-                    targetHex = UtilityService.GetOneHexOnDirection(requestData.CasterHex, requestData.TargetHex, pos);
+                    targetHex = UtilityService.GetOneHexOnDirection(requestData.CasterHex, requestData.TargetHex, pos, gameData);
                     if (targetHex != null && targetHex.IsFree())
                         endHex = targetHex;
                     pos++;
@@ -47,22 +47,22 @@ namespace BattleArenaServer.Skills.SeraphimSkills
                 if (endHex == null)
                     endHex = requestData.CasterHex;
 
-                AttackService.MoveHero(requestData.Caster, requestData.CasterHex, endHex);
+                AttackService.MoveHero(requestData.Caster, requestData.CasterHex, endHex, gameData);
 
-                foreach (var hex in UtilityService.GetHexesRadius(endHex, 1))
+                foreach (var hex in UtilityService.GetHexesRadius(endHex, 1, gameData))
                 {
                     if (hex != null && hex.HERO != null && hex.HERO.Team != requestData.Caster.Team)
-                        AttackService.SetDamage(requestData.Caster, hex.HERO, dmg, dmgType);
+                        AttackService.SetDamage(requestData.Caster, hex.HERO, dmg, dmgType, gameData);
                 }
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

@@ -23,9 +23,9 @@ namespace BattleArenaServer.Models.Items.Tier3
             Skill = new CombatShieldSkill(dmg, armor);
         }
 
-        public override void CastItem(RequestData requestData)
+        public override void CastItem(RequestData requestData, GameData gameData)
         {
-            Skill.Cast(requestData);
+            Skill.Cast(requestData, gameData);
         }
     }
 
@@ -50,32 +50,32 @@ namespace BattleArenaServer.Models.Items.Tier3
 
         public new ISkillCastRequest request => new LineCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null && requestData.CasterHex != null)
             {
                 Hex direction = UtilityService.GetDirection(requestData.CasterHex, requestData.TargetHex);
-                foreach (var n in UtilityService.GetHexesCone(requestData.CasterHex, requestData.TargetHex, radius))
+                foreach (var n in UtilityService.GetHexesCone(requestData.CasterHex, requestData.TargetHex, radius, gameData))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                     {
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType, gameData);
 
                         //Гекс на который нужно оттолкнуть врага
-                        Hex? targetHex = UtilityService.GetOneHexOnDirection(n, direction, 1, 1);
+                        Hex? targetHex = UtilityService.GetOneHexOnDirection(n, direction, 1, gameData, 1);
 
                         if (targetHex != null && targetHex.IsFree() && n.HERO != null && n.HERO.HP > 0)
-                            AttackService.MoveHero(n.HERO, n, targetHex);
+                            AttackService.MoveHero(n.HERO, n, targetHex, gameData);
                     }
                 }
 
                 ArmorBuff buffArmor = new ArmorBuff(requestData.Caster.Id, armor, 2);
-                requestData.Caster.AddEffect(buffArmor);
+                requestData.Caster.AddEffect(buffArmor, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }

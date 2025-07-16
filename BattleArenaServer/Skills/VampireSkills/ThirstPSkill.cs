@@ -15,16 +15,16 @@ namespace BattleArenaServer.Skills.VampireSkills
             hero.beforeAttack += ClearDmgDealed;
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
@@ -38,7 +38,7 @@ namespace BattleArenaServer.Skills.VampireSkills
             return false;
         }
 
-        private bool Thirst(Hero attacker, Hero defender, int dmg, Consts.DamageType dmgType)
+        private bool Thirst(Hero attacker, Hero defender, int dmg, Consts.DamageType dmgType, GameData gameData)
         {
             int heal = (int)(Convert.ToDouble(attacker.DamageDealed * percentHeal) / 100);
             if (attacker.HP > 0)
@@ -46,7 +46,7 @@ namespace BattleArenaServer.Skills.VampireSkills
             return true;
         }
 
-        private bool ClearDmgDealed(Hero attacker, Hero defender, int dmg)
+        private bool ClearDmgDealed(Hero attacker, Hero defender, int dmg, GameData gameData)
         {
             attacker.DamageDealed = 0;
             return true;

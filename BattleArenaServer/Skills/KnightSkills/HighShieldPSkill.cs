@@ -16,26 +16,26 @@ namespace BattleArenaServer.Skills.KnightSkills
             hero.AuraList.Add(Aura);
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
                 upgraded = true;
                 armor += 3;
-                Aura.CancelEffect(hero);
+                Aura.CancelEffect(hero, gameData);
                 hero.AuraList.Remove(Aura);
                 Aura = new HighShieldAura(true);
                 hero.AuraList.Add(Aura);
-                AttackService.ContinuousAuraAction();
+                AttackService.ContinuousAuraAction(gameData);
                 title = $"Герой защищает себя и союзников рядом от дальнобойных атак. При обороне имеет +{armor} брони, если атакующий находится не ближе двух клеток от цели атаки.";
                 return true;
             }

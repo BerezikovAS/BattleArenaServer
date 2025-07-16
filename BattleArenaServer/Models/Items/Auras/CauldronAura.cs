@@ -16,18 +16,18 @@ namespace BattleArenaServer.Models.Items.Auras
             this.percentLoss = percentLoss;
         }
 
-        public override void ApplyEffect(Hero source, Hero target)
+        public override void ApplyEffect(Hero source, Hero target, GameData gameData)
         {
             if (source.Team != target.Team)
             {
                 PoisonDebuff poisonDebuff = new PoisonDebuff(source.Id, percentLoss, 2);
-                target.AddEffect(poisonDebuff);
+                target.AddEffect(poisonDebuff, gameData);
 
-                AttackService.SetDamage(source, target, dmg, Consts.DamageType.Magic);
+                AttackService.SetDamage(source, target, dmg, Consts.DamageType.Magic, gameData);
             }
         }
 
-        public override void CancelEffect(Hero source)
+        public override void CancelEffect(Hero source, GameData gameData)
         {
 
         }

@@ -13,20 +13,20 @@ namespace BattleArenaServer.Skills.SeraphimSkills
             titleUpg = "Также снимает эффекты замедления и обездвиживания.";
 
             HasteBuff hasteBuff = new HasteBuff(hero.Id, 0, 1);
-            hero.AddEffect(hasteBuff);
+            hero.EffectList.Add(hasteBuff);
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
             if (hero.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Haste)) == null)
             {
                 HasteBuff hasteBuff = new HasteBuff(hero.Id, 0, 1);
-                hero.AddEffect(hasteBuff);
+                hero.AddEffect(hasteBuff, gameData);
             }
 
             if (upgraded)
@@ -37,7 +37,7 @@ namespace BattleArenaServer.Skills.SeraphimSkills
                     if (effect.effectTags.Contains(Consts.EffectTag.Slow) || effect.effectTags.Contains(Consts.EffectTag.Root))
                     {
                         removeEffects.Add(effect);
-                        effect.RemoveEffect(hero);
+                        effect.RemoveEffect(hero, gameData);
                     }
                 }
                 foreach (Effect effect in removeEffects)
@@ -45,7 +45,7 @@ namespace BattleArenaServer.Skills.SeraphimSkills
             }
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             upgraded = true;
             title = $"В начале хода Вы получаете ускорение, а также снимаете эффекты замедления и обездвиживания.";

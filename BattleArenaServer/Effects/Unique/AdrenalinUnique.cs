@@ -14,12 +14,12 @@ namespace BattleArenaServer.Effects.Unique
             description = $"+{value} очков действия.";
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             _hero.AP += value;
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             _hero.AP -= value;
         }

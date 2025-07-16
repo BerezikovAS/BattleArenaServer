@@ -15,16 +15,16 @@ namespace BattleArenaServer.Skills.ShadowSkills
             hero.passiveAttackDamage += ShadowsEverywhere;
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
@@ -38,14 +38,14 @@ namespace BattleArenaServer.Skills.ShadowSkills
             return false;
         }
 
-        private int ShadowsEverywhere(Hero attacker, Hero? defender)
+        private int ShadowsEverywhere(Hero attacker, Hero? defender, GameData gameData)
         {
-            Hex? defenderHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == defender.Id);
+            Hex? defenderHex = gameData._hexes.FirstOrDefault(x => x.HERO?.Id == defender.Id);
 
             int freeHexes = 0;
             if (defenderHex != null)
             {
-                foreach (var n in UtilityService.GetHexesRadius(defenderHex, 1))
+                foreach (var n in UtilityService.GetHexesRadius(defenderHex, 1, gameData))
                 {
                     if (n.IsFree())
                         freeHexes++;

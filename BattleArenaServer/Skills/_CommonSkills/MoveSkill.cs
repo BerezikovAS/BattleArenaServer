@@ -24,13 +24,13 @@ namespace BattleArenaServer.Skills._CommonSkills
 
         public new ISkillCastRequest request => new MoveCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             //Проверка на Fear (Можно перемещаться только в направлении ОТ заклинателя. Т.е. дистанция должна увеличиваться)
             Effect? fear = requestData.Caster?.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Fear));
             if (fear != null)
             {
-                Hex? fearSource = GameData._hexes.FirstOrDefault(x => x.HERO != null && x.HERO.Id == fear.idCaster);
+                Hex? fearSource = gameData._hexes.FirstOrDefault(x => x.HERO != null && x.HERO.Id == fear.idCaster);
                 if (fearSource != null && fearSource.Distance(requestData.TargetHex) <= fearSource.Distance(requestData.CasterHex))
                     return false;
             }
@@ -49,7 +49,7 @@ namespace BattleArenaServer.Skills._CommonSkills
             Effect? dizziness = requestData.Caster?.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Dizziness));
             if (dizziness != null)
             {
-                List<Hex> availableHexes = GameData._hexes.FindAll(x => x.IsFree() && x.Distance(requestData.TargetHex) == 1 && x.Distance(requestData.CasterHex) == 1);
+                List<Hex> availableHexes = gameData._hexes.FindAll(x => x.IsFree() && x.Distance(requestData.TargetHex) == 1 && x.Distance(requestData.CasterHex) == 1);
                 availableHexes.Add(requestData.TargetHex);
 
                 Random rnd = new Random();
@@ -57,25 +57,25 @@ namespace BattleArenaServer.Skills._CommonSkills
                 requestData.TargetHex = targetHexNew;
             }
 
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.CasterHex != null && requestData.TargetHex != null)
             {
                 if (haste == null)
-                    requestData.Caster.SpendAP(requireAP);
+                    requestData.Caster.SpendAP(requireAP, gameData);
                 else
                     requestData.Caster.EffectList.Remove(haste);
 
                 requireAP = 1;
-                AttackService.MoveHero(requestData.Caster, requestData.CasterHex, requestData.TargetHex);
+                AttackService.MoveHero(requestData.Caster, requestData.CasterHex, requestData.TargetHex, gameData);
                 return true;
             }
             requireAP = 1;
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             return false;
         }

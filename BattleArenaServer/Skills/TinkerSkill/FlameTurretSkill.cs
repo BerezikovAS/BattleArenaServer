@@ -12,7 +12,6 @@ namespace BattleArenaServer.Skills.TinkerSkill
         int lifeTime = 3;
         int armor = 5;
         int resist = 5;
-        int attackRadius = 0;
 
         public FlameTurretSkill()
         {
@@ -32,31 +31,31 @@ namespace BattleArenaServer.Skills.TinkerSkill
 
         public new ISkillCastRequest request => new HexTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null && requestData.TargetHex.OBSTACLE == null)
             {
                 //Ставим туррель
-                int Id = GameData._heroes.Max(x => x.Id) + 1;
+                int Id = gameData._heroes.Max(x => x.Id) + 1;
                 FlameTurretSummon flameTurretSummon = 
                     new FlameTurretSummon(Id, requestData.Caster.Team, requestData.Caster.Id, lifeTime, turretHP, armor, resist, upgraded);
                 requestData.TargetHex.SetHero(flameTurretSummon);
-                GameData._heroes.Add(flameTurretSummon);
+                gameData._heroes.Add(flameTurretSummon);
 
                 //Обновим ауры
-                AttackService.ContinuousAuraAction();
+                AttackService.ContinuousAuraAction(gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

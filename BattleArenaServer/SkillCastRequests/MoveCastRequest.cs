@@ -6,7 +6,7 @@ namespace BattleArenaServer.SkillCastRequests
 {
     public class MoveCastRequest : ISkillCastRequest
     {
-        public bool startRequest(RequestData requestData, Skill skill)
+        public bool startRequest(RequestData requestData, Skill skill, GameData gameData)
         {
             ICastChecker moveEffectChecker = new MoveEffectChecker();
             ICastChecker actionPointsChecker = new ActionPointsChecker();
@@ -17,7 +17,7 @@ namespace BattleArenaServer.SkillCastRequests
             actionPointsChecker.nextChecker = rangeChecker;
             rangeChecker.nextChecker = hexChecker;
             hexChecker.nextChecker = new TerminalChecker();
-            return moveEffectChecker.Check(requestData, skill);
+            return moveEffectChecker.Check(requestData, skill, gameData);
         }
     }
 }

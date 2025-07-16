@@ -15,35 +15,35 @@ namespace BattleArenaServer.Effects.Debuffs
             description = "Персонаж поддается воле заклинателя и повторяет его движения.";
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
-            Hero? caster = GameData._heroes[idCaster];
+            Hero? caster = gameData._heroes[idCaster];
             if (caster != null)
                 caster.afterMove += AfterMove;
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
-            Hero? caster = GameData._heroes[idCaster];
+            Hero? caster = gameData._heroes[idCaster];
             if (caster != null)
                 caster.afterMove -= AfterMove;
         }
 
-        private void AfterMove(Hero hero, Hex? currentHex, Hex targetHex)
+        private void AfterMove(Hero hero, Hex? currentHex, Hex targetHex, GameData gameData)
         {
             Hex dir = UtilityService.GetDirection(currentHex, targetHex);
 
-            foreach (Hero enemy in GameData._heroes.Where(x => x.EffectList.FirstOrDefault(y => y.Name == "VoodooPuppet" && y.idCaster == hero.Id) != null
+            foreach (Hero enemy in gameData._heroes.Where(x => x.EffectList.FirstOrDefault(y => y.Name == "VoodooPuppet" && y.idCaster == hero.Id) != null
                 && x.HP > 0))
             {
-                Hex? enemyHex = GameData._hexes.FirstOrDefault(x => x.ID == enemy.HexId);
+                Hex? enemyHex = gameData._hexes.FirstOrDefault(x => x.ID == enemy.HexId);
                 if (enemyHex != null)
                 {
-                    Hex? moveHex = UtilityService.GetOneHexOnDirection(enemyHex, dir, 1, 1);
+                    Hex? moveHex = UtilityService.GetOneHexOnDirection(enemyHex, dir, 1, gameData, 1);
                     if (moveHex != null && moveHex.IsFree())
                     {
-                        AttackService.MoveHero(enemy, enemyHex, moveHex);
-                        AttackService.SetDamage(hero, enemy, value, Consts.DamageType.Magic);
+                        AttackService.MoveHero(enemy, enemyHex, moveHex, gameData);
+                        AttackService.SetDamage(hero, enemy, value, Consts.DamageType.Magic, gameData);
                     }
                 }
             }

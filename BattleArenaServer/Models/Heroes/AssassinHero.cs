@@ -17,8 +17,10 @@ namespace BattleArenaServer.Models.Heroes
             SkillList[4] = new AdrenalinSkill();
         }
 
-        public override void Respawn()
+        public override void Respawn(GameData? gameData = null)
         {
+            base.Respawn(gameData);
+
             MaxHP = HP = 900;
             Armor = 4;
             Resist = 4;
@@ -28,7 +30,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 105;
 
-            base.Respawn();
+            ApplyItems(gameData);
         }
     }
 }

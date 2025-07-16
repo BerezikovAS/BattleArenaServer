@@ -14,18 +14,18 @@ namespace BattleArenaServer.Effects.Debuffs
             description = $"Урон от атак по {_casterName} снижен на {value}%";
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             _hero.passiveAttackDamage += PassiveAttackDamage;
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             _hero.passiveAttackDamage -= PassiveAttackDamage;
         }
 
 
-        private int PassiveAttackDamage(Hero attacker, Hero? defender)
+        private int PassiveAttackDamage(Hero attacker, Hero? defender, GameData gameData)
         {
             if (defender != null && defender.Id == idCaster)
                 return (int)(Convert.ToDouble(attacker.Dmg) * value / 100 * -1);

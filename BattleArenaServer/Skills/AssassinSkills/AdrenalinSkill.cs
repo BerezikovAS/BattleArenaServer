@@ -24,9 +24,9 @@ namespace BattleArenaServer.Skills.AssassinSkills
 
         public new ISkillCastRequest request => new NontargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null)
@@ -34,7 +34,7 @@ namespace BattleArenaServer.Skills.AssassinSkills
                 requestData.Caster.Heal(heal);
 
                 AdrenalinUnique adrenalinUnique = new AdrenalinUnique(requestData.Caster.Id, extraAP, 1);
-                requestData.Caster.AddEffect(adrenalinUnique);
+                requestData.Caster.AddEffect(adrenalinUnique, gameData);
 
                 coolDownNow = coolDown;
                 return true;
@@ -43,7 +43,7 @@ namespace BattleArenaServer.Skills.AssassinSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

@@ -17,8 +17,10 @@ namespace BattleArenaServer.Models.Heroes
             SkillList[4] = new EarthquakeSkill();
         }
 
-        public override void Respawn()
+        public override void Respawn(GameData? gameData = null)
         {
+            base.Respawn(gameData);
+
             MaxHP = HP = 850;
             Armor = 2;
             Resist = 2;
@@ -28,7 +30,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 3;
             Dmg = 100;
 
-            base.Respawn();
+            ApplyItems(gameData);
         }
     }
 }

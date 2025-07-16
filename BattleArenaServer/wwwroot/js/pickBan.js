@@ -10,6 +10,15 @@ window.onload = async function () {
 
     await hubConnection.start();
 
+    await hubConnection.invoke("IsGameStarted", 0)
+        .catch(function (err) {
+            return console.error(err.toString());
+        });
+
+    if (isGameStarted != 0)
+        return;
+    
+
     await hubConnection.invoke("SendActiveHero")
         .catch(function (err) {
             return console.error(err.toString());
@@ -21,6 +30,11 @@ window.onload = async function () {
         });
 
     await hubConnection.invoke("GetUsersBindings")
+        .catch(function (err) {
+            return console.error(err.toString());
+        });
+
+    await hubConnection.invoke("SendChatMessage", "") //Пустое сообщение (получение истории переписки)
         .catch(function (err) {
             return console.error(err.toString());
         });

@@ -11,7 +11,7 @@ namespace BattleArenaServer.Skills.GuardianSkills
         public SpearPiercingSkill()
         {
             name = "Spear Piercing";
-            dmg = 140;
+            dmg = 150;
             title = $"Проведите атаку по врагам по прямой на 2 клетки. Эта атака игнорирует до {armorPiercing} брони и наносит {dmg} физ. урона.";
             titleUpg = "+2 к игнорированию брони, -1 к перезарядке";
             coolDown = 3;
@@ -26,21 +26,21 @@ namespace BattleArenaServer.Skills.GuardianSkills
 
         public new ISkillCastRequest request => new LineCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null && requestData.CasterHex != null)
             {
                 requestData.Caster.armorPiercing += ArmorPiercing;
-                foreach (var n in UtilityService.GetHexesOneLine(requestData.CasterHex, requestData.TargetHex, radius))
+                foreach (var n in UtilityService.GetHexesOneLine(requestData.CasterHex, requestData.TargetHex, gameData, radius))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType);
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, dmgType, gameData);
                 }
                 requestData.Caster.armorPiercing -= ArmorPiercing;
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -48,7 +48,7 @@ namespace BattleArenaServer.Skills.GuardianSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

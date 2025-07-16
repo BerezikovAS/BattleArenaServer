@@ -14,12 +14,12 @@ namespace BattleArenaServer.Effects.Buffs
             description = "Входящий урон уменьшается на " + value + "%";
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             _hero.modifierAppliedDamage += ModifierAppliedDamageDelegate;
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             _hero.modifierAppliedDamage -= ModifierAppliedDamageDelegate;
         }

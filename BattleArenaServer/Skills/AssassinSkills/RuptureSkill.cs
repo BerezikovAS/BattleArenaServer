@@ -28,19 +28,19 @@ namespace BattleArenaServer.Skills.AssassinSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null)
             {
                 RuptureDebuff ruptureDebuff = new RuptureDebuff(requestData.Caster.Id, ruptureDmg, ruptureDuration);
-                requestData.Target.AddEffect(ruptureDebuff);
+                requestData.Target.AddEffect(ruptureDebuff, gameData);
 
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType, gameData);
                 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -48,7 +48,7 @@ namespace BattleArenaServer.Skills.AssassinSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

@@ -16,13 +16,13 @@ namespace BattleArenaServer.Skills.CultistSkills.Obstacles
             Team = team;
             Dmg = dmg;
         }
-        public override void ApplyEffect(Hero hero, Hex hex)
+        public override void ApplyEffect(Hero hero, Hex hex, GameData gameData)
         {
             if (hero.Team != Team)
             {
                 //Наносим мгновенный дамаг
-                Hero? attacker = GameData._heroes.FirstOrDefault(x => x.Id == CasterId);
-                AttackService.SetDamage(attacker, hero, Dmg, Consts.DamageType.Pure);
+                Hero? attacker = gameData._heroes.FirstOrDefault(x => x.Id == CasterId);
+                AttackService.SetDamage(attacker, hero, Dmg, Consts.DamageType.Pure, gameData);
 
                 //Лечимся
                 if (attacker != null)

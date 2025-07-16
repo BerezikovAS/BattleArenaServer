@@ -26,22 +26,22 @@ namespace BattleArenaServer.Skills.SnowQueenSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null && requestData.TargetHex != null)
             {
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType, gameData);
 
-                foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, 1))
+                foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, 1, gameData))
                 {
                     if (hex.HERO != null && hex.HERO.Id != requestData.Target.Id && hex.HERO.Team != requestData.Caster.Team)
-                        AttackService.SetDamage(requestData.Caster, hex.HERO, (int)(Convert.ToDouble(dmg * percentDmg) / 100), dmgType);
+                        AttackService.SetDamage(requestData.Caster, hex.HERO, (int)(Convert.ToDouble(dmg * percentDmg) / 100), dmgType, gameData);
                 }
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -49,7 +49,7 @@ namespace BattleArenaServer.Skills.SnowQueenSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

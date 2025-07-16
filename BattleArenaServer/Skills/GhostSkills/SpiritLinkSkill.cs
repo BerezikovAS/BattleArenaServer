@@ -23,18 +23,18 @@ namespace BattleArenaServer.Skills.GhostSkills
 
         public new ISkillCastRequest request => new FriendTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             if (requestData.Target != null && requestData.Caster != null && requestData.Target.IsMainHero)
             {
-                if (!request.startRequest(requestData, this))
+                if (!request.startRequest(requestData, this, gameData))
                     return false;
 
                 SpiritLinkBuff spiritLinkTarget = new SpiritLinkBuff(requestData.Caster.Id, 0, 1, requestData.Caster.Name);
-                requestData.Target.AddEffect(spiritLinkTarget);
+                requestData.Target.AddEffect(spiritLinkTarget, gameData);
 
                 SpiritLinkBuff spiritLinkCaster = new SpiritLinkBuff(requestData.Target.Id, 0, 1, requestData.Target.Name);
-                requestData.Caster.AddEffect(spiritLinkCaster);
+                requestData.Caster.AddEffect(spiritLinkCaster, gameData);
 
                 coolDownNow = coolDown;
                 return true;
@@ -42,7 +42,7 @@ namespace BattleArenaServer.Skills.GhostSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

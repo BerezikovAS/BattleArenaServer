@@ -20,26 +20,26 @@ namespace BattleArenaServer.Effects.Debuffs
                 effectTags.Add(Consts.EffectTag.NonItem);
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
-            Hero? caster = GameData._heroes.FirstOrDefault(x => x.Id == idCaster);
+            Hero? caster = gameData._heroes.FirstOrDefault(x => x.Id == idCaster);
             if (caster != null)
             {
                 TauntBuff tauntBuff = new TauntBuff(idCaster, value, duration, _hero.Id, _hero.Name);
-                caster.AddEffect(tauntBuff);
+                caster.AddEffect(tauntBuff, gameData);
             }
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
-            Hero? caster = GameData._heroes.FirstOrDefault(x => x.Id == idCaster);
+            Hero? caster = gameData._heroes.FirstOrDefault(x => x.Id == idCaster);
             if (caster != null)
             {
                 Effect? taunt = caster.EffectList.FirstOrDefault(x => x.Name == "Taunt" && x.type == Consts.StatusEffect.Buff);
                 if (taunt != null)
                 {
                     caster.EffectList.Remove(taunt);
-                    taunt.RemoveEffect(caster);
+                    taunt.RemoveEffect(caster, gameData);
                 }
             }
         }

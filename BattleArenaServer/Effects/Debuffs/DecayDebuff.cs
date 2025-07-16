@@ -14,12 +14,12 @@ namespace BattleArenaServer.Effects.Debuffs
             description = "Этот герой не может восполнять здоровье.";
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             _hero.Heal -= _hero.BaseHeal;
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             _hero.Heal += _hero.BaseHeal;
         }

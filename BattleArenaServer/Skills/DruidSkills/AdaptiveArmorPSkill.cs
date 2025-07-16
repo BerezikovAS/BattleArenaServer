@@ -16,12 +16,12 @@ namespace BattleArenaServer.Skills.DruidSkills
             hero.afterReceiveDmg += AfterReceiveDmgDelegate;
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
             hero.Armor -= extraArmor;
             hero.Resist -= extraResist;
@@ -29,7 +29,7 @@ namespace BattleArenaServer.Skills.DruidSkills
             extraArmor = extraResist = 0;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
@@ -43,7 +43,7 @@ namespace BattleArenaServer.Skills.DruidSkills
             return false;
         }
 
-        private void AfterReceiveDmgDelegate(Hero defender, Hero? attacker, int dmg, Consts.DamageType dmgType)
+        private void AfterReceiveDmgDelegate(Hero defender, Hero? attacker, int dmg, Consts.DamageType dmgType, GameData gameData)
         {
             if (dmgType == Consts.DamageType.Physical)
             {

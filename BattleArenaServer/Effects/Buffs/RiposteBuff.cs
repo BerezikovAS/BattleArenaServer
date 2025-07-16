@@ -17,27 +17,27 @@ namespace BattleArenaServer.Effects.Buffs
             description = $"+{value} брони. {percentDmg}% урона от атак, наносится атакующим Вас врагам в ближнем бою.";
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             _hero.Armor += value;
             _hero.afterReceivedAttack += AfterReceiveAttackDelegate;
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             _hero.Armor -= value;
             _hero.afterReceivedAttack -= AfterReceiveAttackDelegate;
         }
 
-        private bool AfterReceiveAttackDelegate(Hero attacker, Hero defender, int dmg)
+        private bool AfterReceiveAttackDelegate(Hero attacker, Hero defender, int dmg, GameData gameData)
         {
-            Hex? attackerHex = GameData._hexes.FirstOrDefault(x => x.HERO != null && x.HERO.Id == attacker.Id);
-            Hex? defenderHex = GameData._hexes.FirstOrDefault(x => x.HERO != null && x.HERO.Id == defender.Id);
+            Hex? attackerHex = gameData._hexes.FirstOrDefault(x => x.HERO != null && x.HERO.Id == attacker.Id);
+            Hex? defenderHex = gameData._hexes.FirstOrDefault(x => x.HERO != null && x.HERO.Id == defender.Id);
 
             if (attackerHex != null && defenderHex != null && attackerHex.Distance(defenderHex) == 1)
             {
                 int dealDmg = (int)(Convert.ToDouble(defender.Dmg * percentDmg) / 100);
-                AttackService.SetDamage(defender, attacker, dealDmg, Consts.DamageType.Physical);
+                AttackService.SetDamage(defender, attacker, dealDmg, Consts.DamageType.Physical, gameData);
                 return true;
             }
             return false;

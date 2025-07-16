@@ -14,25 +14,25 @@ namespace BattleArenaServer.Skills.InvokerSkills.Auras
             this.reduce_resist = reduce_resist;
         }
 
-        public override void SetEffect(Hero heroSource, Hex hexSource)
+        public override void SetEffect(Hero heroSource, Hex hexSource, GameData gameData)
         {
-            foreach (var n in UtilityService.GetHexesRadius(hexSource, radius))
+            foreach (var n in UtilityService.GetHexesRadius(hexSource, radius, gameData))
             {
                 if (n.HERO != null && n.HERO.Team != heroSource.Team)
                 {
-                    ApplyEffect(heroSource, n.HERO);
+                    ApplyEffect(heroSource, n.HERO, gameData);
                 }
             }
         }
 
-        public override void ApplyEffect(Hero source, Hero target)
+        public override void ApplyEffect(Hero source, Hero target, GameData gameData)
         {
             target.passiveResistance += ReduceResist;
         }
 
-        public override void CancelEffect(Hero source)
+        public override void CancelEffect(Hero source, GameData gameData)
         {
-            foreach (var hero in GameData._heroes)
+            foreach (var hero in gameData._heroes)
             {
                 hero.passiveResistance -= ReduceResist;
             }

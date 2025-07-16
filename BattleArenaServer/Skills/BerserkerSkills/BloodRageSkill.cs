@@ -24,16 +24,16 @@ namespace BattleArenaServer.Skills.BerserkerSkills
 
         public new ISkillCastRequest request => new NontargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (request.startRequest(requestData, this))
+            if (request.startRequest(requestData, this, gameData))
             {
                 if (requestData.Caster != null)
                 {
                     BloodRageBuff bloodRageBuff = new BloodRageBuff(requestData.Caster.Id, extraDmg, 1, hpLoss);
-                    requestData.Caster.AddEffect(bloodRageBuff);
+                    requestData.Caster.AddEffect(bloodRageBuff, gameData);
 
-                    requestData.Caster.SpendAP(requireAP);
+                    requestData.Caster.SpendAP(requireAP, gameData);
                     coolDownNow = coolDown;
                     return true;
                 }
@@ -41,7 +41,7 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
