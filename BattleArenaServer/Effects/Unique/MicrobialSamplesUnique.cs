@@ -21,36 +21,36 @@ namespace BattleArenaServer.Effects.Unique
             effectTags.Add(Consts.EffectTag.MicrobialSamples);
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             removed = false;
             
-            if (value + (1 * isUpgraded) >= 5 && !valAchived[0]) // 5 // +1 Брони
+            if (value + (1 * isUpgraded) >= 4 && !valAchived[0]) // 4 // +1 Брони
             {
                 _hero.Armor += 1;
                 stats[0] += 1;
                 valAchived[0] = true;
             }
-            if (value + (2 * isUpgraded) >= 10 && !valAchived[1]) // 10 // +1 Резист
+            if (value + (2 * isUpgraded) >= 8 && !valAchived[1]) // 8 // +1 Резист
             {
                 _hero.Resist += 1;
                 stats[1] += 1;
                 valAchived[1] = true;
             }
-            if (value + (3 * isUpgraded) >= 15 && !valAchived[2]) // 15 // +10 Урона
+            if (value + (3 * isUpgraded) >= 13 && !valAchived[2]) // 13 // +10 Урона
             {
                 _hero.Dmg += 10;
                 stats[2] += 10;
                 valAchived[2] = true;
             }
-            if (value + (4 * isUpgraded) >= 20 && !valAchived[3]) // 20 // +100 ХП
+            if (value + (4 * isUpgraded) >= 16 && !valAchived[3]) // 16 // +100 ХП
             {
                 _hero.MaxHP += 100;
                 _hero.HP += 100;
                 stats[3] += 100;
                 valAchived[3] = true;
             }
-            if (value + (5 * isUpgraded) >= 25 && !valAchived[4]) // 25 // +1 Брони +1 Резист
+            if (value + (5 * isUpgraded) >= 20 && !valAchived[4]) // 20 // +1 Брони +1 Резист
             {
                 _hero.Armor += 1;
                 _hero.Resist += 1;
@@ -58,7 +58,7 @@ namespace BattleArenaServer.Effects.Unique
                 stats[1] += 1;
                 valAchived[4] = true;
             }
-            if (value + (6 * isUpgraded) >= 30 && !valAchived[5]) // 30 // +10 Урона +50 ХП
+            if (value + (6 * isUpgraded) >= 25 && !valAchived[5]) // 25 // +10 Урона +50 ХП
             {
                 _hero.Dmg += 10;
                 _hero.MaxHP += 50;
@@ -79,7 +79,7 @@ namespace BattleArenaServer.Effects.Unique
                 description += $"\n+{stats[3]} ХП";
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             if (!removed)
             {

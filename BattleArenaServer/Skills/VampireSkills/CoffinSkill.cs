@@ -25,11 +25,11 @@ namespace BattleArenaServer.Skills.VampireSkills
 
         public new ISkillCastRequest request => new AllyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             if (requestData.Target != null && requestData.Caster != null && requestData.TargetHex != null)
             {
-                if (!request.startRequest(requestData, this))
+                if (!request.startRequest(requestData, this, gameData))
                     return false;
 
                 //Убираем цель с поля
@@ -37,20 +37,20 @@ namespace BattleArenaServer.Skills.VampireSkills
                 requestData.Target.HexId = -1;
 
                 //Ставим гроб
-                int Id = GameData._heroes.Max(x => x.Id) + 1;
+                int Id = gameData._heroes.Max(x => x.Id) + 1;
                 CoffinObstacle coffinObstacle
                     = new CoffinObstacle(Id, requestData.Caster.Id, requestData.TargetHex.ID, coffinHP, requestData.Caster.Team, 1, coffinHP, requestData.Target);
                 requestData.TargetHex.SetHero(coffinObstacle);
-                GameData._solidObstacles.Add(coffinObstacle);
+                gameData._solidObstacles.Add(coffinObstacle);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

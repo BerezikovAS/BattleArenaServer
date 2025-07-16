@@ -15,16 +15,16 @@ namespace BattleArenaServer.Skills.AeroturgSkills
             hero.afterAttack += AfterAttackDelegate;
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
@@ -39,17 +39,17 @@ namespace BattleArenaServer.Skills.AeroturgSkills
             return false;
         }
 
-        private bool AfterAttackDelegate(Hero attacker, Hero? defender, int dmg, Consts.DamageType dmgType)
+        private bool AfterAttackDelegate(Hero attacker, Hero? defender, int dmg, Consts.DamageType dmgType, GameData gameData)
         {
-            Hex? targetHex = GameData._hexes.FirstOrDefault(x => x.ID == defender?.HexId);
+            Hex? targetHex = gameData._hexes.FirstOrDefault(x => x.ID == defender?.HexId);
             if (targetHex != null && defender != null)
             {
-                foreach (var hex in UtilityService.GetHexesRadius(targetHex, 1))
+                foreach (var hex in UtilityService.GetHexesRadius(targetHex, 1, gameData))
                 {
                     if (hex.HERO != null && hex.HERO.Team != attacker.Team && hex.HERO.Id != defender.Id)
                     {
                         double splashDmg = Math.Round(dmg * 0.3);
-                        AttackService.SetDamage(attacker, hex.HERO, (int)splashDmg, damageType);
+                        AttackService.SetDamage(attacker, hex.HERO, (int)splashDmg, damageType, gameData);
                     }
                 }
             }

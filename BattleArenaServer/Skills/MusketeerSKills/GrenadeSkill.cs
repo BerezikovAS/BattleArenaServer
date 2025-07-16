@@ -27,22 +27,22 @@ namespace BattleArenaServer.Skills.MusketeerSKills
 
         public new ISkillCastRequest request => new RangeAoECastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null)
             {
-                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
+                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius, gameData))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                     {
                         int dealDmg = n.Distance(requestData.TargetHex) == 0 ? dmg : sharpDmg;
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dealDmg, Consts.DamageType.Magic);
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dealDmg, Consts.DamageType.Magic, gameData);
                     }
                 }
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -50,7 +50,7 @@ namespace BattleArenaServer.Skills.MusketeerSKills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

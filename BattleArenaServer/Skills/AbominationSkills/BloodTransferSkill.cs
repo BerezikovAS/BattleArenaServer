@@ -21,7 +21,7 @@ namespace BattleArenaServer.Skills.AbominationSkills
             stats = new SkillStats(coolDown, requireAP, range, radius);
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             if (requestData.Target != null && requestData.Caster != null)
             {
@@ -30,7 +30,7 @@ namespace BattleArenaServer.Skills.AbominationSkills
                 else
                     request = new AllyTargetCastRequest();
 
-                if (!request.startRequest(requestData, this))
+                if (!request.startRequest(requestData, this, gameData))
                     return false;
 
                 int healDmg = Convert.ToInt32((double)requestData.Caster.MaxHP * 0.1);
@@ -40,18 +40,18 @@ namespace BattleArenaServer.Skills.AbominationSkills
                     requestData.Caster.HP = requestData.Caster.MaxHP;
 
                 if (requestData.Target.Team != requestData.Caster.Team)
-                    AttackService.SetDamage(requestData.Caster, requestData.Target, healDmg, dmgType);
+                    AttackService.SetDamage(requestData.Caster, requestData.Target, healDmg, dmgType, gameData);
                 else
                     requestData.Target.Heal(healDmg);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

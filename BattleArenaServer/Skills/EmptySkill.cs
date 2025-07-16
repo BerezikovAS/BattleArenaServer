@@ -18,12 +18,12 @@ namespace BattleArenaServer.Skills
 
         public new ISkillCastRequest request => new NontargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             throw new NotImplementedException();
         }

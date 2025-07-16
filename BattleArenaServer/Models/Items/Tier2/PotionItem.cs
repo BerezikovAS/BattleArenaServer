@@ -6,7 +6,7 @@ namespace BattleArenaServer.Models.Items.Tier2
 {
     public class PotionItem : Item
     {
-        int heal = 65;
+        int heal = 80;
         int regen = 30;
 
         public PotionItem()
@@ -22,9 +22,9 @@ namespace BattleArenaServer.Models.Items.Tier2
             Skill = new PotionSkill(heal, regen);
         }
 
-        public override void CastItem(RequestData requestData)
+        public override void CastItem(RequestData requestData, GameData gameData)
         {
-            Skill.Cast(requestData);
+            Skill.Cast(requestData, gameData);
         }
     }
 
@@ -48,18 +48,18 @@ namespace BattleArenaServer.Models.Items.Tier2
 
         public new ISkillCastRequest request => new NontargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (request.startRequest(requestData, this))
+            if (request.startRequest(requestData, this, gameData))
             {
                 if (requestData.Caster != null)
                 {
                     requestData.Caster.Heal(heal);
 
                     RegenerationBuff regenerationBuff = new RegenerationBuff(requestData.Caster.Id, regen, 2);
-                    requestData.Caster.AddEffect(regenerationBuff);
+                    requestData.Caster.AddEffect(regenerationBuff, gameData);
 
-                    requestData.Caster.SpendAP(requireAP);
+                    requestData.Caster.SpendAP(requireAP, gameData);
                     coolDownNow = coolDown;
                     return true;
                 }

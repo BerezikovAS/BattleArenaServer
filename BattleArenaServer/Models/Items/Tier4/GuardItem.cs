@@ -22,9 +22,9 @@ namespace BattleArenaServer.Models.Items.Tier4
             Skill = new GuardSkill(heal, shieldDurability);
         }
 
-        public override void CastItem(RequestData requestData)
+        public override void CastItem(RequestData requestData, GameData gameData)
         {
-            Skill.Cast(requestData);
+            Skill.Cast(requestData, gameData);
         }
     }
 
@@ -49,23 +49,23 @@ namespace BattleArenaServer.Models.Items.Tier4
 
         public new ISkillCastRequest request => new NonTargerAoECastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (request.startRequest(requestData, this))
+            if (request.startRequest(requestData, this, gameData))
             {
                 if (requestData.Caster != null && requestData.TargetHex != null)
                 {
-                    foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
+                    foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius, gameData))
                     {
                         if (n.HERO != null && n.HERO.Team == requestData.Caster.Team)
                         {
                             n.HERO.Heal(heal);
 
                             DmgShieldBuff dmgShieldBuff = new DmgShieldBuff(requestData.Caster.Id, shieldDurability, 2);
-                            n.HERO.AddEffect(dmgShieldBuff);
+                            n.HERO.AddEffect(dmgShieldBuff, gameData);
                         }
                     }
-                    requestData.Caster.SpendAP(requireAP);
+                    requestData.Caster.SpendAP(requireAP, gameData);
                     coolDownNow = coolDown;
                     return true;
                 }

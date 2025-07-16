@@ -27,23 +27,23 @@ namespace BattleArenaServer.Skills.ChaosSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null && requestData.TargetHex != null)
             {
                 int heroesCnt = 0;
 
-                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
+                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius, gameData))
                 {
                     if ((n.HERO != null && n.HERO.Id != requestData.Target.Id) || n.OBSTACLE != null)
                         heroesCnt++;
                 }
 
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg + extraDmg * heroesCnt, dmgType);
-                requestData.Caster.SpendAP(requireAP);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg + extraDmg * heroesCnt, dmgType, gameData);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -51,7 +51,7 @@ namespace BattleArenaServer.Skills.ChaosSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

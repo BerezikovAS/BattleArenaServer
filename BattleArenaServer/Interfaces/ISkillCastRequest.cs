@@ -4,6 +4,6 @@ namespace BattleArenaServer.Interfaces
 {
     public interface ISkillCastRequest
     {
-        public bool startRequest(RequestData requestData, Skill skill);
+        public bool startRequest(RequestData requestData, Skill skill, GameData gameData);
     }
 }

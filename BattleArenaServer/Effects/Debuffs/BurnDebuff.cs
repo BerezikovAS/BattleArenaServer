@@ -14,12 +14,12 @@ namespace BattleArenaServer.Effects.Debuffs
             description = $"Каждая потеря здоровья отнимает еще {value}% от максимального запаса";
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             hero.modifierAppliedDamage += Burn;
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
             hero.modifierAppliedDamage -= Burn;
         }

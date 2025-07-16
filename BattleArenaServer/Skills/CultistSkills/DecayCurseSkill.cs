@@ -27,25 +27,25 @@ namespace BattleArenaServer.Skills.CultistSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null && requestData.TargetHex != null)
             {
-                foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, radiusUpg))
+                foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, radiusUpg, gameData))
                 {
                     if (hex.HERO != null && hex.HERO.Team != requestData.Caster.Team)
                     {
                         DecayDebuff decayDebuff = new DecayDebuff(requestData.Caster.Id, 0, 2);
-                        hex.HERO.AddEffect(decayDebuff);
+                        hex.HERO.AddEffect(decayDebuff, gameData);
                     }
                 }
 
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -53,7 +53,7 @@ namespace BattleArenaServer.Skills.CultistSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

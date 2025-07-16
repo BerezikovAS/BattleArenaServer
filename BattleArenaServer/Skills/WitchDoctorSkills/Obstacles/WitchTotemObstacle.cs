@@ -28,22 +28,22 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills.Obstacles
             this.AddEffect = AddEffectTotem;
         }
 
-        private void AddEffectTotem(Effect effect)
+        private void AddEffectTotem(Effect effect, GameData gameData)
         {
             if (effect is TotemChargeUnique)
                 EffectList.Add(effect);
         }
 
-        public void EndLifeTotem(Hex currentHex)
+        public void EndLifeTotem(Hex currentHex, GameData gameData)
         {
             Effect? charge = this.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.TotemCharge));
             int charges = charge == null ? 0 : charge.value;
 
-            foreach (var hex in UtilityService.GetHexesRadius(currentHex, _radius))
+            foreach (var hex in UtilityService.GetHexesRadius(currentHex, _radius, gameData))
             {
                 int dmg = _baseDmg + charges * _chargeDmg;
                 if (hex.HERO != null && hex.HERO.Team != this.Team)
-                    AttackService.SetDamage(this, hex.HERO, dmg, Consts.DamageType.Pure);
+                    AttackService.SetDamage(this, hex.HERO, dmg, Consts.DamageType.Pure, gameData);
                 else if (hex.HERO != null)
                     hex.HERO.Heal(charges * _chargeDmg);
             }

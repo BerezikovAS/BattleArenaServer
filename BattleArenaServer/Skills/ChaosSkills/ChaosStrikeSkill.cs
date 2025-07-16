@@ -26,9 +26,9 @@ namespace BattleArenaServer.Skills.ChaosSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null && requestData.TargetHex != null)
@@ -45,8 +45,8 @@ namespace BattleArenaServer.Skills.ChaosSkills
                         break;
                 }
 
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg + rnd.Next(0, extraDmg), damageType);
-                requestData.Caster.SpendAP(requireAP);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg + rnd.Next(0, extraDmg), damageType, gameData);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -54,7 +54,7 @@ namespace BattleArenaServer.Skills.ChaosSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

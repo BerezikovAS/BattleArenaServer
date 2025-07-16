@@ -15,10 +15,10 @@ namespace BattleArenaServer.Skills.GeomantSkills.Auras
             this.upgraded = upgraded;
         }
 
-        public override void SetEffect(Hero heroSource, Hex hexSource)
+        public override void SetEffect(Hero heroSource, Hex hexSource, GameData gameData)
         {
             stalaktiteCount = 0;
-            foreach (var n in UtilityService.GetHexesRadius(hexSource, radius))
+            foreach (var n in UtilityService.GetHexesRadius(hexSource, radius, gameData))
             {
                 if (n.HERO != null && n.HERO.Name == "Stalaktite" && n.HERO.Team == heroSource.Team)
                 {
@@ -27,17 +27,17 @@ namespace BattleArenaServer.Skills.GeomantSkills.Auras
                         stalaktiteCount++;
                 }
             }
-            ApplyEffect(heroSource, heroSource);
+            ApplyEffect(heroSource, heroSource, gameData);
         }
 
-        public override void ApplyEffect(Hero source, Hero target)
+        public override void ApplyEffect(Hero source, Hero target, GameData gameData)
         {
             source.Armor += stalaktiteCount;
             source.Resist += stalaktiteCount;
             source.Dmg += stalaktiteCount * 10;
         }
 
-        public override void CancelEffect(Hero source)
+        public override void CancelEffect(Hero source, GameData gameData)
         {
             source.Armor -= stalaktiteCount;
             source.Resist -= stalaktiteCount;

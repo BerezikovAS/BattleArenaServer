@@ -26,9 +26,9 @@ namespace BattleArenaServer.Skills.GeomantSkills
 
         public new ISkillCastRequest request => new LineCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.CasterHex != null && requestData.TargetHex != null)
@@ -38,33 +38,33 @@ namespace BattleArenaServer.Skills.GeomantSkills
                 Hex? targetHex = null;
                 while (pos <= radius && target == null)
                 {
-                    targetHex = UtilityService.GetOneHexOnDirection(requestData.CasterHex, requestData.TargetHex, pos);
+                    targetHex = UtilityService.GetOneHexOnDirection(requestData.CasterHex, requestData.TargetHex, pos, gameData);
                     target = targetHex?.HERO?.Team != requestData.Caster.Team ? targetHex?.HERO : null;
                     pos++;
                 }
 
                 if (target != null && targetHex != null)
                 {
-                    Hex? hex = UtilityService.GetOneHexOnDirection(requestData.CasterHex, requestData.TargetHex, pos);
+                    Hex? hex = UtilityService.GetOneHexOnDirection(requestData.CasterHex, requestData.TargetHex, pos, gameData);
                     if (hex != null && hex.IsFree())
                     {
-                        AttackService.MoveHero(target, targetHex, hex);
+                        AttackService.MoveHero(target, targetHex, hex, gameData);
                     }
                     else
                         target.AP -= 1;
 
-                    AttackService.SetDamage(requestData.Caster, target, dmg, dmgType);
+                    AttackService.SetDamage(requestData.Caster, target, dmg, dmgType, gameData);
                 }
 
                 //Если не нашли никого, кому влетит камнем, то это вина кастера)
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

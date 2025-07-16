@@ -13,16 +13,16 @@ namespace BattleArenaServer.Skills.ElementalistSkills
             hero.afterSpellCast += ElementEssence;
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
@@ -34,7 +34,7 @@ namespace BattleArenaServer.Skills.ElementalistSkills
             return false;
         }
 
-        private void ElementEssence(Hero caster, Hero? target, Skill skill)
+        private void ElementEssence(Hero caster, Hero? target, Skill skill, GameData gameData)
         {
             caster.Dmg += extraDmg;
         }

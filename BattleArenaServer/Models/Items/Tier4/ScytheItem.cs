@@ -22,19 +22,19 @@ namespace BattleArenaServer.Models.Items.Tier4
             Skill = new ScytheSkill(enemyHP, heal);
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             hero.Resist += resist;
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
             hero.Resist -= resist;
         }
 
-        public override void CastItem(RequestData requestData)
+        public override void CastItem(RequestData requestData, GameData gameData)
         {
-            Skill.Cast(requestData);
+            Skill.Cast(requestData, gameData);
         }
     }
 
@@ -56,9 +56,9 @@ namespace BattleArenaServer.Models.Items.Tier4
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null)
@@ -66,10 +66,10 @@ namespace BattleArenaServer.Models.Items.Tier4
                 if (requestData.Target.HP > enemyHP)
                     return false;
 
-                AttackService.KillHero(requestData.Target);
+                AttackService.KillHero(requestData.Target, gameData);
                 requestData.Target.Heal(heal);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }

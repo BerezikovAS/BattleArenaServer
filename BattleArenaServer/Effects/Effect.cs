@@ -19,12 +19,12 @@ namespace BattleArenaServer.Effects
 
         public List<Consts.EffectTag> effectTags { get; set; } = new List<Consts.EffectTag>();
 
-        public abstract void ApplyEffect(Hero hero);
+        public abstract void ApplyEffect(Hero hero, GameData gameData);
 
-        public abstract void RemoveEffect(Hero hero);
+        public abstract void RemoveEffect(Hero hero, GameData gameData);
 
         public virtual void RefreshDescr() { }
 
-        public virtual void ApplyAfterEffect(Hero hero) { }
+        public virtual void ApplyAfterEffect(Hero hero, GameData gameData) { }
     }
 }

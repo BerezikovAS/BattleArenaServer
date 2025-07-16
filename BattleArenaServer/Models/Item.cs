@@ -26,17 +26,17 @@ namespace BattleArenaServer.Models
             Description = descr;
         }
 
-        public virtual void ApplyEffect(Hero hero)
+        public virtual void ApplyEffect(Hero hero, GameData gameData)
         {
 
         }
 
-        public virtual void RemoveEffect(Hero hero)
+        public virtual void RemoveEffect(Hero hero, GameData gameData)
         {
 
         }
 
-        public virtual void CastItem(RequestData requestData)
+        public virtual void CastItem(RequestData requestData, GameData gameData)
         {
 
         }

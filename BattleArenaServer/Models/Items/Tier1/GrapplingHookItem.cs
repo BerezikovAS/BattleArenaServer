@@ -6,7 +6,7 @@ namespace BattleArenaServer.Models.Items.Tier1
 {
     public class GrapplingHookItem : Item
     {
-        int dmg = 50;
+        int dmg = 65;
         public GrapplingHookItem()
         {
             Name = "GrapplingHook";
@@ -20,9 +20,9 @@ namespace BattleArenaServer.Models.Items.Tier1
             Skill = new GrapplingHookSkill(dmg);
         }
 
-        public override void CastItem(RequestData requestData)
+        public override void CastItem(RequestData requestData, GameData gameData)
         {
-            Skill.Cast(requestData);
+            Skill.Cast(requestData, gameData);
         }
     }
 
@@ -45,9 +45,9 @@ namespace BattleArenaServer.Models.Items.Tier1
 
         public new ISkillCastRequest request => new LineCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.CasterHex != null && requestData.TargetHex != null)
@@ -57,21 +57,21 @@ namespace BattleArenaServer.Models.Items.Tier1
                 Hex? targetHex = null;
                 while (pos <= radius && target == null)
                 {
-                    targetHex = UtilityService.GetOneHexOnDirection(requestData.CasterHex, requestData.TargetHex, pos);
+                    targetHex = UtilityService.GetOneHexOnDirection(requestData.CasterHex, requestData.TargetHex, pos, gameData);
                     target = targetHex?.HERO?.Team != requestData.Caster.Team ? targetHex?.HERO : null;
                     pos++;
                 }
 
                 if (target != null && targetHex != null)
                 {
-                    Hex? hex = UtilityService.GetOneHexOnDirection(targetHex, requestData.CasterHex, 1);
+                    Hex? hex = UtilityService.GetOneHexOnDirection(targetHex, requestData.CasterHex, 1, gameData);
                     if (hex != null && hex.IsFree())
-                        AttackService.MoveHero(target, targetHex, hex);
+                        AttackService.MoveHero(target, targetHex, hex, gameData);
 
-                    AttackService.SetDamage(requestData.Caster, target, dmg, dmgType);
+                    AttackService.SetDamage(requestData.Caster, target, dmg, dmgType, gameData);
                 }
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }

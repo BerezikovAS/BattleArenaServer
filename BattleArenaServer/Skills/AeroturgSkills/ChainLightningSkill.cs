@@ -25,45 +25,45 @@ namespace BattleArenaServer.Skills.AeroturgSkills
 
         public new ISkillCastRequest request => new HeroTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null && requestData.TargetHex != null)
             {
                 List<Hero> heroes = new List<Hero>([requestData.Target]);
-                heroes = AddNearbyHeroes(requestData.TargetHex, heroes);
+                heroes = AddNearbyHeroes(requestData.TargetHex, heroes, gameData);
 
                 foreach (var hero in heroes)
                 {
                     if (requestData.Caster.Team != hero.Team)
                     {
-                        AttackService.SetDamage(requestData.Caster, hero, dmg, dmgType);
+                        AttackService.SetDamage(requestData.Caster, hero, dmg, dmgType, gameData);
                     }
                 }
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        private List<Hero> AddNearbyHeroes(Hex targetHex, List<Hero> heroes)
+        private List<Hero> AddNearbyHeroes(Hex targetHex, List<Hero> heroes, GameData gameData)
         {
-            foreach (var hex in UtilityService.GetHexesRadius(targetHex, 1))
+            foreach (var hex in UtilityService.GetHexesRadius(targetHex, 1, gameData))
             {
                 if (hex.ID != targetHex.ID && hex.HERO != null && heroes.FirstOrDefault(x => x.Id == hex.HERO.Id) == null)
                 {
                     heroes.Add(hex.HERO);
-                    AddNearbyHeroes(hex, heroes);
+                    AddNearbyHeroes(hex, heroes, gameData);
                 }
             }
             return heroes;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

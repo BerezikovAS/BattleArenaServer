@@ -10,7 +10,7 @@ namespace BattleArenaServer.Skills.GuardianSkills
         public OnslaughtSkill()
         {
             name = "Onslaught";
-            dmg = 90;
+            dmg = 100;
             title = $"Мощный натиск отбрасывает врага назад и наносит {dmg} маг. урона, а Вы становитесь на его место.";
             titleUpg = "-1 к перезарядке, +20 к урону";
             coolDown = 3;
@@ -25,23 +25,23 @@ namespace BattleArenaServer.Skills.GuardianSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null && requestData.TargetHex != null && requestData.CasterHex != null)
             {
-                Hex? hex = UtilityService.GetOneHexOnDirection(requestData.CasterHex, requestData.TargetHex, 2);
+                Hex? hex = UtilityService.GetOneHexOnDirection(requestData.CasterHex, requestData.TargetHex, 2, gameData);
                 if (hex != null && hex.IsFree())
                 {
-                    AttackService.MoveHero(requestData.Target, requestData.TargetHex, hex); // Перемещаем врага
-                    AttackService.MoveHero(requestData.Caster, requestData.CasterHex, requestData.TargetHex); // Встаём на его место
+                    AttackService.MoveHero(requestData.Target, requestData.TargetHex, hex, gameData); // Перемещаем врага
+                    AttackService.MoveHero(requestData.Caster, requestData.CasterHex, requestData.TargetHex, gameData); // Встаём на его место
                 }
 
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -49,7 +49,7 @@ namespace BattleArenaServer.Skills.GuardianSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

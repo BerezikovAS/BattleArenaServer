@@ -20,34 +20,22 @@ namespace BattleArenaServer.Skills.Crossbowman.Obstacles
 
             bleedingDmg = bleedingDamage;
             bleedingDur = bleedingDuration;
-
-            //Одновременно может существовать только одна ловушка. Если она уже на поле, уберем её
-            /*Obstacle? obst = GameData._obstacles.FirstOrDefault(x => x.Name == "Caltrop");
-            if (obst != null)
-            {
-                Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == obst.HexId);
-                if (hex != null && hex.OBSTACLE != null)
-                {
-                    hex.RemoveObstacle();
-                    GameData._obstacles.Remove(obst);
-                }
-            }*/
         }
-        public override void ApplyEffect(Hero hero, Hex hex)
+        public override void ApplyEffect(Hero hero, Hex hex, GameData gameData)
         {
             if (hero.Team != Team)
             {
                 //Убираем ловушку из игры
                 hex.RemoveObstacle();
-                GameData._obstacles.Remove(this);
+                gameData._obstacles.Remove(this);
 
                 //Вешаем кровотечение
                 BleedingDebuff bleedingDebuff = new BleedingDebuff(CasterId, bleedingDmg, bleedingDur);
-                hero.AddEffect(bleedingDebuff);
+                hero.AddEffect(bleedingDebuff, gameData);
 
                 //Наносим мгновенный дамаг
-                Hero? attacker = GameData._heroes.FirstOrDefault(x => x.Id == CasterId);
-                AttackService.SetDamage(attacker, hero, instantDmg, Consts.DamageType.Pure);
+                Hero? attacker = gameData._heroes.FirstOrDefault(x => x.Id == CasterId);
+                AttackService.SetDamage(attacker, hero, instantDmg, Consts.DamageType.Pure, gameData);
 
             }
         }

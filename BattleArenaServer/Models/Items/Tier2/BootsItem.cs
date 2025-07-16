@@ -19,9 +19,9 @@ namespace BattleArenaServer.Models.Items.Tier2
             Skill = new BootsSkill();
         }
 
-        public override void CastItem(RequestData requestData)
+        public override void CastItem(RequestData requestData, GameData gameData)
         {
-            Skill.Cast(requestData);
+            Skill.Cast(requestData, gameData);
         }
     }
 
@@ -40,14 +40,14 @@ namespace BattleArenaServer.Models.Items.Tier2
 
         public new ISkillCastRequest request => new NontargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (request.startRequest(requestData, this))
+            if (request.startRequest(requestData, this, gameData))
             {
                 if (requestData.Caster != null)
                 {
                     HasteBuff hasteBuff = new HasteBuff(requestData.Caster.Id, 0, 1);
-                    requestData.Caster.AddEffect(hasteBuff);
+                    requestData.Caster.AddEffect(hasteBuff, gameData);
 
                     coolDownNow = coolDown;
                     return true;

@@ -6,7 +6,7 @@ namespace BattleArenaServer.SkillCastRequests
 {
     public class LineCastRequest : ISkillCastRequest
     {
-        public bool startRequest(RequestData requestData, Skill skill)
+        public bool startRequest(RequestData requestData, Skill skill, GameData gameData)
         {
             ICastChecker coolDownChecker = new CooldownChecker();
             ICastChecker actionPointsChecker = new ActionPointsChecker();
@@ -15,7 +15,7 @@ namespace BattleArenaServer.SkillCastRequests
             coolDownChecker.nextChecker = actionPointsChecker;
             actionPointsChecker.nextChecker = onLineChecker;
             onLineChecker.nextChecker = new TerminalChecker();
-            return coolDownChecker.Check(requestData, skill);
+            return coolDownChecker.Check(requestData, skill, gameData);
         }
     }
 }

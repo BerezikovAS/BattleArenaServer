@@ -24,9 +24,9 @@ namespace BattleArenaServer.Skills.AbominationSkills
 
         public new ISkillCastRequest request => new NontargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null)
@@ -39,14 +39,14 @@ namespace BattleArenaServer.Skills.AbominationSkills
                 requestData.Caster.Resist += extraDef;
                 requestData.Caster.Dmg += extraDmg;
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

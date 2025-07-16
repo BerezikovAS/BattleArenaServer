@@ -10,15 +10,15 @@ namespace BattleArenaServer.Models
         public int radius { get; set; } = 0;
         public Consts.AuraType type { get; set; } = Consts.AuraType.Continuous;
 
-        public abstract void ApplyEffect(Hero source, Hero target);
-        public abstract void CancelEffect(Hero source);
+        public abstract void ApplyEffect(Hero source, Hero target, GameData gameData);
+        public abstract void CancelEffect(Hero source, GameData gameData);
 
-        public virtual void SetEffect(Hero heroSource, Hex hexSource)
+        public virtual void SetEffect(Hero heroSource, Hex hexSource, GameData gameData)
         {
-            foreach (var n in UtilityService.GetHexesRadius(hexSource, radius))
+            foreach (var n in UtilityService.GetHexesRadius(hexSource, radius, gameData))
             {
                 if (n.HERO != null)
-                    ApplyEffect(heroSource, n.HERO);
+                    ApplyEffect(heroSource, n.HERO, gameData);
             }
         }
     }

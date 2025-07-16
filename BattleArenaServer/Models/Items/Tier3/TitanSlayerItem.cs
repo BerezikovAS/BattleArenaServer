@@ -14,19 +14,19 @@
             SellCost = 27;
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             //hero.Dmg += dmg;
             hero.passiveAttackDamage += AttackDelegate;
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
             //hero.Dmg -= dmg;
             hero.passiveAttackDamage -= AttackDelegate;
         }
 
-        private int AttackDelegate(Hero attacker, Hero? defender)
+        private int AttackDelegate(Hero attacker, Hero? defender, GameData gameData)
         {
             if (defender == null)
                 return 0;

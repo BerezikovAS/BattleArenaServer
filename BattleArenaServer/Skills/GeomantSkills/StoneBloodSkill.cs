@@ -26,16 +26,16 @@ namespace BattleArenaServer.Skills.GeomantSkills
 
         public new ISkillCastRequest request => new NonTargerAoECastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.CasterHex != null)
             {
                 int freeHexCount = 0;
 
-                foreach (var hex in UtilityService.GetHexesRadius(requestData.CasterHex, radius))
+                foreach (var hex in UtilityService.GetHexesRadius(requestData.CasterHex, radius, gameData))
                 {
                     if (hex.IsFree())
                         freeHexCount += 1;
@@ -44,16 +44,16 @@ namespace BattleArenaServer.Skills.GeomantSkills
                 }
 
                 RegenerationBuff regenerationBuff = new RegenerationBuff(requestData.Caster.Id, freeHexCount * extraRegen, 3);
-                requestData.Caster.AddEffect(regenerationBuff);
+                requestData.Caster.AddEffect(regenerationBuff, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

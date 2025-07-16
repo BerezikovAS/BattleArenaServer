@@ -18,7 +18,7 @@
             obstacleLifeTimeDecrease = Consts.ObstacleLifeTimeDecrease.EndTurn;
         }
 
-        public delegate void EndLifeEffect(Hex currentHex);
+        public delegate void EndLifeEffect(Hex currentHex, GameData gameData);
         public EndLifeEffect endLifeEffect = delegate { };
     }
 }

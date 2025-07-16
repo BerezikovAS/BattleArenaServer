@@ -17,27 +17,27 @@ namespace BattleArenaServer.Models.Items.Auras
             this.dmg = dmg;
         }
 
-        public override void SetEffect(Hero heroSource, Hex hexSource)
+        public override void SetEffect(Hero heroSource, Hex hexSource, GameData gameData)
         {
             heroList.Clear();
-            foreach (var n in UtilityService.GetHexesRadius(hexSource, radius))
+            foreach (var n in UtilityService.GetHexesRadius(hexSource, radius, gameData))
             {
                 if (n.HERO != null && n.HERO.Team == heroSource.Team)
                 {
                     heroList.Add(n.HERO);
-                    ApplyEffect(heroSource, n.HERO);
+                    ApplyEffect(heroSource, n.HERO, gameData);
                 }
             }
         }
 
-        public override void ApplyEffect(Hero source, Hero target)
+        public override void ApplyEffect(Hero source, Hero target, GameData gameData)
         {
             target.Armor += armorResist;
             target.Resist += armorResist;
             target.Dmg += dmg;
         }
 
-        public override void CancelEffect(Hero source)
+        public override void CancelEffect(Hero source, GameData gameData)
         {
             foreach (var hero in heroList)
             {

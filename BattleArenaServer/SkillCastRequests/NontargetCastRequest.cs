@@ -6,13 +6,13 @@ namespace BattleArenaServer.SkillCastRequests
 {
     public class NontargetCastRequest : ISkillCastRequest
     {
-        public bool startRequest(RequestData requestData, Skill skill)
+        public bool startRequest(RequestData requestData, Skill skill, GameData gameData)
         {
             ICastChecker coolDownChecker = new CooldownChecker();
             ICastChecker actionPointsChecker = new ActionPointsChecker();
             coolDownChecker.nextChecker = actionPointsChecker;
             actionPointsChecker.nextChecker = new TerminalChecker();
-            return coolDownChecker.Check(requestData, skill);
+            return coolDownChecker.Check(requestData, skill, gameData);
         }
     }
 }

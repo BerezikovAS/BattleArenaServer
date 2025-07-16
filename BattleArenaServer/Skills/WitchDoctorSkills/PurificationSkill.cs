@@ -27,14 +27,14 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
 
         public new ISkillCastRequest request => new RangeAoECastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null)
             {
-                foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
+                foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, radius, gameData))
                 {
                     if (hex.HERO != null && hex.HERO.Team == requestData.Caster.Team)
                     {
@@ -42,17 +42,17 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
                         foreach (var debuff in hex.HERO.EffectList.Where(x => x.type == Consts.StatusEffect.Debuff))
                         {
                             debuffs.Add(debuff);
-                            debuff.RemoveEffect(hex.HERO);
+                            debuff.RemoveEffect(hex.HERO, gameData);
                         }
 
                         int debuffCount = debuffs.Count;
                         if (debuffCount > 0)
                         {
                             ArmorBuff armorBuff = new ArmorBuff(requestData.Caster.Id, debuffCount, 2);
-                            hex.HERO.AddEffect(armorBuff);
+                            hex.HERO.AddEffect(armorBuff, gameData);
 
                             ResistBuff resistBuff = new ResistBuff(requestData.Caster.Id, debuffCount, 2);
-                            hex.HERO.AddEffect(resistBuff);
+                            hex.HERO.AddEffect(resistBuff, gameData);
                         }
 
                         foreach (var effect in debuffs)
@@ -61,14 +61,14 @@ namespace BattleArenaServer.Skills.WitchDoctorSkills
                         }
                     }
                 }
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

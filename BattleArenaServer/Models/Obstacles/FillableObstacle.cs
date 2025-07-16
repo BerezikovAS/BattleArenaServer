@@ -2,6 +2,6 @@
 {
     public abstract class FillableObstacle : Obstacle
     {
-        public abstract void ApplyEffect(Hero hero, Hex hex);
+        public abstract void ApplyEffect(Hero hero, Hex hex, GameData gameData);
     }
 }

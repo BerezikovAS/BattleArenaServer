@@ -57,23 +57,22 @@ namespace BattleArenaServer.Models
             Hero = null;
         }
 
-        public void SetObstacle(Obstacle obstacle)
+        public void SetObstacle(Obstacle obstacle, GameData gameData)
         {
             Obstacle = obstacle;
             obstacle.HexId = _id;
-            GameData._obstacles.Add(obstacle);
+            gameData._obstacles.Add(obstacle);
         }
 
         public void RemoveObstacle()
         {
             Obstacle = null;
-            //GameData._obstacles.Remove(Obstacle);
         }
 
-        public void AddSurface(FillableObstacle surface)
+        public void AddSurface(FillableObstacle surface, GameData gameData)
         {
             Surfaces.Add(surface);
-            GameData._surfaces.Add(surface);
+            gameData._surfaces.Add(surface);
         }
 
         public void RemoveSurface(FillableObstacle surface)

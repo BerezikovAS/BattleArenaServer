@@ -14,12 +14,12 @@ namespace BattleArenaServer.Effects.Debuffs
             description = $"Урон от атак снижен на {value}%";
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             _hero.StatsEffect.DmgMultiplier -= Convert.ToDouble(value) / 100;
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             _hero.StatsEffect.DmgMultiplier += Convert.ToDouble(value) / 100;
         }

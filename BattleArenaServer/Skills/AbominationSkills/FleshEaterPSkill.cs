@@ -13,16 +13,16 @@ namespace BattleArenaServer.Skills.AbominationSkills
             hero.afterAttack += FleshEater;
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
@@ -36,7 +36,7 @@ namespace BattleArenaServer.Skills.AbominationSkills
             return false;
         }
 
-        private bool FleshEater(Hero attacker, Hero defender, int dmg, Consts.DamageType dmgType)
+        private bool FleshEater(Hero attacker, Hero defender, int dmg, Consts.DamageType dmgType, GameData gameData)
         {
             if (defender == null)
                 return false;

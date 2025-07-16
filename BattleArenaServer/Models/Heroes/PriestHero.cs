@@ -18,8 +18,10 @@ namespace BattleArenaServer.Models.Heroes
             SkillList[4] = new CondemnationSkill();
         }
 
-        public override void Respawn()
+        public override void Respawn(GameData? gameData = null)
         {
+            base.Respawn(gameData);
+
             MaxHP = HP = 875;
             Armor = 2;
             Resist = 3;
@@ -29,7 +31,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 95;
 
-            base.Respawn();
+            ApplyItems(gameData);
         }
     }
 }

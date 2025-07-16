@@ -26,9 +26,9 @@ namespace BattleArenaServer.Skills.GhostSkills
 
         public new ISkillCastRequest request => new RangeAoECastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.CasterHex != null && requestData.TargetHex != null)
@@ -36,14 +36,14 @@ namespace BattleArenaServer.Skills.GhostSkills
                 if (requestData.CasterHex.Distance(requestData.TargetHex) < 1)
                     return false;
 
-                foreach (var n in UtilityService.GetHexesCircle(requestData.CasterHex, requestData.TargetHex, radius))
+                foreach (var n in UtilityService.GetHexesCircle(requestData.CasterHex, requestData.TargetHex, radius, gameData))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
                     {
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, Consts.DamageType.Magic);
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg, Consts.DamageType.Magic, gameData);
                     }
                 }
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -51,7 +51,7 @@ namespace BattleArenaServer.Skills.GhostSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

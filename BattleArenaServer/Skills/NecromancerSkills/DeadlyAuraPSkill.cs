@@ -18,26 +18,26 @@ namespace BattleArenaServer.Skills.NecromancerSkills
             hero.AuraList.Add(Aura);
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
                 upgraded = true;
                 reduce_resist += 1;
-                Aura.CancelEffect(hero);
+                Aura.CancelEffect(hero, gameData);
                 hero.AuraList.Remove(Aura);
                 Aura = new DeadlyAura(false, reduce_resist, radius);
                 hero.AuraList.Add(Aura);
-                AttackService.ContinuousAuraAction();
+                AttackService.ContinuousAuraAction(gameData);
                 title = $"Враги в радиусе 2-х клеток от Вас имеют -{reduce_resist} к сопротивлению.";
                 return true;
             }

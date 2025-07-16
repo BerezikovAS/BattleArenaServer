@@ -1,6 +1,6 @@
 const hubConnection = new signalR.HubConnectionBuilder()
-    .withUrl("http://localhost:8080/fieldhub", { withCredentials: false, mode: 'no-cors' })
-    //.withUrl("http://10.80.3.105:8080/fieldhub", { withCredentials: false, mode: 'no-cors' })
+    //.withUrl("http://localhost:8080/fieldhub", { withCredentials: false, mode: 'no-cors' })
+    .withUrl("http://10.80.3.137:8080/fieldhub", { withCredentials: false, mode: 'no-cors' })
     //.withUrl("http://130.193.45.251:8080/fieldhub", { withCredentials: false, mode: 'no-cors' }) //ip виртуалки
     .build();
 
@@ -24,11 +24,13 @@ hubConnection.on("SetShopItems", function (_items) {
 });
 
 hubConnection.on("BeginBattle", function () {
-    window.location.href = 'http://localhost:8080/Battle.html';
+    //window.location.href = 'http://localhost:8080/Battle.html';
+    window.location.href = 'http://10.80.3.137:8080/Battle.html';
 });
 
 hubConnection.on("RecreateGame", function () {
-    window.location.href = 'http://localhost:8080';
+    //window.location.href = 'http://localhost:8080';
+    window.location.href = 'http://10.80.3.137:8080/Pick.html';
 });
 
 hubConnection.on("GetUsersBindings", (_bindings) => {
@@ -130,6 +132,7 @@ var isNeedRespawnPoint = false;
 var selectedBanchHero = -1;
 var shopItems;
 var nameCastingItem = "";
+var isGameStarted = -1;
 
 window.onload = async function () {
 
@@ -138,9 +141,16 @@ window.onload = async function () {
         setUserCookie();
         userId = getCookie("user_id");
     }
-    //console.log("user_id: " + userId);
 
     await hubConnection.start();
+
+    await hubConnection.invoke("IsGameStarted", 1)
+        .catch(function (err) {
+            return console.error(err.toString());
+        });
+
+    if (isGameStarted != 1)
+        return;
 
     await hubConnection.invoke("SendActiveHero")
         .catch(function (err) {
@@ -157,7 +167,15 @@ window.onload = async function () {
             return console.error(err.toString());
         });
 
-    feelHeroInfo(0, hero.coordid);
+    await hubConnection.invoke("SendChatMessage", "") //Пустое сообщение (получение истории переписки)
+        .catch(function (err) {
+            return console.error(err.toString());
+        });
+
+    //let www = heroes.find(x => x != undefined);
+
+    let coord = hero == undefined ? heroes.find(x => x != undefined).coordid : hero.coordid;
+    feelHeroInfo(0, coord);
 }
 
 window.addEventListener("keydown", keyPressed);
@@ -176,7 +194,7 @@ function keyPressed(e){
     }
 }
 
-function skillPressed(e){
+function skillPressed(e) {
    switch(e.code){
         case "Digit1":
             castSpell(1);
@@ -190,12 +208,14 @@ function skillPressed(e){
         case "Digit4":
             castSpell(4);
            break;
-        case "KeyR":
+        case "KeyR": {
             cancel();
-           break;
+            showHideShop(0);
+        }
+            break;
         case "KeyT":
             endTurn();
-           break;
+            break;
    }
 }
 
@@ -287,8 +307,9 @@ async function feelField(_field) {
 
     enableUpgrades(hero);
     feelActiveHeroInfo(hero);
-    fillFootHovers(hexes[hero.coordid], hexes);
     enableSpells(hero);
+    if (hero != undefined)
+        fillFootHovers(hexes[hero.coordid], hexes);
 }
 
 function hexClick(_hex) {
@@ -336,6 +357,7 @@ function cancel() {
     hero = heroes[idActiveHero];
     fillFootHovers(hexes[hero.coordid], hexes);
     enableSpells(hero);
+    fillActiveHeroItems();
 }
 
 function bindUserToTeam(_team) {

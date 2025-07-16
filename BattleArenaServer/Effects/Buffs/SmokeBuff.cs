@@ -16,12 +16,12 @@ namespace BattleArenaServer.Effects.Buffs
             effectTags.Add(Consts.EffectTag.NonTargetable);
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             _hero.StatsEffect.Armor += value;
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             _hero.StatsEffect.Armor -= value;
         }

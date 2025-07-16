@@ -25,29 +25,29 @@ namespace BattleArenaServer.Skills.SeraphimSkills
 
         public new ISkillCastRequest request => new RangeAoECastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null)
             {
-                foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
+                foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, radius, gameData))
                 {
                     if (hex.HERO != null && hex.HERO.Team == requestData.Caster.Team)
                     {
                         GuardianAngelBuff guardianAngelBuff = new GuardianAngelBuff(requestData.Caster.Id, 0, 2);
-                        hex.HERO.AddEffect(guardianAngelBuff);
+                        hex.HERO.AddEffect(guardianAngelBuff, gameData);
                     }
                 }
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

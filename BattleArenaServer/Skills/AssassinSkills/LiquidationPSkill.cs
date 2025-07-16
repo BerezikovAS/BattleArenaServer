@@ -17,16 +17,16 @@ namespace BattleArenaServer.Skills.AssassinSkills
             hero.beforeAttack += Liquidation;
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
@@ -41,29 +41,29 @@ namespace BattleArenaServer.Skills.AssassinSkills
             return false;
         }
 
-        private bool Liquidation(Hero attacker, Hero defender, int dmg)
+        private bool Liquidation(Hero attacker, Hero defender, int dmg, GameData gameData)
         {
             Effect? liquidation = defender.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Liquidation));
             if (liquidation == null)
             {
-                foreach (var hero in GameData._heroes.Where(x => x.Team != attacker.Team))
+                foreach (var hero in gameData._heroes.Where(x => x.Team != attacker.Team))
                 {
                     Effect? liquidationRemove = hero.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Liquidation));
                     if (liquidationRemove != null)
                     {
-                        liquidationRemove.RemoveEffect(hero);
+                        liquidationRemove.RemoveEffect(hero, gameData);
                         hero.EffectList.Remove(liquidationRemove);
                     }
                 }
 
                 LiquidationDebuff liquidationDebuff = new LiquidationDebuff(attacker.Id, extraDmg, 99);
-                defender.AddEffect(liquidationDebuff);
+                defender.AddEffect(liquidationDebuff, gameData);
             }
             else
             {
-                liquidation.RemoveEffect(defender);
+                liquidation.RemoveEffect(defender, gameData);
                 liquidation.value += extraDmg;
-                liquidation.ApplyEffect(defender);
+                liquidation.ApplyEffect(defender, gameData);
             }
             return true;
         }

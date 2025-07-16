@@ -24,9 +24,9 @@ namespace BattleArenaServer.Models.Items.Tier4
             Skill = new ShieldBreakerSkill(dmg, armorResistReduce);
         }
 
-        public override void CastItem(RequestData requestData)
+        public override void CastItem(RequestData requestData, GameData gameData)
         {
-            Skill.Cast(requestData);
+            Skill.Cast(requestData, gameData);
         }
     }
 
@@ -50,9 +50,9 @@ namespace BattleArenaServer.Models.Items.Tier4
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null)
@@ -61,19 +61,19 @@ namespace BattleArenaServer.Models.Items.Tier4
                     x.effectTags.Contains(Consts.EffectTag.MagicShield) || x.effectTags.Contains(Consts.EffectTag.DmgShield));
                 foreach (var shield in shields)
                 {
-                    shield.RemoveEffect(requestData.Target);
+                    shield.RemoveEffect(requestData.Target, gameData);
                     requestData.Target.EffectList.Remove(shield);
                 }
 
                 ArmorDebuff armorDebuff = new ArmorDebuff(requestData.Caster.Id, armorResistReduce, 2);
-                requestData.Target.AddEffect(armorDebuff);
+                requestData.Target.AddEffect(armorDebuff, gameData);
 
                 ResistDebuff resistDebuff = new ResistDebuff(requestData.Caster.Id, armorResistReduce, 2);
-                requestData.Target.AddEffect(resistDebuff);
+                requestData.Target.AddEffect(resistDebuff, gameData);
 
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }

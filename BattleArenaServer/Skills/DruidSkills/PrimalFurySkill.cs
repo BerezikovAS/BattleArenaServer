@@ -24,28 +24,29 @@ namespace BattleArenaServer.Skills.DruidSkills
 
         public new ISkillCastRequest request => new AllyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             if (requestData.Target != null && requestData.Caster != null)
             {
-                if (!request.startRequest(requestData, this))
+                if (!request.startRequest(requestData, this, gameData))
                     return false;
 
                 PrimalFuryBuff primalFuryBuff = new PrimalFuryBuff(requestData.Caster.Id, dmg, 3);
-                requestData.Target.AddEffect(primalFuryBuff);
+                requestData.Target.AddEffect(primalFuryBuff, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
                 upgraded = true;
+                dmg += 40;
                 coolDown -= 1;
                 stats.coolDown -= 1;
                 title = $"Наделяет себя или союзника первобытной свирепостью. Следующая атака цели нанесёт дополнительно {dmg} урона.";

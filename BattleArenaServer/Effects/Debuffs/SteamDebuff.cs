@@ -16,12 +16,12 @@ namespace BattleArenaServer.Effects.Debuffs
             description = $"По окончанию действия эффекта Вы получите {value}% от потерянного ХП в качестве магического урона. (Потеряно ХП: {dmgReceived})";
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             hero.afterReceiveDmg += AfterReceiveDmgDelegate;
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
             hero.afterReceiveDmg -= AfterReceiveDmgDelegate;
         }
@@ -31,14 +31,14 @@ namespace BattleArenaServer.Effects.Debuffs
             description = $"По окончанию действия эффекта Вы получите {value}% от потерянного ХП в качестве магического урона. (Потеряно ХП: {dmgReceived})";
         }
 
-        public override void ApplyAfterEffect(Hero hero)
+        public override void ApplyAfterEffect(Hero hero, GameData gameData)
         {
             int dmg = (int)(dmgReceived * Convert.ToDouble(value) / 100);
-            Hero? attacker = GameData._heroes.FirstOrDefault(x => x.Id == idCaster);
-            AttackService.SetDamage(attacker, hero, dmg, Consts.DamageType.Magic);
+            Hero? attacker = gameData._heroes.FirstOrDefault(x => x.Id == idCaster);
+            AttackService.SetDamage(attacker, hero, dmg, Consts.DamageType.Magic, gameData);
         }
 
-        private void AfterReceiveDmgDelegate(Hero defender, Hero? attacker, int dmg, Consts.DamageType dmgType)
+        private void AfterReceiveDmgDelegate(Hero defender, Hero? attacker, int dmg, Consts.DamageType dmgType, GameData gameData)
         {
             dmgReceived += dmg;
         }

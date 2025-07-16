@@ -15,12 +15,28 @@ function getPercentHP(_hero) {
 
 // Заполнить инфу по активному герою
 function feelActiveHeroInfo(_hero) {
-    feelAP(_hero.ap);
+    feelAP();
     feelSpells(_hero)
 }
 
 // Заполнить инфу по скилам
 function feelSpells(_hero) {
+    if (_hero == undefined) {
+        for (i = 0; i <= 4; i++) {
+            const spell = document.getElementById("spell" + i);
+            const cdInfo = document.getElementById("cd" + i);
+            const spellDiv = document.getElementById("sp" + i);
+            const spellUpg = document.getElementById("upgrade" + i);
+            spell.innerText = "";
+            spellUpg.title = "";
+
+            spell.setAttribute("class", "spell cooldawn");
+            spellDiv.setAttribute("onclick", "");
+            cdInfo.innerText = "";
+        }
+        return;
+    }
+
     var i = 0;
     var availableAP = _hero.ap;
 
@@ -63,21 +79,58 @@ function feelSpells(_hero) {
     });
 }
 
+function fillActiveHeroItems() {
+
+    let cnt = 1;
+    for (var i = 1; i <= 3; i++) {
+        const itemBtn = document.getElementById("itemBtn" + i);
+        const itemDiv = document.getElementById("itemDiv" + i);
+        itemBtn.removeAttribute("src");
+        itemDiv.className = "item";
+        const cdItem = document.getElementById("cdItem" + i);
+        cdItem.innerText = "";
+    }
+
+    hero.items.forEach(item => {
+        const itemBtn = document.getElementById("itemBtn" + cnt);
+        const itemDiv = document.getElementById("itemDiv" + cnt);
+        itemBtn.setAttribute("src", "items/" + item.name + ".png");
+        itemBtn.setAttribute("onclick", "castItem('" + item.name + "')");
+        itemDiv.classList.add("level" + item.level);
+        itemDiv.title = item.description;
+
+        if (item.name == nameCastingItem) {
+            itemDiv.classList.add("active");
+        }
+        else if (item.skill.coolDownNow > 0 || hero.effectList.find(x => x.effectTags.find(y => y == 20))) {
+            itemDiv.classList.add("cooldawn");
+            const cdItem = document.getElementById("cdItem" + cnt);
+            if (item.skill.coolDownNow > 0)
+                cdItem.innerText = item.skill.coolDownNow;
+        }
+        cnt++;
+    });
+}
+
 // Заполнить очки действий
-function feelAP(_ap) {
+function feelAP() {
+    if (idActiveHero == -1 || idActiveHero == undefined)
+        return feelAP_NoHero();
+
+    var _hero = heroes[idActiveHero];
+
     const AProw = document.getElementById("AProw");
     while(AProw.firstChild) {
         AProw.removeChild(AProw.firstChild);
     }
 
-    for(var i = 0; i < _ap; i++) {
+    for (var i = 0; i < _hero.ap; i++) {
         const apImg = document.createElement("img");
         apImg.setAttribute("src", "ap.png");
         apImg.setAttribute("style", "width: 40px; padding: 3px");
         AProw.appendChild(apImg);
     }
 
-    var _hero = heroes[idActiveHero];
     var _color = "red";
     var _excolor = "rgb(238, 150, 150)";
     if (_hero != null & _hero.team == "blue") {
@@ -114,6 +167,53 @@ function feelAP(_ap) {
     resist.innerText = _hero.resist + _hero.statsEffect.resist;
 
 
+    fillActiveHeroItems();
+    fillEffectsOnHeroInfo(_hero, "statusbar");
+}
+
+function feelAP_NoHero() {
+
+    const AProw = document.getElementById("AProw");
+    while (AProw.firstChild) {
+        AProw.removeChild(AProw.firstChild);
+    }
+
+    var _color = "red";
+    var _excolor = "rgb(238, 150, 150)";
+    if (activeTeam == "blue") {
+        _color = "rgb(0, 99, 248)";
+        _excolor = "rgb(135, 165, 228)";
+    }
+
+    const iconDiv = document.getElementById("hero_icon");
+    iconDiv.setAttribute("style", "margin-bottom: 20px; background-color: " + _color);
+
+    const icon = document.getElementById("hero_icon_img");
+    icon.setAttribute("src", "heroes/None.png");
+
+    const hp = document.getElementById("heroinfo_hpcur");
+    hp.innerText = "0 / 0";
+
+    var hpPercent = 300;
+    const hpbar = document.getElementById("heroinfo_hpbarcur");
+    hpbar.setAttribute("style", "width: " + hpPercent + "px; background-color: " + _color);
+
+    const hpbarhp = document.getElementById("hpbarcur");
+    hpbarhp.setAttribute("style", "margin-top: 14px; background-color: " + _excolor);
+
+    const dmg = document.getElementById("active_heroinfo_damage");
+    dmg.innerText = 0;
+
+    const range = document.getElementById("active_heroinfo_range");
+    range.innerText = 0;
+
+    const armor = document.getElementById("active_heroinfo_armor");
+    armor.innerText = 0;
+
+    const resist = document.getElementById("active_heroinfo_resist");
+    resist.innerText = 0;
+
+
     let cnt = 1;
     for (var i = 1; i <= 3; i++) {
         const itemBtn = document.getElementById("itemBtn" + i);
@@ -124,30 +224,14 @@ function feelAP(_ap) {
         cdItem.innerText = "";
     }
 
-    _hero.items.forEach(item => {
-        const itemBtn = document.getElementById("itemBtn" + cnt);
-        const itemDiv = document.getElementById("itemDiv" + cnt);
-        itemBtn.setAttribute("src", "items/" + item.name + ".png");
-        itemBtn.setAttribute("onclick", "castItem('" + item.name + "')");
-        itemDiv.classList.add("level" + item.level);
-        itemDiv.title = item.description;
-
-        if (item.skill.coolDownNow > 0 || _hero.effectList.find(x => x.effectTags.find(y => y == 20))) {
-            itemDiv.classList.add("cooldawn");
-            const cdItem = document.getElementById("cdItem" + cnt);
-            if (item.skill.coolDownNow > 0)
-                cdItem.innerText = item.skill.coolDownNow;
-        }
-        cnt++;
-    });
-
-
-
-    fillEffectsOnHeroInfo(_hero, "statusbar");
+    const statusBar = document.getElementById("statusbar_info");
+    while (statusBar.firstChild) {
+        statusBar.removeChild(statusBar.firstChild);
+    }
 }
 
 // Проверить находятся ли клетки на одной линии
-function isOnLine(_hexCaster, _hexTarget) {
+/*function isOnLine(_hexCaster, _hexTarget) {
     if (getDistance (_hexCaster, _hexTarget) == 0)
         return false;
     for (var i = 0; i < 3; i++) {
@@ -155,10 +239,10 @@ function isOnLine(_hexCaster, _hexTarget) {
             return true;
     }
     return false;
-}
+}*/
 
 // Получить направление для клеток на одной линии
-function getDirection(_hexCaster, _hexTarget)
+/*function getDirection(_hexCaster, _hexTarget)
 {
     var dist = getDistance (_hexCaster, _hexTarget);
     if (dist == 0)
@@ -170,10 +254,10 @@ function getDirection(_hexCaster, _hexTarget)
         coord[2] = (_hexCaster.coord[2] - _hexTarget.coord[2]) / dist;
         return coord;
     }
-}
+}*/
 
 // Получить направление для клеток на одной линии
-function getDirectionHex(_hexCaster, _hexTarget) {
+/*function getDirectionHex(_hexCaster, _hexTarget) {
     var dist = getDistance(_hexCaster, _hexTarget);
     if (dist == 0)
         return false;
@@ -184,7 +268,7 @@ function getDirectionHex(_hexCaster, _hexTarget) {
         h.coord[2] = (_hexCaster.coord[2] - _hexTarget.coord[2]) / dist;
         return h;
     }
-}
+}*/
 
 
 function disableSpells(_spell) {
@@ -463,6 +547,15 @@ function fillEffectsOnHex(_hex, _hero)
 }
 
 function enableUpgrades(_hero) {
+    if (_hero == undefined) {
+        for (k = 0; k <= 4; k++) {
+            const spellUp = document.getElementById("upgrade" + k);
+            spellUp.disable = true;
+            spellUp.setAttribute("style", "visibility: hidden;");
+        }
+        return;
+    }
+
     let i = 0;
     _hero.skillList.forEach(skill => {
         if (i > 4)
@@ -483,10 +576,16 @@ function enableUpgrades(_hero) {
 function showSpellInfo(_spell, _spellBox, _heroFlag)
 {
     var spell = heroInfo.skillList[_spell];
-    if (_heroFlag == 0)
+    if (_heroFlag == 0 && idActiveHero != undefined && idActiveHero >= 0)
         spell = heroes[idActiveHero].skillList[_spell];
-    else if (_heroFlag == 2)
+    else if (_heroFlag == 1 && heroInfo != undefined && heroInfo != null) {
+        spell = heroInfo.skillList[_spell];
+    }
+    else if (_heroFlag == 2) {
         spell = hero.skillList[_spell];
+    }
+    else
+        return;
 
     var skillInfoName = document.getElementById("skillInfoName");
     skillInfoName.innerText = spell.name;
@@ -572,14 +671,15 @@ function showVP(_VP) {
 
     var redVPText = document.getElementById("vp_red");
     var blueVPText = document.getElementById("vp_blue");
-    var vpLine = document.getElementById("vp_line_c");
+    var vpLineRed = document.getElementById("vp_line_c");
+    var vpLineBlue = document.getElementById("vp_line_b");
     var victory = document.getElementById("victory");
 
     redVPText.innerText = redVP;
     blueVPText.innerText = blueVP;
 
-    var width = 649 * redVP / (redVP + blueVP);
-    vpLine.setAttribute("style", "width: " + width + "px; height: 90px; background-color: red;");
+    vpLineRed.setAttribute("style", "width: " + 649 * redVP / 200 + "px; height: 90px; background-color: red;");
+    vpLineBlue.setAttribute("style", "width: " + 649 * blueVP / 200 + "px; height: 90px; background-color: rgba(0, 99, 248, 1); position: absolute; right: 0; top: 0;");
 
     if (redVP >= 100) {
         victory.innerText = "ПОБЕДА КРАСНЫХ!";
@@ -653,7 +753,7 @@ function fillShop(items) {
 function showHideShop(mode) {
     const shop = document.getElementById("shop");
     const btn = document.getElementById("showShop");
-    console.log(shop);
+
     if (mode == 1) {
         shop.setAttribute("style", "visibility: visible;");
         btn.setAttribute("onclick", "showHideShop(0)");

@@ -5,7 +5,7 @@ namespace BattleArenaServer.Models.Items.Tier1
 {
     public class FeatherItem : Item
     {
-        int heal = 14;
+        int heal = 15;
         int maxCharges = 10;
 
         public FeatherItem()
@@ -13,7 +13,7 @@ namespace BattleArenaServer.Models.Items.Tier1
             Name = "Feather";
             Amount = 1;
             Cost = 10;
-            Description = $"Когда Вы используете действие перемещения, перо получает 1 заряд. Используйте перо, чтобы восстановить {heal} ХП за заряд. (Макс: {maxCharges} зарядов)";
+            Description = $"Когда Вы перемещаетесь, перо получает 1 заряд за каждую клетку. Используйте перо, чтобы восстановить {heal} ХП за заряд. (Макс: {maxCharges} зарядов)";
             Level = 1;
             SellCost = 5;
 
@@ -21,36 +21,37 @@ namespace BattleArenaServer.Models.Items.Tier1
             Skill = new FeatherSkill(heal, maxCharges);
         }
 
-        public override void CastItem(RequestData requestData)
+        public override void CastItem(RequestData requestData, GameData gameData)
         {
-            Skill.Cast(requestData);
-            Description = $"Когда Вы используете действие перемещения, перо получает 1 заряд. Используйте перо, чтобы восстановить {heal} ХП за заряд. (Макс: {maxCharges} зарядов)";
+            Skill.Cast(requestData, gameData);
+            Description = $"Когда Вы перемещаетесь, перо получает 1 заряд за каждую клетку. Используйте перо, чтобы восстановить {heal} ХП за заряд. (Макс: {maxCharges} зарядов)";
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             hero.afterMove += AfterMove;
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
             (Skill as FeatherSkill).charges = 0;
             hero.afterMove -= AfterMove;
-            Description = $"Когда Вы используете действие перемещения, перо получает 1 заряд. Используйте перо, чтобы восстановить {heal} ХП за заряд. (Макс: {maxCharges} зарядов)";
+            Description = $"Когда Вы перемещаетесь, перо получает 1 заряд за каждую клетку. Используйте перо, чтобы восстановить {heal} ХП за заряд. (Макс: {maxCharges} зарядов)";
         }
 
-        private void AfterMove(Hero hero, Hex? currentHex, Hex targetHex)
+        private void AfterMove(Hero hero, Hex? currentHex, Hex targetHex, GameData gameData)
         {
             FeatherSkill feather = Skill as FeatherSkill;
-            feather.AddCharge();
-            Description = $"Когда Вы используете действие перемещения, перо получает 1 заряд. Используйте перо, чтобы восстановить {heal} ХП за заряд. (Макс: {maxCharges} зарядов)" +
+            if (currentHex != null)
+                feather.AddCharge(currentHex.Distance(targetHex));
+            Description = $"Когда Вы перемещаетесь, перо получает 1 заряд за каждую клетку. Используйте перо, чтобы восстановить {heal} ХП за заряд. (Макс: {maxCharges} зарядов)" +
                 $"\nНакоплено {feather.charges} зарядов.";
         }
     }
 
     public class FeatherSkill : Skill
     {
-        int heal = 14;
+        int heal = 15;
         int maxCharges = 10;
         public int charges { get; set; } = 0;
 
@@ -69,16 +70,16 @@ namespace BattleArenaServer.Models.Items.Tier1
 
         public new ISkillCastRequest request => new NontargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (request.startRequest(requestData, this))
+            if (request.startRequest(requestData, this, gameData))
             {
                 if (requestData.Caster != null)
                 {
                     requestData.Caster.Heal(heal * charges);
                     charges = 0;
 
-                    requestData.Caster.SpendAP(requireAP);
+                    requestData.Caster.SpendAP(requireAP, gameData);
                     coolDownNow = coolDown;
                     return true;
                 }
@@ -86,9 +87,9 @@ namespace BattleArenaServer.Models.Items.Tier1
             return false;
         }
 
-        public void AddCharge()
+        public void AddCharge(int addCharges)
         {
-            charges = charges < maxCharges ? charges + 1 : maxCharges;
+            charges = charges < maxCharges ? charges + addCharges : maxCharges;
         }
     }
 }

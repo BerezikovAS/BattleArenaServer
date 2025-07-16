@@ -15,16 +15,16 @@ namespace BattleArenaServer.Effects.Buffs
             effectTags.Add(Consts.EffectTag.SpiritLink);
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             _hero.SpendAP -= _hero.BaseSpendAP;
             _hero.SpendAP += _hero.SpiritLinkSpendAP;
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             // Связь разорвалась. Убираем её и со связанного героя
-            Hero? caster = GameData._heroes.FirstOrDefault(x => x.Id == idCaster);
+            Hero? caster = gameData._heroes.FirstOrDefault(x => x.Id == idCaster);
             if (caster != null)
             {
                 Effect? spiritLink = caster.EffectList.FirstOrDefault(x => x.Name == Name && x.idCaster == _hero.Id);
@@ -34,7 +34,7 @@ namespace BattleArenaServer.Effects.Buffs
                     _hero.SpendAP += _hero.BaseSpendAP;
 
                     caster.EffectList.Remove(spiritLink);
-                    spiritLink.RemoveEffect(caster);
+                    spiritLink.RemoveEffect(caster, gameData);
                 }
             }
         }

@@ -15,23 +15,23 @@ namespace BattleArenaServer.Effects.Debuffs
             description = $"Перемещение отнимает {value} ХП, за каждый пройденный гекс.";
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             hero.afterMove += Rupture;
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
             hero.afterMove -= Rupture;
         }
 
-        private void Rupture(Hero hero, Hex? currentHex, Hex targetHex)
+        private void Rupture(Hero hero, Hex? currentHex, Hex targetHex, GameData gameData)
         {
             if (currentHex != null)
             {
-                Hero? attacker = GameData._heroes.FirstOrDefault(x => x.Id == idCaster);
+                Hero? attacker = gameData._heroes.FirstOrDefault(x => x.Id == idCaster);
                 int distance = currentHex.Distance(targetHex);
-                AttackService.SetDamage(attacker, hero, distance * value, Consts.DamageType.Pure);
+                AttackService.SetDamage(attacker, hero, distance * value, Consts.DamageType.Pure, gameData);
             }
         }
     }

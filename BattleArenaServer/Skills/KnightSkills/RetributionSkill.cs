@@ -27,20 +27,20 @@ namespace BattleArenaServer.Skills.KnightSkills
 
         public new ISkillCastRequest request => new LineCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null && requestData.CasterHex != null)
             {
                 double lostHealthPercent = (requestData.Caster.HP / requestData.Caster.MaxHP);
-                foreach (var n in UtilityService.GetHexesCone(requestData.CasterHex, requestData.TargetHex, radius))
+                foreach (var n in UtilityService.GetHexesCone(requestData.CasterHex, requestData.TargetHex, radius, gameData))
                 {
                     if (n.HERO != null && n.HERO.Team != requestData.Caster.Team)
-                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg + Convert.ToInt32(lostHealthPercent) * extraDmg, dmgType);
+                        AttackService.SetDamage(requestData.Caster, n.HERO, dmg + Convert.ToInt32(lostHealthPercent) * extraDmg, dmgType, gameData);
                 }
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -48,7 +48,7 @@ namespace BattleArenaServer.Skills.KnightSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

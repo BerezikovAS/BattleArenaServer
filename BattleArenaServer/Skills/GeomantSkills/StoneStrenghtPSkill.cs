@@ -16,26 +16,26 @@ namespace BattleArenaServer.Skills.GeomantSkills
             hero.AuraList.Add(Aura);
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
                 upgraded = true;
                 upgString = "\n" + titleUpg;
-                Aura.CancelEffect(hero);
+                Aura.CancelEffect(hero, gameData);
                 hero.AuraList.Remove(Aura);
                 Aura = new StoneStrengthAura(true);
                 hero.AuraList.Add(Aura);
-                AttackService.ContinuousAuraAction();
+                AttackService.ContinuousAuraAction(gameData);
                 title = "Герой наполняется силой природы. Каждый столоктит в радиусе 3-х гексов даёт +1 к броне, +1 к сопротивлению, +10 к урону." + upgString;
                 return true;
             }

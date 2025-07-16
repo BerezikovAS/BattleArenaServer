@@ -30,9 +30,9 @@ namespace BattleArenaServer.Skills.VampireSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Target != null && requestData.Caster != null)
@@ -55,10 +55,10 @@ namespace BattleArenaServer.Skills.VampireSkills
                     if (requestData.Target.AP < 0)
                         requestData.Target.AP = 0;
 
-                    AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
+                    AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType, gameData);
                 }
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
 
                 return true;
@@ -67,7 +67,7 @@ namespace BattleArenaServer.Skills.VampireSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

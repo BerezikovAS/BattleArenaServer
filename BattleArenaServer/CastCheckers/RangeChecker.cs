@@ -7,13 +7,13 @@ namespace BattleArenaServer.CastCheckers
     {
         public ICastChecker nextChecker { get; set; } = new TerminalChecker();
 
-        public bool Check(RequestData requestData, Skill skill)
+        public bool Check(RequestData requestData, Skill skill, GameData gameData)
         {
             int range = requestData.Caster?.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Blind)) == null ? skill.range : 1;
 
             if (requestData.CasterHex != null && requestData.TargetHex != null && range < requestData.CasterHex.Distance(requestData.TargetHex))
                 return false;
-            return nextChecker.Check(requestData, skill);
+            return nextChecker.Check(requestData, skill, gameData);
         }
     }
 }

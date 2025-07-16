@@ -1,5 +1,4 @@
-﻿using BattleArenaServer.Models.Items;
-using BattleArenaServer.Skills.AbominationSkills;
+﻿using BattleArenaServer.Skills.AbominationSkills;
 
 namespace BattleArenaServer.Models.Heroes
 {
@@ -16,13 +15,12 @@ namespace BattleArenaServer.Models.Heroes
             SkillList[2] = new BloodTransferSkill();
             SkillList[3] = new BloodRainSkill();
             SkillList[4] = new OssificationSkill();
-
-            foreach (var item in Items)
-                item.ApplyEffect(this);
         }
 
-        public override void Respawn()
+        public override void Respawn(GameData? gameData = null)
         {
+            base.Respawn(gameData);
+
             MaxHP = HP = 1500;
             Armor = 0;
             Resist = 0;
@@ -32,7 +30,7 @@ namespace BattleArenaServer.Models.Heroes
             AttackRadius = 1;
             Dmg = 100;
 
-            base.Respawn();
+            ApplyItems(gameData);
         }
     }
 }

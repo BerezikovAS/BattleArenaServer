@@ -28,16 +28,16 @@ namespace BattleArenaServer.Skills.ChaosSkills
 
         public new ISkillCastRequest request => new RangeAoECastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null)
             {
                 int[] statsSkill = new int[3];
                 Random rnd = new Random();
-                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
+                foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius, gameData))
                 {
                     if (n.HERO != null && n.HERO is not SolidObstacle)
                     {
@@ -51,16 +51,16 @@ namespace BattleArenaServer.Skills.ChaosSkills
                 if (statsSkill[1] > 0)
                 {
                     ArmorBuff armorBuff = new ArmorBuff(requestData.Caster.Id, statsSkill[1] * 2, 2);
-                    requestData.Caster.AddEffect(armorBuff);
+                    requestData.Caster.AddEffect(armorBuff, gameData);
                 }
 
                 if (statsSkill[2] > 0)
                 {
                     ResistBuff resistBuff = new ResistBuff(requestData.Caster.Id, statsSkill[2] * 2, 2);
-                    requestData.Caster.AddEffect(resistBuff);
+                    requestData.Caster.AddEffect(resistBuff, gameData);
                 }
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -68,7 +68,7 @@ namespace BattleArenaServer.Skills.ChaosSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

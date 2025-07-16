@@ -7,7 +7,7 @@ namespace BattleArenaServer.Skills._SummonsSkills
 {
     public class HealingSpraySkill : Skill
     {
-        int heal = 60;
+        int heal = 70;
         public HealingSpraySkill(bool upgraded)
         {
             name = "Healing Spray";
@@ -20,21 +20,21 @@ namespace BattleArenaServer.Skills._SummonsSkills
             area = Consts.SpellArea.AllyTarget;
             stats = new SkillStats(coolDown, requireAP, range, radius);
 
-            heal = upgraded ? 80 : 60;
+            heal = upgraded ? 90 : 70;
         }
 
         public new ISkillCastRequest request => new AllyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null && requestData.Target is not Summon)
             {
                 requestData.Target.Heal(heal);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -42,7 +42,7 @@ namespace BattleArenaServer.Skills._SummonsSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

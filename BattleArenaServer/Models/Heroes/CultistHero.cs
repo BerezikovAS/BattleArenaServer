@@ -17,8 +17,9 @@ namespace BattleArenaServer.Models.Heroes
             SkillList[4] = new RitualSkill();
         }
 
-        public override void Respawn()
+        public override void Respawn(GameData? gameData = null)
         {
+            base.Respawn(gameData);
             Name = "Cultist";
 
             MaxHP = HP = 875;
@@ -31,7 +32,8 @@ namespace BattleArenaServer.Models.Heroes
             Dmg = 100;
 
             SkillList[4] = new RitualSkill();
-            base.Respawn();
+
+            ApplyItems(gameData);
         }
     }
 }

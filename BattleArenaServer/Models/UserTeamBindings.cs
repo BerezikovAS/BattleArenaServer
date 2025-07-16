@@ -12,6 +12,10 @@
         public int RedCoins { get; set; }
         public int BlueCoins { get; set; }
 
+        public int GameLength { get; set; } = 100;
+
+        public string WinnerTeam { get; set; }
+
         public UserTeamBindings() 
         {
             ClearBindings();
@@ -24,6 +28,25 @@
             BlueVP = 5;
             RedCoins = 30;
             BlueCoins = 40;
+            WinnerTeam = "";
+        }
+
+        public void CheckWin()
+        {
+            if (WinnerTeam != "")
+                return;
+
+            if (RedVP >= GameLength && BlueVP >= GameLength) //Обе команды набрали нужно кол-во очков (и такое бывает)
+            {
+                if (RedVP > BlueVP)
+                    WinnerTeam = "red";
+                else if (BlueVP > RedVP)
+                    WinnerTeam = "blue";
+            }
+            else if (RedVP >= GameLength)
+                WinnerTeam = "red";
+            else if (BlueVP >= GameLength)
+                WinnerTeam = "blue";
         }
     }
 }

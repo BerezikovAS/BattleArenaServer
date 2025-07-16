@@ -52,7 +52,7 @@ namespace BattleArenaServer.Services
             return resist - resistPiercing; // Иначе возвращаем сопротивление с учетом значение игнора
         }
 
-        public static bool AttackHero(RequestData requestData)
+        public static bool AttackHero(RequestData requestData, GameData gameData)
         {
             if (requestData.CasterHex != null && requestData.TargetHex != null && requestData.Caster != null && requestData.Target != null &&
                 requestData.Target.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.NonTargetable)) == null && // Цель должна быть доступна для выбора
@@ -73,7 +73,7 @@ namespace BattleArenaServer.Services
                 Effect? spiritLink = requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.SpiritLink));
                 if (spiritLink != null)
                 {
-                    Hero? anotherHero = GameData._heroes.FirstOrDefault(x => x.Id == spiritLink.idCaster);
+                    Hero? anotherHero = gameData._heroes.FirstOrDefault(x => x.Id == spiritLink.idCaster);
                     if (anotherHero != null)
                         availableAP += anotherHero.AP;
                 }
@@ -81,24 +81,24 @@ namespace BattleArenaServer.Services
                 if (requestData.CasterHex.Distance(requestData.TargetHex) > range || availableAP < attacker.APtoAttack)
                     return false;
 
-                attacker.SpendAP(attacker.APtoAttack);
+                attacker.SpendAP(attacker.APtoAttack, gameData);
                 // К урону добавляем дополнительный от пассивок и эффектов
-                int dmg = (int)((attacker.Dmg + attacker.GetPassiveAttackDamage(attacker, defender)) * attacker.StatsEffect.DmgMultiplier);
+                int dmg = (int)((attacker.Dmg + attacker.GetPassiveAttackDamage(attacker, defender, gameData)) * attacker.StatsEffect.DmgMultiplier);
 
                 // Эффекты перед атакой
-                attacker.beforeAttack(attacker, defender, dmg);
+                attacker.beforeAttack(attacker, defender, dmg, gameData);
                 defender.beforeReceivedAttack(attacker, defender, dmg);
                 // Сама атака с нанесением урона
-                SetDamage(attacker, defender, dmg, Consts.DamageType.Physical);
+                SetDamage(attacker, defender, dmg, Consts.DamageType.Physical, gameData);
                 // Эффекты после атаки
-                attacker.afterAttack(attacker, defender, dmg, Consts.DamageType.Physical);
-                defender.afterReceivedAttack(attacker, defender, dmg);
+                attacker.afterAttack(attacker, defender, dmg, Consts.DamageType.Physical, gameData);
+                defender.afterReceivedAttack(attacker, defender, dmg, gameData);
                 return true;
             }
             return false;
         }
 
-        public static bool SetDamage(Hero? attacker, Hero defender, int dmg, DamageType damageType)
+        public static bool SetDamage(Hero? attacker, Hero defender, int dmg, DamageType damageType, GameData gameData)
         {
             if (defender != null)
             {
@@ -106,7 +106,7 @@ namespace BattleArenaServer.Services
                 Effect? bubble = defender.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Bubble));
                 if (bubble != null)
                 {
-                    bubble.RemoveEffect(defender);
+                    bubble.RemoveEffect(defender, gameData);
                     defender.EffectList.Remove(bubble);
                     return false;
                 }
@@ -122,7 +122,7 @@ namespace BattleArenaServer.Services
                 {
                     case DamageType.Physical:
                         {
-                            int armor = defender.Armor + defender.GetPassiveArmor(attacker, defender);
+                            int armor = defender.Armor + defender.GetPassiveArmor(attacker, defender, gameData);
                             armor = ArmorPiercedValue(armor, attacker, defender);
                             totalDmg = dmg * (1 - (0.1 * armor) / (1 + 0.1 * armor));
 
@@ -149,12 +149,12 @@ namespace BattleArenaServer.Services
                         break;
                 }
 
-                return defender.applyDamage(attacker, defender, (int)Math.Round(totalDmg), damageType);
+                return defender.applyDamage(attacker, defender, (int)Math.Round(totalDmg), damageType, gameData);
             }
             return false;
         }
 
-        public static bool ApplyDamage(Hero? attacker, Hero defender, int dmg, DamageType damageType)
+        public static bool ApplyDamage(Hero? attacker, Hero defender, int dmg, DamageType damageType, GameData gameData)
         {
             // Добавляем модификатор получаемого урона
             dmg += defender.GetModifierAppliedDamage(attacker, defender, dmg, damageType);
@@ -169,86 +169,88 @@ namespace BattleArenaServer.Services
                 attacker.DamageDealed += (int)(Convert.ToDouble(dmg) / dmgReducer);
             }
 
-            defender.afterReceiveDmg(defender, attacker, dmg, damageType);
+            defender.afterReceiveDmg(defender, attacker, dmg, damageType, gameData);
 
             foreach (var effect in defender.EffectList)
                 effect.RefreshDescr();
 
             if (defender.HP <= 0)
             {
-                KillHero(defender);
+                KillHero(defender, gameData);
                 return true;
             }
             return false;
         }
 
-        public static void KillHero(Hero defender)
+        public static void KillHero(Hero defender, GameData gameData)
         {
             defender.HP = -1;
-            Hex? hex = GameData._hexes.FirstOrDefault(x => x.ID == defender.HexId);
+            Hex? hex = gameData._hexes.FirstOrDefault(x => x.ID == defender.HexId);
             if (hex != null && hex.HERO != null)
             {
                 Hero killedHero = hex.HERO;
                 killedHero.HexId = -1;
                 hex.RemoveHero();
-                ContinuousAuraAction();
+                ContinuousAuraAction(gameData);
 
                 if (killedHero is SolidObstacle)
                 {
                     SolidObstacle obstacle = (SolidObstacle)killedHero;
-                    obstacle.endLifeEffect(hex);
-                    GameData._solidObstacles.Remove(obstacle);
+                    obstacle.endLifeEffect(hex, gameData);
+                    gameData._solidObstacles.Remove(obstacle);
                 }
             }
             if (defender.Team == "red")
             {
-                GameData.userTeamBindings.BlueVP += defender.VP;
-                GameData.userTeamBindings.BlueCoins += defender.GoldReward;
+                gameData.userTeamBindings.BlueVP += defender.VP;
+                gameData.userTeamBindings.BlueCoins += defender.GoldReward;
             }
             else
             {
-                GameData.userTeamBindings.RedVP += defender.VP;
-                GameData.userTeamBindings.RedCoins += defender.GoldReward;
+                gameData.userTeamBindings.RedVP += defender.VP;
+                gameData.userTeamBindings.RedCoins += defender.GoldReward;
             }
+            gameData.userTeamBindings.CheckWin();
 
             if (defender.IsMainHero)
             {
                 defender.RespawnTime = 4;
-                
-                foreach (var item in defender.Items)
-                    item.RemoveEffect(defender);
+
+                foreach (var effect in defender.EffectList)
+                    effect.RemoveEffect(defender, gameData);
+                defender.EffectList.Clear();
             }
         }
 
         /// <summary>
         /// Обновление эффектов постоянных аур
         /// </summary>
-        public static void ContinuousAuraAction()
+        public static void ContinuousAuraAction(GameData gameData)
         {
-            foreach (var hero in GameData._heroes)
+            foreach (var hero in gameData._heroes)
             {
                 foreach (var aura in hero.AuraList)
                 {
                     if (aura.type == Consts.AuraType.Continuous)
                     {
-                        aura.CancelEffect(hero);
-                        Hex? hexSource = GameData._hexes.FirstOrDefault(x => x.ID == hero.HexId);
+                        aura.CancelEffect(hero, gameData);
+                        Hex? hexSource = gameData._hexes.FirstOrDefault(x => x.ID == hero.HexId);
                         if (hexSource != null)
-                            aura.SetEffect(hero, hexSource);
+                            aura.SetEffect(hero, hexSource, gameData);
                     }
                 }
             }
 
-            foreach (var hero in GameData._solidObstacles)
+            foreach (var hero in gameData._solidObstacles)
             {
                 foreach (var aura in hero.AuraList)
                 {
                     if (aura.type == Consts.AuraType.Continuous)
                     {
-                        aura.CancelEffect(hero);
-                        Hex? hexSource = GameData._hexes.FirstOrDefault(x => x.ID == hero.HexId);
+                        aura.CancelEffect(hero, gameData);
+                        Hex? hexSource = gameData._hexes.FirstOrDefault(x => x.ID == hero.HexId);
                         if (hexSource != null)
-                            aura.SetEffect(hero, hexSource);
+                            aura.SetEffect(hero, hexSource, gameData);
                     }
                 }
             }
@@ -258,15 +260,15 @@ namespace BattleArenaServer.Services
         /// Применение эффекта ауры в конце хода текущего героя
         /// </summary>
         /// <param name="sourceAura"></param>
-        public static void EndTurnAuraAction(Hero sourceAura)
+        public static void EndTurnAuraAction(Hero sourceAura, GameData gameData)
         {
             foreach (var aura in sourceAura.AuraList)
             {
                 if (aura.type == Consts.AuraType.EndTurn)
                 {
-                    Hex? hexSource = GameData._hexes.FirstOrDefault(x => x.ID == sourceAura.HexId);
+                    Hex? hexSource = gameData._hexes.FirstOrDefault(x => x.ID == sourceAura.HexId);
                     if (hexSource != null)
-                        aura.SetEffect(sourceAura, hexSource);
+                        aura.SetEffect(sourceAura, hexSource, gameData);
                 }
             }
         }
@@ -275,15 +277,15 @@ namespace BattleArenaServer.Services
         /// Применение эффекта ауры в начале хода текущего героя
         /// </summary>
         /// <param name="sourceAura"></param>
-        public static void StartTurnAuraAction(Hero sourceAura)
+        public static void StartTurnAuraAction(Hero sourceAura, GameData gameData)
         {
             foreach (var aura in sourceAura.AuraList)
             {
                 if (aura.type == Consts.AuraType.StartTurn)
                 {
-                    Hex? hexSource = GameData._hexes.FirstOrDefault(x => x.ID == sourceAura.HexId);
+                    Hex? hexSource = gameData._hexes.FirstOrDefault(x => x.ID == sourceAura.HexId);
                     if (hexSource != null)
-                        aura.SetEffect(sourceAura, hexSource);
+                        aura.SetEffect(sourceAura, hexSource, gameData);
                 }
             }
         }
@@ -294,25 +296,25 @@ namespace BattleArenaServer.Services
         /// <param name="hero"></param>
         /// <param name="currentHex"></param>
         /// <param name="targetHex"></param>
-        public static void MoveHero(Hero hero, Hex? currentHex, Hex targetHex)
+        public static void MoveHero(Hero hero, Hex? currentHex, Hex targetHex, GameData gameData)
         {
             if (currentHex != null)
                 currentHex.RemoveHero();
             targetHex.SetHero(hero);
-            ContinuousAuraAction();
+            ContinuousAuraAction(gameData);
 
             if (targetHex.OBSTACLE != null && targetHex.OBSTACLE is FillableObstacle)
             {
-                (targetHex.OBSTACLE as FillableObstacle).ApplyEffect(hero, targetHex);
+                (targetHex.OBSTACLE as FillableObstacle).ApplyEffect(hero, targetHex, gameData);
             }
 
             foreach (var surface in targetHex.SURFACES)
             {
-                surface.ApplyEffect(hero, targetHex);
+                surface.ApplyEffect(hero, targetHex, gameData);
             }
 
             // Применяем эффекты после движения (если есть)
-            hero.afterMove(hero, currentHex, targetHex);
+            hero.afterMove(hero, currentHex, targetHex, gameData);
         }
     }
 }

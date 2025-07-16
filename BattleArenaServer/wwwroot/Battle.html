@@ -127,18 +127,28 @@
 
               </div>
 
-              <div style="background-color: rgba(69, 180, 69, 0.863); padding: 12px; border: 4px solid rgb(1, 73, 1); border-radius: 20px; margin-top: 4px; width: 340px; height: 108px;">
-                  <div id="banch_hero1" class="heroinfo_icon" style="display: inline-block;" onclick="selectBanchHero(1)">
-                      <p class="cooldawn" id="cdBanch1" style="position: absolute; padding-left: 38px; z-index: 100;"></p>
-                      <img id="banch_icon1" class="heroinfo_icon_img">
+              <div style="display: flex;">
+                  <div style="background-color: rgba(69, 180, 69, 0.863); padding: 12px; border: 4px solid rgb(1, 73, 1); border-radius: 20px; margin-top: 4px; width: 340px; height: 108px;">
+                      <div id="banch_hero1" class="heroinfo_icon" style="display: inline-block;" onclick="selectBanchHero(1)">
+                          <p class="cooldawn" id="cdBanch1" style="position: absolute; padding-left: 38px; z-index: 100;"></p>
+                          <img id="banch_icon1" class="heroinfo_icon_img">
+                      </div>
+                      <div id="banch_hero2" class="heroinfo_icon" style="display: inline-block; margin-left: 6px;" onclick="selectBanchHero(2)">
+                          <p class="cooldawn" id="cdBanch2" style="position: absolute; padding-left: 38px; z-index: 100;"></p>
+                          <img id="banch_icon2" class="heroinfo_icon_img">
+                      </div>
+                      <div id="banch_hero3" class="heroinfo_icon" style="display: inline-block; margin-left: 6px;" onclick="selectBanchHero(3)">
+                          <p class="cooldawn" id="cdBanch3" style="position: absolute; padding-left: 38px; z-index: 100;"></p>
+                          <img id="banch_icon3" class="heroinfo_icon_img">
+                      </div>
                   </div>
-                  <div id="banch_hero2" class="heroinfo_icon" style="display: inline-block; margin-left: 6px;" onclick="selectBanchHero(2)">
-                      <p class="cooldawn" id="cdBanch2" style="position: absolute; padding-left: 38px; z-index: 100;"></p>
-                      <img id="banch_icon2" class="heroinfo_icon_img">
-                  </div>
-                  <div id="banch_hero3" class="heroinfo_icon" style="display: inline-block; margin-left: 6px;" onclick="selectBanchHero(3)">
-                      <p class="cooldawn" id="cdBanch3" style="position: absolute; padding-left: 38px; z-index: 100;"></p>
-                      <img id="banch_icon3" class="heroinfo_icon_img">
+
+                  <div class="chat-container2">
+                      <div class="messages" id="messages">
+                      </div>
+                      <div class="input-area">
+                          <input type="text" placeholder="Введите сообщение..." id="messageInput">
+                      </div>
                   </div>
               </div>
           </div>
@@ -196,17 +206,21 @@
       </div>
 
       <!--<div id="team_btns" style="position: absolute; display: flex;">
-          <div style="display:flex; padding: 20px;">
-              <button id="redTeam" class="TeamPick Red" onclick="bindUserToTeam('red')">ЗА КРАСНЫХ!</button>
-              <button id="blueTeam" class="TeamPick Blue" onclick="bindUserToTeam('blue')" style="margin-left: 100px;">ЗА СИНИХ!</button>
-          </div>
-      </div>-->
+        <div style="display:flex; padding: 20px;">
+            <button id="redTeam" class="TeamPick Red" onclick="bindUserToTeam('red')">ЗА КРАСНЫХ!</button>
+            <button id="blueTeam" class="TeamPick Blue" onclick="bindUserToTeam('blue')" style="margin-left: 100px;">ЗА СИНИХ!</button>
+        </div>
+    </div>-->
 
       <div id="vp_line" style="width: 860px; display: inline-block;">
 
-          <div style="display: flex; width: 865px; height: 90px; border: 4px solid rgb(1, 73, 1); border-radius: 0px 0px 50px 50px; position: relative; top: -54px; z-index: -5;">
+          <div style="background-color: gray; display: flex; width: 865px; height: 90px; border: 4px solid rgb(1, 73, 1); border-radius: 0px 0px 50px 50px; position: relative; top: -54px; z-index: -5;">
               <div id="vp_red" class="VPDiv" style="background-color: red; flex: 1; border-radius: 0px 0px 0px 46px;">5</div>
-              <div style="background-color: rgba(0, 99, 248, 1); flex: 6; "><div id="vp_line_c" style="width: 600px; height: 90px; background-color: red;"></div></div>
+              <div style="flex: 6; position: relative;">
+                  <div id="vp_line_c" style="width: 600px; height: 90px; background-color: red;"></div>
+                  <div style="width: 3px; z-index: 777; height: 50%; background-color: gold; position:absolute; left: 50%; top: 50%;"></div>
+                  <div id="vp_line_b" style="width: 600px; height: 90px; background-color: rgba(0, 99, 248, 1); position: absolute; right: 0; top: 0;"></div>
+              </div>
               <div id="vp_blue" class="VPDiv" style="background-color: rgba(0, 99, 248, 1); flex: 1; border-radius: 0px 0px 46px 0px;">15</div>
           </div>
 
@@ -216,7 +230,7 @@
       <div id="victory" class="Victory VictoryRed" style="visibility: collapse;">
           ПОБЕДА СИНИХ!
       </div>
-      <button style="margin-left: 650px; height: 30px; width: 150px; position: absolute; left: 840px; top: 740px;" onclick="recreateGame()">пересоздать игру</button>
+      <button style="height: 30px; width: 150px; position: absolute; left: 20px; top: 820px;" onclick="recreateGame()">пересоздать игру</button>
 
 
 
@@ -252,9 +266,10 @@
 
 
       <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+      <script src="/js/util.js"></script>
       <script src="/js/script.js"></script>
       <script src="/js/hovers.js"></script>
       <script src="/js/actions.js"></script>
-      <script src="/js/util.js"></script>
+      <script src="/js/chat.js"></script>
   </body>
 </html>

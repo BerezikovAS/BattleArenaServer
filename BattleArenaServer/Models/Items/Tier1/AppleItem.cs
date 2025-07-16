@@ -13,13 +13,13 @@
             SellCost = 5;
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             hero.MaxHP += hp;
             hero.HP += hp;
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
             hero.MaxHP -= hp;
             hero.HP -= hp;

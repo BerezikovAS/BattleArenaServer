@@ -14,19 +14,19 @@ namespace BattleArenaServer.Skills.GolemSkills
             hero.afterReceiveDmg += AfterReceiveDmg;
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
             int heal = (int)(Convert.ToDouble(percentHeal * dmgReceived) / 100);
             hero.Heal(heal);
             dmgReceived = 0;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             upgraded = true;
             hero.afterReceiveDmg -= AfterReceiveDmg;
@@ -36,7 +36,7 @@ namespace BattleArenaServer.Skills.GolemSkills
             return true;
         }
 
-        public void AfterReceiveDmg(Hero hero, Hero? attacker, int dmg, Consts.DamageType dmgType)
+        public void AfterReceiveDmg(Hero hero, Hero? attacker, int dmg, Consts.DamageType dmgType, GameData gameData)
         {
             dmgReceived += dmg;
         }

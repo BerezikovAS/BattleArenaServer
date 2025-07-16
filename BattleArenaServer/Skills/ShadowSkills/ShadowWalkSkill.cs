@@ -24,23 +24,23 @@ namespace BattleArenaServer.Skills.ShadowSkills
 
         public new ISkillCastRequest request => new HexTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.CasterHex != null && requestData.TargetHex != null && requestData.TargetHex.IsFree())
             {
-                AttackService.MoveHero(requestData.Caster, requestData.CasterHex, requestData.TargetHex);
+                AttackService.MoveHero(requestData.Caster, requestData.CasterHex, requestData.TargetHex, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

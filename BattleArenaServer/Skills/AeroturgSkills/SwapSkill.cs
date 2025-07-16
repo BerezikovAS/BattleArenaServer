@@ -27,39 +27,39 @@ namespace BattleArenaServer.Skills.AeroturgSkills
 
         public new ISkillCastRequest request => new HeroNotSelfCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (request.startRequest(requestData, this) && requestData.CasterHex != null && requestData.TargetHex != null && requestData.Target != null)
+            if (request.startRequest(requestData, this, gameData) && requestData.CasterHex != null && requestData.TargetHex != null && requestData.Target != null)
             {
                 //Меняем местами героев
                 requestData.CasterHex.SetHero(requestData.Target);
                 requestData.TargetHex.SetHero(requestData.Caster);
 
                 if (requestData.TargetHex.OBSTACLE != null && requestData.TargetHex.OBSTACLE is FillableObstacle)
-                    (requestData.TargetHex.OBSTACLE as FillableObstacle).ApplyEffect(requestData.Caster, requestData.TargetHex);
+                    (requestData.TargetHex.OBSTACLE as FillableObstacle).ApplyEffect(requestData.Caster, requestData.TargetHex, gameData);
 
                 if (requestData.CasterHex.OBSTACLE != null && requestData.CasterHex.OBSTACLE is FillableObstacle)
-                    (requestData.CasterHex.OBSTACLE as FillableObstacle).ApplyEffect(requestData.Target, requestData.CasterHex);
+                    (requestData.CasterHex.OBSTACLE as FillableObstacle).ApplyEffect(requestData.Target, requestData.CasterHex, gameData);
 
                 if (requestData.Caster.Team != requestData.Target.Team)
                 {
                     ArmorDebuff armorDebuff = new ArmorDebuff(requestData.Caster.Id, extraArmor, 2);
-                    requestData.Target.AddEffect(armorDebuff);
+                    requestData.Target.AddEffect(armorDebuff, gameData);
                 }
                 else
                 {
                     ArmorBuff armorBuff = new ArmorBuff(requestData.Caster.Id, extraArmor, 2);
-                    requestData.Target.AddEffect(armorBuff);
+                    requestData.Target.AddEffect(armorBuff, gameData);
                 }
-                AttackService.ContinuousAuraAction();
-                requestData.Caster.SpendAP(requireAP);
+                AttackService.ContinuousAuraAction(gameData);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

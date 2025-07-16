@@ -16,7 +16,7 @@ namespace BattleArenaServer.Effects.Buffs
             description = "Броня и сопротивление увеличены на " + value + ".\n50% полученного урона переносится на владельца способности.";
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             _hero.StatsEffect.Armor += value;
             _hero.StatsEffect.Resist += value;
@@ -24,7 +24,7 @@ namespace BattleArenaServer.Effects.Buffs
             _hero.applyDamage += ApplyDamageDelgate;
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             _hero.StatsEffect.Armor -= value;
             _hero.StatsEffect.Resist -= value;
@@ -32,17 +32,17 @@ namespace BattleArenaServer.Effects.Buffs
             _hero.applyDamage += AttackService.ApplyDamage;
         }
 
-        public bool ApplyDamageDelgate(Hero attacker, Hero defender, int dmg, Consts.DamageType dmgType)
+        public bool ApplyDamageDelgate(Hero attacker, Hero defender, int dmg, Consts.DamageType dmgType, GameData gameData)
         {
-            Hero? buffer = GameData._heroes.FirstOrDefault(x => x.Id == idCaster);
+            Hero? buffer = gameData._heroes.FirstOrDefault(x => x.Id == idCaster);
             if (buffer != null && buffer.HP > 0)
             {
                 int halfDmg = dmg / 2;
-                AttackService.ApplyDamage(attacker, buffer, halfDmg, dmgType);
-                return AttackService.ApplyDamage(attacker, defender, halfDmg, dmgType);
+                AttackService.ApplyDamage(attacker, buffer, halfDmg, dmgType, gameData);
+                return AttackService.ApplyDamage(attacker, defender, halfDmg, dmgType, gameData);
             }
             else
-                return AttackService.ApplyDamage(attacker, defender, dmg, dmgType);
+                return AttackService.ApplyDamage(attacker, defender, dmg, dmgType, gameData);
         }
     }
 }

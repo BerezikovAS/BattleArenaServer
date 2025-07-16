@@ -12,8 +12,7 @@ namespace BattleArenaServer.Skills.VampireSkills
         public CoverOfNightSkill()
         {
             name = "Cover Of Night";
-            title = $"Укрывает себя и созников в ночи. Герои получают +{extraResist} сопротивления и после того как стали целью атаки перемещаются на " +
-                $"случайный соседний гекс в направлении от атакующего.";
+            title = $"Укрывает себя и созников в ночи. Герои получают +{extraResist} сопротивления, а атакующие их враги дополнительно теряют 1 ОД.";
             titleUpg = "+2 к сопротивлению";
             coolDown = 4;
             coolDownNow = 0;
@@ -27,21 +26,21 @@ namespace BattleArenaServer.Skills.VampireSkills
 
         public new ISkillCastRequest request => new NonTargerAoECastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (request.startRequest(requestData, this))
+            if (request.startRequest(requestData, this, gameData))
             {
                 if (requestData.Caster != null && requestData.TargetHex != null)
                 {
-                    foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
+                    foreach (var n in UtilityService.GetHexesRadius(requestData.TargetHex, radius, gameData))
                     {
                         if (n.HERO != null && n.HERO.Team == requestData.Caster.Team)
                         {
                             CoverOfNightBuff coverOfNightBuff = new CoverOfNightBuff(requestData.Caster.Id, extraResist, 2);
-                            n.HERO.AddEffect(coverOfNightBuff);
+                            n.HERO.AddEffect(coverOfNightBuff, gameData);
                         }
                     }
-                    requestData.Caster.SpendAP(requireAP);
+                    requestData.Caster.SpendAP(requireAP, gameData);
                     coolDownNow = coolDown;
                     return true;
                 }
@@ -49,14 +48,13 @@ namespace BattleArenaServer.Skills.VampireSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
                 upgraded = true;
                 extraResist += 2;
-                title = $"Укрывает себя и созников в ночи. Герои получают +{extraResist} сопротивления и после того как стали целью атаки перемещаются на " +
-                    $"случайный соседний гекс в направлении от атакующего.";
+                title = $"Укрывает себя и созников в ночи. Герои получают +{extraResist} сопротивления, а атакующие их враги дополнительно теряют 1 ОД.";
                 return true;
             }
             return false;

@@ -17,23 +17,23 @@ namespace BattleArenaServer.Effects.Buffs
             description = $"{value}% полученного урона Вам наносится и связанному врагу.";
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             _hero.afterReceiveDmg += AfterReceiveDmgDelegate;
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             _hero.afterReceiveDmg -= AfterReceiveDmgDelegate;
         }
 
-        private void AfterReceiveDmgDelegate(Hero defender, Hero? attacker, int dmg, Consts.DamageType dmgType)
+        private void AfterReceiveDmgDelegate(Hero defender, Hero? attacker, int dmg, Consts.DamageType dmgType, GameData gameData)
         {
-            Hero? targetHero = GameData._heroes.FirstOrDefault(x => x.Id == target);
+            Hero? targetHero = gameData._heroes.FirstOrDefault(x => x.Id == target);
             if (targetHero != null)
             {
                 int dmgTransfer = Convert.ToInt32(Convert.ToDouble(dmg * value) / 100);
-                AttackService.SetDamage(defender, targetHero, dmgTransfer, Consts.DamageType.Pure);
+                AttackService.SetDamage(defender, targetHero, dmgTransfer, Consts.DamageType.Pure, gameData);
             }
         }
     }

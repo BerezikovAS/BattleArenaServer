@@ -13,24 +13,24 @@ namespace BattleArenaServer.Skills.KnightSkills.Auras
             this.upgraded = upgraded;
         }
 
-        public override void ApplyEffect(Hero source, Hero target)
+        public override void ApplyEffect(Hero source, Hero target, GameData gameData)
         {
             if (source.Team == target.Team)
                 target.passiveArmor += HighShield;
         }
 
-        public override void CancelEffect(Hero source)
+        public override void CancelEffect(Hero source, GameData gameData)
         {
-            foreach (var hero in GameData._heroes)
+            foreach (var hero in gameData._heroes)
             {
                 hero.passiveArmor -= HighShield;
             }
         }
 
-        private int HighShield(Hero? attacker, Hero defender)
+        private int HighShield(Hero? attacker, Hero defender, GameData gameData)
         {
-            Hex? attackerHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == attacker.Id);
-            Hex? defenderHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == defender.Id);
+            Hex? attackerHex = gameData._hexes.FirstOrDefault(x => x.HERO?.Id == attacker.Id);
+            Hex? defenderHex = gameData._hexes.FirstOrDefault(x => x.HERO?.Id == defender.Id);
 
             if (attackerHex != null && defenderHex != null && attackerHex.Distance(defenderHex) > 1)
             {

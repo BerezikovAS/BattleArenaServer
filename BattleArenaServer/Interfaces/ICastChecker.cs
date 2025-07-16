@@ -6,6 +6,6 @@ namespace BattleArenaServer.Interfaces
     {
         ICastChecker nextChecker { get; set; }
 
-        bool Check(RequestData requestData, Skill skill);
+        bool Check(RequestData requestData, Skill skill, GameData gameData);
     }
 }

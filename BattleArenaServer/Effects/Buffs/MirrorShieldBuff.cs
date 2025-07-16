@@ -15,12 +15,12 @@ namespace BattleArenaServer.Effects.Buffs
             effectTags.Add(Consts.EffectTag.MirrorShield);
         }
 
-        public override void ApplyEffect(Hero _hero)
+        public override void ApplyEffect(Hero _hero, GameData gameData)
         {
             _hero.StatsEffect.Resist += value;
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
             _hero.StatsEffect.Resist -= value;
         }

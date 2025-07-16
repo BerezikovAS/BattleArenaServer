@@ -8,7 +8,7 @@ namespace BattleArenaServer.CastCheckers
     {
         public ICastChecker nextChecker { get; set; } = new TerminalChecker();
 
-        public bool Check(RequestData requestData, Skill skill)
+        public bool Check(RequestData requestData, Skill skill, GameData gameData)
         {
             if (requestData.Caster == null)
                 return false;
@@ -19,13 +19,13 @@ namespace BattleArenaServer.CastCheckers
             Effect? spiritLink = requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.SpiritLink));
             if (spiritLink != null)
             {
-                Hero? anotherHero = GameData._heroes.FirstOrDefault(x => x.Id == spiritLink.idCaster);
+                Hero? anotherHero = gameData._heroes.FirstOrDefault(x => x.Id == spiritLink.idCaster);
                 if (anotherHero != null)
                     availableAP += anotherHero.AP;
             }
 
             if (availableAP >= skill.requireAP)
-                return nextChecker.Check(requestData, skill);
+                return nextChecker.Check(requestData, skill, gameData);
             return false;
         }
     }

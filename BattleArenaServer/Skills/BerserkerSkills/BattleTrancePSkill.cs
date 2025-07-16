@@ -16,16 +16,16 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             hero.passiveAttackDamage += BattleTrance;
         }
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
             return false;
         }
 
-        public override void refreshEffect()
+        public override void refreshEffect(GameData gameData)
         {
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {
@@ -40,15 +40,15 @@ namespace BattleArenaServer.Skills.BerserkerSkills
             return false;
         }
 
-        private int BattleTrance(Hero attacker, Hero? defender)
+        private int BattleTrance(Hero attacker, Hero? defender, GameData gameData)
         {
-            Hex? attackerHex = GameData._hexes.FirstOrDefault(x => x.HERO?.Id == attacker.Id);
+            Hex? attackerHex = gameData._hexes.FirstOrDefault(x => x.HERO?.Id == attacker.Id);
 
             int enemiesCount = 0;
             double extraDmg = 0;
             if (attackerHex != null)
             {
-                foreach (var n in UtilityService.GetHexesRadius(attackerHex, 1))
+                foreach (var n in UtilityService.GetHexesRadius(attackerHex, 1, gameData))
                 {
                     if (n.HERO != null && n.HERO.Team != attacker.Team && n.HERO.type != Consts.HeroType.Obstacle)
                         enemiesCount++;

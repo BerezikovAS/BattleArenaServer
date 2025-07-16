@@ -27,24 +27,24 @@ namespace BattleArenaServer.Skills.FairySkills
 
         public new ISkillCastRequest request => new HexTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null)
             {
                 AstralPortalObstacle astralPortalObstacle = new AstralPortalObstacle(requestData.Caster.Id, requestData.TargetHex.ID, duration, requestData.Caster.Team, dmg);
-                requestData.TargetHex.SetObstacle(astralPortalObstacle);
+                requestData.TargetHex.SetObstacle(astralPortalObstacle, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

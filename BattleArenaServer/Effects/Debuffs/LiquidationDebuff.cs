@@ -15,13 +15,13 @@ namespace BattleArenaServer.Effects.Debuffs
             effectTags.Add(Consts.EffectTag.Liquidation);
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             hero.modifierAppliedDamage += Liquidation;
             description = $"Атаки Assassin дополнительно отнимают {value} ХП.";
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
             hero.modifierAppliedDamage -= Liquidation;
         }

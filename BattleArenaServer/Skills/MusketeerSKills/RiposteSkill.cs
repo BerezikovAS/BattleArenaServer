@@ -24,16 +24,16 @@ namespace BattleArenaServer.Skills.MusketeerSKills
 
         public new ISkillCastRequest request => new NontargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (request.startRequest(requestData, this))
+            if (request.startRequest(requestData, this, gameData))
             {
                 if (requestData.Caster != null)
                 {
                     RiposteBuff riposteBuff = new RiposteBuff(requestData.Caster.Id, armor, 2, percentDmg);
-                    requestData.Caster.AddEffect(riposteBuff);
+                    requestData.Caster.AddEffect(riposteBuff, gameData);
 
-                    requestData.Caster.SpendAP(requireAP);
+                    requestData.Caster.SpendAP(requireAP, gameData);
                     coolDownNow = coolDown;
                     return true;
                 }
@@ -41,7 +41,7 @@ namespace BattleArenaServer.Skills.MusketeerSKills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

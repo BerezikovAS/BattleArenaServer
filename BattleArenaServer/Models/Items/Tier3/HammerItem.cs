@@ -20,9 +20,9 @@ namespace BattleArenaServer.Models.Items.Tier3
             Skill = new HammerSkill(dmg);
         }
 
-        public override void CastItem(RequestData requestData)
+        public override void CastItem(RequestData requestData, GameData gameData)
         {
-            Skill.Cast(requestData);
+            Skill.Cast(requestData, gameData);
         }
     }
 
@@ -30,7 +30,7 @@ namespace BattleArenaServer.Models.Items.Tier3
     {
         public HammerSkill(int dmg)
         {
-            name = "ThrowingAxe";
+            name = "Hammer";
             this.dmg = dmg;
             coolDown = 4;
             coolDownNow = 0;
@@ -44,20 +44,20 @@ namespace BattleArenaServer.Models.Items.Tier3
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null)
             {
-                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, dmg, dmgType, gameData);
                 requestData.Target.AP -= 1;
 
                 if (requestData.Target.AP < 0)
                     requestData.Target.AP = 0;
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }

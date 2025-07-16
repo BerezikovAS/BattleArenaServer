@@ -20,15 +20,15 @@ namespace BattleArenaServer.Models.Items.Tier3
             Skill = new WhistleSkill();
         }
 
-        public override void CastItem(RequestData requestData)
+        public override void CastItem(RequestData requestData, GameData gameData)
         {
-            Skill.Cast(requestData);
+            Skill.Cast(requestData, gameData);
         }
     }
 
     public class WhistleSkill : Skill
     {
-        int eagleHP = 175;
+        int eagleHP = 200;
         int armor = 3;
         int resist = 3;
         int eagleDmg = 65;
@@ -48,23 +48,23 @@ namespace BattleArenaServer.Models.Items.Tier3
 
         public new ISkillCastRequest request => new HexTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.TargetHex != null && requestData.TargetHex.OBSTACLE == null)
             {
                 //Вызываем орла
-                int Id = GameData._heroes.Max(x => x.Id) + 1;
+                int Id = gameData._heroes.Max(x => x.Id) + 1;
                 EagleSummon eagle = new EagleSummon(Id, requestData.Caster.Team, requestData.Caster.Id, lifeTime, eagleHP, armor, resist, eagleDmg);
                 requestData.TargetHex.SetHero(eagle);
-                GameData._heroes.Add(eagle);
+                gameData._heroes.Add(eagle);
 
                 //Обновим ауры
-                AttackService.ContinuousAuraAction();
+                AttackService.ContinuousAuraAction(gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }

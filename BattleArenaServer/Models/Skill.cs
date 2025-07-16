@@ -24,9 +24,9 @@ namespace BattleArenaServer.Models
         public string extraDmgStr { get; set; } = "";
         public Consts.DamageType dmgType { get; set; } = DamageType.Physical;
 
-        public abstract bool Cast(RequestData requestData);
+        public abstract bool Cast(RequestData requestData, GameData gameData);
 
-        public virtual bool UpgradeSkill() { return false; }
+        public virtual bool UpgradeSkill(GameData gameData) { return false; }
 
         public ISkillCastRequest request { get; set; } = new NontargetCastRequest();
 

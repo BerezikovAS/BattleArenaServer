@@ -31,34 +31,34 @@ namespace BattleArenaServer.Skills.InvokerSkills
 
         public new ISkillCastRequest request => new HexTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.CasterHex != null && requestData.TargetHex != null && requestData.TargetHex.OBSTACLE == null)
             {
                 //Телепортируемся
-                AttackService.MoveHero(requestData.Caster, requestData.CasterHex, requestData.TargetHex);
+                AttackService.MoveHero(requestData.Caster, requestData.CasterHex, requestData.TargetHex, gameData);
 
                 //Ставим магический сгусток
-                int Id = GameData._heroes.Max(x => x.Id) + 1;
+                int Id = gameData._heroes.Max(x => x.Id) + 1;
                 MagicBundleObstacle magicBundleObstacle 
                     = new MagicBundleObstacle(Id, requestData.Caster.Id, requestData.TargetHex.ID, obstHP, requestData.Caster.Team, lifeTime, resistReduce, dmg);
                 requestData.CasterHex.SetHero(magicBundleObstacle);
-                GameData._solidObstacles.Add(magicBundleObstacle);
+                gameData._solidObstacles.Add(magicBundleObstacle);
 
                 //Обновим ауры
-                AttackService.ContinuousAuraAction();
+                AttackService.ContinuousAuraAction(gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

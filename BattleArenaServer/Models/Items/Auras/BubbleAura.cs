@@ -11,16 +11,16 @@ namespace BattleArenaServer.Models.Items.Auras
             type = Consts.AuraType.StartTurn;
         }
 
-        public override void ApplyEffect(Hero source, Hero target)
+        public override void ApplyEffect(Hero source, Hero target, GameData gameData)
         {
             if (source.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Bubble)) == null)
             {
                 BubbleBuff bubbleBuff = new BubbleBuff(source.Id, 0, 99);
-                source.AddEffect(bubbleBuff);
+                source.AddEffect(bubbleBuff, gameData);
             }
         }
 
-        public override void CancelEffect(Hero source)
+        public override void CancelEffect(Hero source, GameData gameData)
         {
 
         }

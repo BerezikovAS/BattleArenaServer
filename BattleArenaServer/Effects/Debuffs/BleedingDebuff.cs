@@ -16,13 +16,13 @@ namespace BattleArenaServer.Effects.Debuffs
             description = "Теряет " + value + "ХП в конце своего хода.";
         }
 
-        public override void ApplyEffect(Hero defender)
+        public override void ApplyEffect(Hero defender, GameData gameData)
         {
-            Hero? attacker = GameData._heroes.FirstOrDefault(x => x.Id == idCaster);
-            AttackService.SetDamage(attacker, defender, value, Consts.DamageType.Pure);
+            Hero? attacker = gameData._heroes.FirstOrDefault(x => x.Id == idCaster);
+            AttackService.SetDamage(attacker, defender, value, Consts.DamageType.Pure, gameData);
         }
 
-        public override void RemoveEffect(Hero _hero)
+        public override void RemoveEffect(Hero _hero, GameData gameData)
         {
 
         }

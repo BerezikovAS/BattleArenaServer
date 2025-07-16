@@ -25,9 +25,9 @@ namespace BattleArenaServer.Skills.CultistSkills
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null && requestData.TargetHex != null)
@@ -39,9 +39,9 @@ namespace BattleArenaServer.Skills.CultistSkills
                     return false;
 
                 //Съедаем бедолагу
-                AttackService.KillHero(requestData.Target);
+                AttackService.KillHero(requestData.Target, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -49,7 +49,7 @@ namespace BattleArenaServer.Skills.CultistSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             return false;
         }

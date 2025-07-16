@@ -13,7 +13,7 @@ namespace BattleArenaServer.Skills.GolemSkills
             dmg = 140;
             title = $"Наносит врагам по линиям от себя {dmg} магического урона и притягивает их к себе.";
             titleUpg = "+25 к урону, -1 к перезарядке";
-            coolDown = 4;
+            coolDown = 5;
             coolDownNow = 0;
             requireAP = 2;
             radius = 2;
@@ -24,25 +24,25 @@ namespace BattleArenaServer.Skills.GolemSkills
             dmgType = Consts.DamageType.Magic;
         }
 
-        public new ISkillCastRequest request => new NonTargerAoECastRequest();
+        public new ISkillCastRequest request => new LineCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.CasterHex != null)
             {
                 List<Hero> enemies = new List<Hero>();
                 //Сначала пытаемся пододвинуть всех, а потом будем наносить урон
-                foreach (var n in UtilityService.GetHexesLines(requestData.CasterHex, radius))
+                foreach (var n in UtilityService.GetHexesLines(requestData.CasterHex, gameData, radius))
                 {
                     int pos = 1;
                     Hero? target = null;
                     Hex? targetHex = null;
                     while (pos <= radius)
                     {
-                        targetHex = UtilityService.GetOneHexOnDirection(requestData.CasterHex, n, pos);
+                        targetHex = UtilityService.GetOneHexOnDirection(requestData.CasterHex, n, pos, gameData);
                         target = targetHex?.HERO?.Team != requestData.Caster.Team ? targetHex?.HERO : null;
                         pos++;
                         
@@ -52,25 +52,25 @@ namespace BattleArenaServer.Skills.GolemSkills
 
                     if (target != null && targetHex != null)
                     {
-                        Hex? hex = UtilityService.GetOneHexOnDirection(targetHex, requestData.CasterHex, 1);
+                        Hex? hex = UtilityService.GetOneHexOnDirection(targetHex, requestData.CasterHex, 1, gameData);
                         if (hex != null && hex.IsFree())
-                            AttackService.MoveHero(target, targetHex, hex);
+                            AttackService.MoveHero(target, targetHex, hex, gameData);
 
                     }
                 }
 
                 //Наносим урон
                 foreach (var enemy in enemies)
-                    AttackService.SetDamage(requestData.Caster, enemy, dmg, dmgType);
+                    AttackService.SetDamage(requestData.Caster, enemy, dmg, dmgType, gameData);
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

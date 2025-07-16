@@ -24,9 +24,9 @@ namespace BattleArenaServer.Skills.GolemSkills
 
         public new ISkillCastRequest request => new NontargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null)
@@ -35,12 +35,12 @@ namespace BattleArenaServer.Skills.GolemSkills
                 int addArmorResist = usedAP * extraArmorResist + defaultArmorResist;
 
                 ArmorBuff armorBuff = new ArmorBuff(requestData.Caster.Id, addArmorResist, 2);
-                requestData.Caster.AddEffect(armorBuff);
+                requestData.Caster.AddEffect(armorBuff, gameData);
 
                 ResistBuff resistBuff = new ResistBuff(requestData.Caster.Id, addArmorResist, 2);
-                requestData.Caster.AddEffect(resistBuff);
+                requestData.Caster.AddEffect(resistBuff, gameData);
 
-                requestData.Caster.SpendAP(usedAP);
+                requestData.Caster.SpendAP(usedAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -48,7 +48,7 @@ namespace BattleArenaServer.Skills.GolemSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

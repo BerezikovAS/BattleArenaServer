@@ -23,7 +23,7 @@ namespace BattleArenaServer.Effects.Unique
             targetHex = _targetHex;
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             if (isDisappear)
             {
@@ -48,7 +48,7 @@ namespace BattleArenaServer.Effects.Unique
                     int radius = 2;
                     while (hex == null)
                     {
-                        freeHexes = GameData._hexes.FindAll(x => x.Distance(targetHex) == radius && x.IsFree());
+                        freeHexes = gameData._hexes.FindAll(x => x.Distance(targetHex) == radius && x.IsFree());
                         if (freeHexes.Count() > 0)
                         {
                             while (hex == null)
@@ -60,10 +60,10 @@ namespace BattleArenaServer.Effects.Unique
 
                 hex.SetHero(hero);
                 //Наносим урон
-                foreach (var hexR in UtilityService.GetHexesRadius(hex, 1))
+                foreach (var hexR in UtilityService.GetHexesRadius(hex, 1, gameData))
                 {
                     if (hexR.HERO != null && hexR.HERO.Team != hero.Team)
-                        AttackService.SetDamage(hero, hexR.HERO, value, Consts.DamageType.Magic);
+                        AttackService.SetDamage(hero, hexR.HERO, value, Consts.DamageType.Magic, gameData);
                 }
             }
             else
@@ -74,7 +74,7 @@ namespace BattleArenaServer.Effects.Unique
             }
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
 
         }

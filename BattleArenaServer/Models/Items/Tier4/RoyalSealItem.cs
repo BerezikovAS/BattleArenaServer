@@ -15,7 +15,7 @@
             SellCost = 40;
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             hero.Resist += armorResist;
             hero.Armor += armorResist;
@@ -24,7 +24,7 @@
             hero.HP += hp;
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
             hero.Resist -= armorResist;
             hero.Armor -= armorResist;

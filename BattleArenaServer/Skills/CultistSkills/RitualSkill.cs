@@ -26,9 +26,9 @@ namespace BattleArenaServer.Skills.CultistSkills
 
         public new ISkillCastRequest request => new NonTargerAoECastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null)
@@ -39,20 +39,20 @@ namespace BattleArenaServer.Skills.CultistSkills
                 //Добавляем эффект ритуала, или просто увеличиваем значение, если он уже есть
                 if (ritual != null)
                 {
-                    ritual.ApplyEffect(requestData.Caster);
+                    ritual.ApplyEffect(requestData.Caster, gameData);
                     ritualPower = ritual.value;
                 }
                 else
                 {
                     RitualUnique ritualUnique = new RitualUnique(requestData.Caster.Id, 0, 100);
-                    requestData.Caster.AddEffect(ritualUnique);
+                    requestData.Caster.AddEffect(ritualUnique, gameData);
                 }
 
                 //Наносим урон
-                foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, radius))
+                foreach (var hex in UtilityService.GetHexesRadius(requestData.TargetHex, radius, gameData))
                 {
                     if (hex.HERO != null && hex.HERO.Team != requestData.Caster.Team)
-                        AttackService.SetDamage(requestData.Caster, hex.HERO, dmg, dmgType);
+                        AttackService.SetDamage(requestData.Caster, hex.HERO, dmg, dmgType, gameData);
                 }
 
                 //Достигли нужного значения. Превращаемся
@@ -68,7 +68,7 @@ namespace BattleArenaServer.Skills.CultistSkills
                     requestData.Caster.SkillList[4] = new DevourSkill();
                 }
 
-                requestData.Caster.SpendAP(requireAP);
+                requestData.Caster.SpendAP(requireAP, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -76,7 +76,7 @@ namespace BattleArenaServer.Skills.CultistSkills
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

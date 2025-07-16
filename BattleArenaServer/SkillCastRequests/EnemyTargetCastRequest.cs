@@ -6,7 +6,7 @@ namespace BattleArenaServer.SkillCastRequests
 {
     public class EnemyTargetCastRequest : ISkillCastRequest
     {
-        public bool startRequest(RequestData requestData, Skill skill)
+        public bool startRequest(RequestData requestData, Skill skill, GameData gameData)
         {
             ICastChecker coolDownChecker = new CooldownChecker();
             ICastChecker actionPointsChecker = new ActionPointsChecker();
@@ -19,7 +19,7 @@ namespace BattleArenaServer.SkillCastRequests
             rangeChecker.nextChecker = enemyChecker;
             enemyChecker.nextChecker = enemyTargetSpellChecker;
             enemyTargetSpellChecker.nextChecker = new TerminalChecker();
-            return coolDownChecker.Check(requestData, skill);
+            return coolDownChecker.Check(requestData, skill, gameData);
         }
     }
 }

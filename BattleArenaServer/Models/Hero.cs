@@ -49,18 +49,18 @@ namespace BattleArenaServer.Models
         public StatsEffect StatsEffect { get; set; } = new StatsEffect();
 
         #region Delegates
-        public delegate bool ApplyDamage(Hero? attacker, Hero defender, int dmg, Consts.DamageType dmgType);
+        public delegate bool ApplyDamage(Hero? attacker, Hero defender, int dmg, Consts.DamageType dmgType, GameData gameData);
         public ApplyDamage applyDamage = AttackService.ApplyDamage;
 
-        public delegate int PassiveArmor(Hero? attacker, Hero defender);
+        public delegate int PassiveArmor(Hero? attacker, Hero defender, GameData gameData);
         public PassiveArmor passiveArmor = delegate { return 0; };
 
-        public int GetPassiveArmor(Hero? attacker, Hero defender)
+        public int GetPassiveArmor(Hero? attacker, Hero defender, GameData gameData)
         {
             int value = 0;
             var invocationList = passiveArmor.GetInvocationList();
             foreach (var invocation in invocationList)
-                value += ((PassiveArmor)invocation)(attacker, defender);
+                value += ((PassiveArmor)invocation)(attacker, defender, gameData);
             return value;
         }
 
@@ -76,15 +76,15 @@ namespace BattleArenaServer.Models
             return value;
         }
 
-        public delegate int PassiveAttackDamage(Hero attacker, Hero? defender);
+        public delegate int PassiveAttackDamage(Hero attacker, Hero? defender, GameData gameData);
         public PassiveAttackDamage passiveAttackDamage = delegate { return 0; };
 
-        public int GetPassiveAttackDamage(Hero attacker, Hero? defender)
+        public int GetPassiveAttackDamage(Hero attacker, Hero? defender, GameData gameData)
         {
             int value = 0;
             var invocationList = passiveAttackDamage.GetInvocationList();
             foreach (var invocation in invocationList)
-                value += ((PassiveAttackDamage)invocation)(attacker, defender);
+                value += ((PassiveAttackDamage)invocation)(attacker, defender, gameData);
             return value;
         }
 
@@ -112,16 +112,16 @@ namespace BattleArenaServer.Models
             return value;
         }
 
-        public delegate bool BeforeAttack(Hero attacker, Hero defender, int dmg);
+        public delegate bool BeforeAttack(Hero attacker, Hero defender, int dmg, GameData gameData);
         public BeforeAttack beforeAttack = delegate { return false; };
 
         public delegate bool BeforeReceivedAttack(Hero attacker, Hero defender, int dmg);
         public BeforeReceivedAttack beforeReceivedAttack = delegate { return false; };
 
-        public delegate bool AfterAttack(Hero attacker, Hero defender, int dmg, Consts.DamageType dmgType);
+        public delegate bool AfterAttack(Hero attacker, Hero defender, int dmg, Consts.DamageType dmgType, GameData gameData);
         public AfterAttack afterAttack = delegate { return false; };
 
-        public delegate bool AfterReceivedAttack(Hero attacker, Hero defender, int dmg);
+        public delegate bool AfterReceivedAttack(Hero attacker, Hero defender, int dmg, GameData gameData);
         public AfterReceivedAttack afterReceivedAttack = delegate { return false; };
 
         public delegate int ModifierAppliedDamage(Hero? attacker, Hero defender, int dmg, Consts.DamageType dmgType);
@@ -136,36 +136,45 @@ namespace BattleArenaServer.Models
             return value;
         }
 
-        public delegate void BeforeSpellCast(Hero attacker, Hero? defender, Skill skill);
+        public delegate void BeforeSpellCast(Hero attacker, Hero? defender, Skill skill, GameData gameData);
         public BeforeSpellCast beforeSpellCast = delegate { };
 
-        public delegate void AfterSpellCast(Hero attacker, Hero? defender, Skill skill);
+        public delegate void AfterSpellCast(Hero attacker, Hero? defender, Skill skill, GameData gameData);
         public BeforeSpellCast afterSpellCast = delegate { };
 
-        public delegate void AfterMove(Hero hero, Hex? currentHex, Hex targetHex);
+        public delegate void AfterMove(Hero hero, Hex? currentHex, Hex targetHex, GameData gameData);
         public AfterMove afterMove = delegate { };
 
-        public delegate void AfterReceiveDmg(Hero hero, Hero? attacker, int dmg, Consts.DamageType dmgType);
+        public delegate void AfterReceiveDmg(Hero hero, Hero? attacker, int dmg, Consts.DamageType dmgType, GameData gameData);
         public AfterReceiveDmg afterReceiveDmg = delegate { };
 
         public delegate void HealDelegate(int heal);
         public HealDelegate Heal = delegate { };
 
-        public delegate void AddEffectDelegate(Effect effect);
+        public delegate void AddEffectDelegate(Effect effect, GameData gameData);
         public AddEffectDelegate AddEffect = delegate { };
 
-        public delegate void SpendAPDelegate(int spendAP);
+        public delegate void SpendAPDelegate(int spendAP, GameData gameData);
         public SpendAPDelegate SpendAP = delegate { };
         #endregion
 
-        public virtual void Respawn()
+        public virtual void Respawn(GameData? gameData = null)
         {
-            foreach (var effect in EffectList)
-                effect.RemoveEffect(this);
-            EffectList.Clear();
+            foreach (var item in this.Items)
+                item.RemoveEffect(this, gameData);
 
+            if (gameData != null)
+            {
+                foreach (var effect in EffectList)
+                    effect.RemoveEffect(this, gameData);
+                EffectList.Clear();
+            }
+        }
+
+        public void ApplyItems(GameData? gameData = null)
+        {
             foreach (var item in Items)
-                item.ApplyEffect(this);
+                item.ApplyEffect(this, gameData);
         }
 
         public void BaseHeal(int heal)
@@ -175,16 +184,16 @@ namespace BattleArenaServer.Models
                 HP = MaxHP;
         }
 
-        public void BaseAddEffect(Effect effect)
+        public void BaseAddEffect(Effect effect, GameData gameData)
         {
             Effect? MirrorShield = EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.MirrorShield)); //Отражение дебафов
             if (effect.type == Consts.StatusEffect.Debuff && MirrorShield != null)
             {
-                Hero? caster = GameData._heroes.FirstOrDefault(x => x.Id == effect.idCaster);
+                Hero? caster = gameData._heroes.FirstOrDefault(x => x.Id == effect.idCaster);
                 if (caster != null)
                 {
                     effect.idCaster = Id;
-                    caster.AddEffect(effect);
+                    caster.AddEffect(effect, gameData);
                 }
                 return;
             }    
@@ -195,27 +204,17 @@ namespace BattleArenaServer.Models
 
             EffectList.Add(effect);
             if (effect.effectType == Consts.EffectType.Instant)
-                effect.ApplyEffect(this);
+                effect.ApplyEffect(this, gameData);
         }
 
-        /*public void ImmunAddEffect(Effect effect)
-        {
-            if (effect.type == Consts.StatusEffect.Debuff)
-                return;
-
-            EffectList.Add(effect);
-            if (effect.effectType == Consts.EffectType.Instant)
-                effect.ApplyEffect(this);
-        }*/
-
-        public void BaseSpendAP(int apCount)
+        public void BaseSpendAP(int apCount, GameData gameData = null)
         {
             AP -= apCount;
             if (AP < 0)
                 AP = 0;
         }
 
-        public void SpiritLinkSpendAP(int apCount)
+        public void SpiritLinkSpendAP(int apCount, GameData gameData)
         {
             AP -= apCount;
             if (AP < 0)
@@ -223,10 +222,10 @@ namespace BattleArenaServer.Models
                 Effect? spiritLink = EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.SpiritLink));
                 if (spiritLink != null)
                 {
-                    Hero? anotherHero = GameData._heroes.FirstOrDefault(x => x.Id == spiritLink.idCaster);
+                    Hero? anotherHero = gameData._heroes.FirstOrDefault(x => x.Id == spiritLink.idCaster);
                     if (anotherHero != null)
                     {
-                        anotherHero.SpendAP(AP * -1);
+                        anotherHero.SpendAP(AP * -1, gameData);
                     }
                 }
                 AP = 0;

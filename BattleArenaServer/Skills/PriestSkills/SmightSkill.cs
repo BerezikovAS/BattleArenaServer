@@ -27,9 +27,9 @@ namespace BattleArenaServer.Skills.Priest
 
         public new ISkillCastRequest request => new EnemyTargetCastRequest();
 
-        public override bool Cast(RequestData requestData)
+        public override bool Cast(RequestData requestData, GameData gameData)
         {
-            if (!request.startRequest(requestData, this))
+            if (!request.startRequest(requestData, this, gameData))
                 return false;
 
             if (requestData.Caster != null && requestData.Target != null)
@@ -41,8 +41,8 @@ namespace BattleArenaServer.Skills.Priest
                         totalDmg += extraDmg;
                 }
 
-                requestData.Caster.SpendAP(requireAP);
-                AttackService.SetDamage(requestData.Caster, requestData.Target, totalDmg, dmgType);
+                requestData.Caster.SpendAP(requireAP, gameData);
+                AttackService.SetDamage(requestData.Caster, requestData.Target, totalDmg, dmgType, gameData);
                 coolDownNow = coolDown;
                 return true;
             }
@@ -50,7 +50,7 @@ namespace BattleArenaServer.Skills.Priest
             return false;
         }
 
-        public override bool UpgradeSkill()
+        public override bool UpgradeSkill(GameData gameData)
         {
             if (!upgraded)
             {

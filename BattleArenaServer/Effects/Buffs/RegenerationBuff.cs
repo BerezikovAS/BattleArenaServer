@@ -15,12 +15,12 @@ namespace BattleArenaServer.Effects.Buffs
             description = "Восстанавливает " + value + "ХП в конце своего хода.";
         }
 
-        public override void ApplyEffect(Hero hero)
+        public override void ApplyEffect(Hero hero, GameData gameData)
         {
             hero.Heal(value);
         }
 
-        public override void RemoveEffect(Hero hero)
+        public override void RemoveEffect(Hero hero, GameData gameData)
         {
 
         }
