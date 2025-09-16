@@ -144,6 +144,7 @@ namespace BattleArenaServer.Hubs
             heroes.Add(new VampireHero(0, ""));
             heroes.Add(new SnowQueenHero(0, ""));
             heroes.Add(new ArtistHero(0, ""));
+            heroes.Add(new LizardmanHero(0, ""));
             
 
 

@@ -21,14 +21,14 @@ namespace BattleArenaServer.Models.Heroes
         {
             base.Respawn(gameData);
 
-            MaxHP = HP = 1100;
+            MaxHP = HP = 1000;
             Armor = 8;
             Resist = 0;
 
             AP = 4;
 
             AttackRadius = 1;
-            Dmg = 105;
+            Dmg = 100;
 
             (SkillList[0] as PassiveSkill).refreshEffect(gameData);
 

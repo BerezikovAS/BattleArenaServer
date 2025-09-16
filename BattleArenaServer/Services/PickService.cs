@@ -49,6 +49,7 @@ namespace BattleArenaServer.Services
             heroes.Add(new GuardianHero(0, ""));
             heroes.Add(new InvokerHero(0, ""));
             heroes.Add(new KnightHero(0, ""));
+            heroes.Add(new LizardmanHero(0, ""));
             heroes.Add(new MusketeerHero(0, ""));
             heroes.Add(new NecromancerHero(0, ""));
             heroes.Add(new PlagueDoctorHero(0, ""));

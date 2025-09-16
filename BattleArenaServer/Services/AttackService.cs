@@ -63,14 +63,14 @@ namespace BattleArenaServer.Services
 
                 int range = attacker.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Blind)) == null ? attacker.AttackRadius + attacker.StatsEffect.AttackRadius : 1;
 
-                int availableAP = requestData.Caster.AP;
+                int availableAP = attacker.AP;
 
-                Effect? taunt = requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Taunt));
+                Effect? taunt = attacker.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Taunt));
                 if (taunt != null && taunt.idCaster != defender.Id) // Если атакующий под таунтом, то он может атаковать только заклинателя
                     return false;
 
                 // Спиритическая связь объединяет ОД двух героев, поэтому доступные ОД - это ОД кастера + ОД связанного героя
-                Effect? spiritLink = requestData.Caster.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.SpiritLink));
+                Effect? spiritLink = attacker.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.SpiritLink));
                 if (spiritLink != null)
                 {
                     Hero? anotherHero = gameData._heroes.FirstOrDefault(x => x.Id == spiritLink.idCaster);
@@ -82,6 +82,15 @@ namespace BattleArenaServer.Services
                     return false;
 
                 attacker.SpendAP(attacker.APtoAttack, gameData);
+
+                // Если у цели есть уворот, то вся атака отменяется, а ОД тратятся
+                Effect? dodge = defender.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.Dodge));
+                if (dodge != null)
+                {
+                    defender.EffectList.Remove(dodge);
+                    return true;
+                }
+
                 // К урону добавляем дополнительный от пассивок и эффектов
                 int dmg = (int)((attacker.Dmg + attacker.GetPassiveAttackDamage(attacker, defender, gameData)) * attacker.StatsEffect.DmgMultiplier);
 
@@ -116,6 +125,8 @@ namespace BattleArenaServer.Services
                 //ГА защищает от физ. урона
                 if (defender.EffectList.FirstOrDefault(x => x.effectTags.Contains(Consts.EffectTag.GuardianAngel)) != null && damageType == DamageType.Physical)
                     dmg = 0;
+
+                defender.beforeReceiveDmg(defender, attacker, dmg, damageType, gameData);
 
                 double totalDmg = 0;
                 switch (damageType)

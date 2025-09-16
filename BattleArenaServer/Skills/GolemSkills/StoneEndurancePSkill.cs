@@ -4,7 +4,7 @@ namespace BattleArenaServer.Skills.GolemSkills
 {
     public class StoneEndurancePSkill : PassiveSkill
     {
-        int percentHeal = 20;
+        int percentHeal = 15;
         int dmgReceived = 0;
         public StoneEndurancePSkill(Hero hero) : base(hero)
         {
