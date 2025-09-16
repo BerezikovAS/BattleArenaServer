@@ -112,7 +112,8 @@
             MicrobialSamples,
             DebuffImmun,
             MirrorShield,
-            Note
+            Note,
+            Dodge
         }
     }
 }

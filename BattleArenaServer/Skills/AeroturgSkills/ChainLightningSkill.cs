@@ -10,9 +10,9 @@ namespace BattleArenaServer.Skills.AeroturgSkills
         public ChainLightningSkill()
         {
             name = "Chain Lightning";
-            dmg = 150;
+            dmg = 140;
             title = $"Выпускает молнию, которая наносит {dmg} магического урона всем врагам в цепи.";
-            titleUpg = "+50 к урону. -1 к перезарядке";
+            titleUpg = "+40 к урону. -1 к перезарядке";
             coolDown = 4;
             coolDownNow = 0;
             requireAP = 2;
@@ -68,7 +68,7 @@ namespace BattleArenaServer.Skills.AeroturgSkills
             if (!upgraded)
             {
                 upgraded = true;
-                dmg += 50;
+                dmg += 40;
                 coolDown -= 1;
                 stats.coolDown -= 1;
                 title = $"Выпускает молнию, которая наносит {dmg} магического урона всем врагам в цепи.";

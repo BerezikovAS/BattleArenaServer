@@ -148,6 +148,9 @@ namespace BattleArenaServer.Models
         public delegate void AfterReceiveDmg(Hero hero, Hero? attacker, int dmg, Consts.DamageType dmgType, GameData gameData);
         public AfterReceiveDmg afterReceiveDmg = delegate { };
 
+        public delegate void BeforeReceiveDmg(Hero hero, Hero? attacker, int dmg, Consts.DamageType dmgType, GameData gameData);
+        public AfterReceiveDmg beforeReceiveDmg = delegate { };
+
         public delegate void HealDelegate(int heal);
         public HealDelegate Heal = delegate { };
 
